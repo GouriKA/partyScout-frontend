@@ -49,7 +49,7 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>🎉 Birthday Party Planner</h1>
+        <h1>🎉 Party Scout</h1>
         <p>Find the perfect venue for your celebration!</p>
       </header>
 
