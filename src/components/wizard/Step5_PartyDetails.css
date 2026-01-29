@@ -1,0 +1,367 @@
+.step-party-details {
+  max-width: 100%;
+}
+
+.party-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Venue Hero */
+.venue-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(236, 72, 153, 0.08));
+  border-radius: 1rem;
+  gap: 1rem;
+}
+
+.venue-hero-content {
+  flex: 1;
+}
+
+.venue-hero-name {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--neutral-900, #111827);
+  margin: 0 0 0.25rem;
+}
+
+.venue-hero-address {
+  color: var(--neutral-600, #4b5563);
+  margin: 0 0 0.75rem;
+  font-size: 0.9375rem;
+}
+
+.venue-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.venue-hero-rating {
+  color: var(--warning, #f59e0b);
+  font-weight: 600;
+}
+
+.venue-hero-distance,
+.venue-hero-setting {
+  color: var(--neutral-600, #4b5563);
+}
+
+.venue-hero-setting {
+  padding: 0.125rem 0.5rem;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 0.25rem;
+  text-transform: capitalize;
+}
+
+.venue-hero-score {
+  flex-shrink: 0;
+}
+
+.match-score-circle {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: var(--primary, #6366f1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.score-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.score-label {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+/* Party Info Grid */
+.party-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.info-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--neutral-50, #f9fafb);
+  border-radius: 0.75rem;
+}
+
+.info-card.highlight {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1));
+}
+
+.info-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.info-label {
+  font-size: 0.75rem;
+  color: var(--neutral-500, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.info-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--neutral-900, #111827);
+}
+
+.info-sub {
+  font-size: 0.75rem;
+  color: var(--neutral-500, #6b7280);
+}
+
+/* Details Sections */
+.details-section {
+  padding: 1.25rem;
+  background: white;
+  border: 1px solid var(--neutral-200, #e5e7eb);
+  border-radius: 0.75rem;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--neutral-800, #1f2937);
+  margin: 0 0 1rem;
+}
+
+.section-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--success, #10b981);
+  color: white;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.not-included .section-icon {
+  background: var(--warning, #f59e0b);
+}
+
+/* Included/Not Included Lists */
+.included-list,
+.not-included-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.5rem 1rem;
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.included-list li,
+.not-included-list li {
+  position: relative;
+  padding-left: 1.25rem;
+  font-size: 0.9375rem;
+  color: var(--neutral-700, #374151);
+}
+
+.included-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--success, #10b981);
+  font-weight: bold;
+}
+
+.not-included-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--warning, #f59e0b);
+}
+
+/* Add-ons Grid */
+.addons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.addon-card {
+  position: relative;
+  padding: 1rem;
+  background: var(--neutral-50, #f9fafb);
+  border: 1px solid var(--neutral-200, #e5e7eb);
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.addon-card:hover {
+  border-color: var(--primary, #6366f1);
+}
+
+.addon-card.recommended {
+  border-color: var(--secondary, #ec4899);
+  background: rgba(236, 72, 153, 0.05);
+}
+
+.addon-badge {
+  position: absolute;
+  top: -0.5rem;
+  right: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  background: var(--secondary, #ec4899);
+  color: white;
+  font-size: 0.625rem;
+  font-weight: 600;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+}
+
+.addon-name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--neutral-800, #1f2937);
+  margin: 0 0 0.25rem;
+}
+
+.addon-description {
+  font-size: 0.8125rem;
+  color: var(--neutral-600, #4b5563);
+  margin: 0 0 0.5rem;
+}
+
+.addon-price {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary, #6366f1);
+}
+
+/* Contact Section */
+.contact-section {
+  padding: 1.5rem;
+  background: var(--neutral-900, #111827);
+  border-radius: 0.75rem;
+  color: white;
+}
+
+.contact-section .section-title {
+  color: white;
+}
+
+.contact-section .section-icon {
+  background: var(--primary, #6366f1);
+}
+
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.contact-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.contact-phone {
+  background: var(--primary, #6366f1);
+  color: white;
+}
+
+.contact-phone:hover {
+  background: var(--primary-dark, #4f46e5);
+}
+
+.contact-website {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.contact-website:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.contact-icon {
+  font-size: 1rem;
+}
+
+.contact-hint {
+  margin: 0;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+  .venue-hero {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .venue-hero-meta {
+    justify-content: center;
+  }
+
+  .venue-hero-score {
+    display: flex;
+    justify-content: center;
+  }
+
+  .party-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .included-list,
+  .not-included-list {
+    grid-template-columns: 1fr;
+  }
+
+  .addons-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-actions {
+    flex-direction: column;
+  }
+
+  .contact-btn {
+    justify-content: center;
+  }
+}

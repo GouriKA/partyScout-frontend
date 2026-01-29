@@ -1,0 +1,208 @@
+import { useState } from 'react';
+import { usePartyPlanner } from '../../context/PartyPlannerContext';
+import VenueCard from '../venue/VenueCard';
+import VenueCompare from '../venue/VenueCompare';
+import Button from '../common/Button';
+import './WizardStep.css';
+import './Step4_VenueResults.css';
+
+const sortOptions = [
+  { value: 'matchScore', label: 'Best Match' },
+  { value: 'rating', label: 'Highest Rated' },
+  { value: 'distance', label: 'Closest' },
+  { value: 'price', label: 'Lowest Price' }
+];
+
+const filterOptions = [
+  { value: 'all', label: 'All' },
+  { value: 'indoor', label: 'Indoor' },
+  { value: 'outdoor', label: 'Outdoor' },
+  { value: 'highRated', label: '4+ Stars' }
+];
+
+export default function Step4_VenueResults() {
+  const {
+    venues,
+    loading,
+    error,
+    compareVenues,
+    toggleCompareVenue,
+    clearCompare,
+    selectVenue,
+    nextStep,
+    prevStep,
+    preferences
+  } = usePartyPlanner();
+
+  const [sortBy, setSortBy] = useState('matchScore');
+  const [filterBy, setFilterBy] = useState('all');
+  const [showCompare, setShowCompare] = useState(false);
+
+  // Sort venues
+  const sortedVenues = [...venues].sort((a, b) => {
+    switch (sortBy) {
+      case 'matchScore':
+        return b.matchScore - a.matchScore;
+      case 'rating':
+        return (b.rating || 0) - (a.rating || 0);
+      case 'distance':
+        return a.distanceInMiles - b.distanceInMiles;
+      case 'price':
+        return a.estimatedTotal - b.estimatedTotal;
+      default:
+        return 0;
+    }
+  });
+
+  // Filter venues
+  const filteredVenues = sortedVenues.filter((venue) => {
+    switch (filterBy) {
+      case 'indoor':
+        return venue.setting === 'indoor';
+      case 'outdoor':
+        return venue.setting === 'outdoor';
+      case 'highRated':
+        return venue.rating >= 4;
+      default:
+        return true;
+    }
+  });
+
+  const handleSelectVenue = (venue) => {
+    selectVenue(venue);
+    nextStep();
+  };
+
+  const handleCompareSelect = (venue) => {
+    setShowCompare(false);
+    handleSelectVenue(venue);
+  };
+
+  if (loading) {
+    return (
+      <div className="wizard-step">
+        <div className="loading-state">
+          <div className="loading-spinner" />
+          <h3>Finding perfect venues...</h3>
+          <p>Searching for party places near you</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="wizard-step">
+        <div className="error-state">
+          <span className="error-icon">!</span>
+          <h3>Something went wrong</h3>
+          <p>{error}</p>
+          <Button onClick={prevStep} variant="outline">
+            Go Back
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="wizard-step step-venue-results">
+      <div className="step-top-nav">
+        <button type="button" className="btn-back" onClick={prevStep}>
+          Back
+        </button>
+      </div>
+
+      <div className="step-header">
+        <h2 className="step-title">
+          {filteredVenues.length} Venue{filteredVenues.length !== 1 ? 's' : ''} Found
+        </h2>
+        <p className="step-description">
+          Sorted by best match for your {preferences.guestCount}-guest party
+        </p>
+      </div>
+
+      <div className="results-controls">
+        <div className="filter-chips">
+          {filterOptions.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => setFilterBy(option.value)}
+              className={`filter-chip ${filterBy === option.value ? 'active' : ''}`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="sort-control">
+          <label htmlFor="sort">Sort by:</label>
+          <select
+            id="sort"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+          >
+            {sortOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {compareVenues.length > 0 && (
+        <div className="compare-bar">
+          <span>{compareVenues.length} venue{compareVenues.length !== 1 ? 's' : ''} selected</span>
+          <div className="compare-bar-actions">
+            <Button variant="ghost" size="small" onClick={clearCompare}>
+              Clear
+            </Button>
+            <Button
+              size="small"
+              onClick={() => setShowCompare(true)}
+              disabled={compareVenues.length < 2}
+            >
+              Compare ({compareVenues.length})
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {filteredVenues.length === 0 ? (
+        <div className="empty-state">
+          <span className="empty-icon">🔍</span>
+          <h3>No venues match your filters</h3>
+          <p>Try adjusting your filters or search criteria</p>
+          <Button variant="outline" onClick={() => setFilterBy('all')}>
+            Clear Filters
+          </Button>
+        </div>
+      ) : (
+        <div className="venue-grid">
+          {filteredVenues.map((venue) => (
+            <VenueCard
+              key={venue.id}
+              venue={venue}
+              isComparing={compareVenues.some(v => v.id === venue.id)}
+              onSelect={handleSelectVenue}
+              onToggleCompare={toggleCompareVenue}
+            />
+          ))}
+        </div>
+      )}
+
+      <div className="step-actions">
+        <span className="results-hint">Select a venue to see full details</span>
+      </div>
+
+      {showCompare && (
+        <VenueCompare
+          venues={compareVenues}
+          onClose={() => setShowCompare(false)}
+          onSelect={handleCompareSelect}
+        />
+      )}
+    </div>
+  );
+}

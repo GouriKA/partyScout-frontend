@@ -1,0 +1,77 @@
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-label {
+  font-weight: 500;
+  color: var(--neutral-700, #374151);
+  font-size: 0.9375rem;
+}
+
+.input-required {
+  color: var(--secondary, #ec4899);
+  margin-left: 0.25rem;
+}
+
+.input-field {
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--neutral-200, #e5e7eb);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  background: white;
+  color: var(--neutral-900, #111827);
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--primary, #6366f1);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.input-field:disabled {
+  background: var(--neutral-100, #f3f4f6);
+  color: var(--neutral-500, #6b7280);
+  cursor: not-allowed;
+}
+
+.input-field::placeholder {
+  color: var(--neutral-400, #9ca3af);
+}
+
+.input-group-error .input-field {
+  border-color: var(--error, #ef4444);
+}
+
+.input-group-error .input-field:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.input-error {
+  color: var(--error, #ef4444);
+  font-size: 0.875rem;
+}
+
+.input-hint {
+  color: var(--neutral-500, #6b7280);
+  font-size: 0.875rem;
+}
+
+/* Number input specific */
+input[type="number"].input-field {
+  -moz-appearance: textfield;
+}
+
+input[type="number"].input-field::-webkit-inner-spin-button,
+input[type="number"].input-field::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Date/time input specific */
+input[type="datetime-local"].input-field {
+  cursor: pointer;
+}

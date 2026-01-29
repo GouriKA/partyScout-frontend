@@ -1,0 +1,126 @@
+import { usePartyPlanner } from '../../context/PartyPlannerContext';
+import PartyTypeSelector from '../common/PartyTypeSelector';
+import Input from '../common/Input';
+import Slider from '../common/Slider';
+import Button from '../common/Button';
+import './WizardStep.css';
+
+export default function Step2_Preferences() {
+  const {
+    childInfo,
+    preferences,
+    updatePreferences,
+    partyTypeSuggestions,
+    nextStep,
+    prevStep
+  } = usePartyPlanner();
+
+  const handlePartyTypesChange = (types) => {
+    updatePreferences({ partyTypes: types });
+  };
+
+  const handleGuestCountChange = (e) => {
+    const rawValue = e.target.value;
+    // Allow empty string for typing, but store as empty or parsed number
+    if (rawValue === '') {
+      updatePreferences({ guestCount: '' });
+    } else {
+      const value = parseInt(rawValue, 10);
+      if (!isNaN(value) && value >= 0) {
+        updatePreferences({ guestCount: value });
+      }
+    }
+  };
+
+  const handleBudgetChange = (e) => {
+    const max = parseInt(e.target.value, 10);
+    updatePreferences({ budget: { ...preferences.budget, max } });
+  };
+
+  const formatBudget = (value) => `$${value}`;
+
+  // Calculate estimated cost based on selections
+  const estimatedCost = preferences.guestCount * 30; // Rough estimate
+  const isOverBudget = estimatedCost > preferences.budget.max;
+
+  const handleGuestCountBlur = () => {
+    // Reset to 1 if empty or invalid
+    if (preferences.guestCount === '' || preferences.guestCount < 1) {
+      updatePreferences({ guestCount: 1 });
+    }
+  };
+
+  const canProceed = preferences.partyTypes.length > 0 && preferences.guestCount >= 1;
+
+  return (
+    <div className="wizard-step">
+      <div className="step-top-nav">
+        <button type="button" className="btn-back" onClick={prevStep}>
+          Back
+        </button>
+      </div>
+
+      <div className="step-header">
+        <h2 className="step-title">What kind of party?</h2>
+        <p className="step-description">
+          {childInfo.age
+            ? `Here are popular party ideas for ${childInfo.age}-year-olds`
+            : 'Select the types of parties you\'re interested in'}
+        </p>
+      </div>
+
+      <div className="step-form">
+        <div className="form-section">
+          <label className="section-label">Party Type</label>
+          <PartyTypeSelector
+            options={partyTypeSuggestions}
+            selected={preferences.partyTypes}
+            onChange={handlePartyTypesChange}
+            maxSelections={3}
+          />
+        </div>
+
+        <div className="form-row">
+          <Input
+            label="Number of guests"
+            type="number"
+            value={preferences.guestCount}
+            onChange={handleGuestCountChange}
+            onBlur={handleGuestCountBlur}
+            min={1}
+            max={100}
+            hint="Including the birthday child"
+          />
+        </div>
+
+        <div className="form-section">
+          <Slider
+            label="Budget"
+            value={preferences.budget.max}
+            onChange={handleBudgetChange}
+            min={100}
+            max={1500}
+            step={50}
+            formatValue={formatBudget}
+          />
+          {isOverBudget && (
+            <p className="budget-warning">
+              Estimated cost (~${estimatedCost}) may exceed your budget
+            </p>
+          )}
+        </div>
+      </div>
+
+      <div className="step-actions">
+        <div /> {/* Spacer */}
+        <Button
+          onClick={nextStep}
+          disabled={!canProceed}
+          size="large"
+        >
+          Continue to Location
+        </Button>
+      </div>
+    </div>
+  );
+}
