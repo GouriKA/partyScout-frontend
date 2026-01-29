@@ -1,0 +1,40 @@
+steps:
+  # Build the Docker image with build args
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '--build-arg'
+      - 'VITE_API_URL=${_VITE_API_URL}'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/partyscout-frontend:$COMMIT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/partyscout-frontend:latest'
+      - '.'
+
+  # Push the image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/partyscout-frontend:$COMMIT_SHA']
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'partyscout-frontend'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/partyscout-frontend:$COMMIT_SHA'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--memory'
+      - '256Mi'
+
+substitutions:
+  _VITE_API_URL: 'https://partyscout-backend-869352526308.us-central1.run.app'
+
+images:
+  - 'gcr.io/$PROJECT_ID/partyscout-frontend:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/partyscout-frontend:latest'
