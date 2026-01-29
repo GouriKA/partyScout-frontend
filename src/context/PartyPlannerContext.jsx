@@ -118,6 +118,9 @@ function partyPlannerReducer(state, action) {
   }
 }
 
+// API base URL from environment variable (set at build time for production)
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+
 export function PartyPlannerProvider({ children }) {
   const [state, dispatch] = useReducer(partyPlannerReducer, initialState);
 
@@ -201,7 +204,7 @@ export function PartyPlannerProvider({ children }) {
     };
 
     try {
-      const response = await fetch('http://localhost:8080/api/v2/party-wizard/search', {
+      const response = await fetch(`${API_BASE_URL}/api/v2/party-wizard/search`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -224,7 +227,7 @@ export function PartyPlannerProvider({ children }) {
   // Fetch party type suggestions for an age
   const fetchPartyTypeSuggestions = useCallback(async (age) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/v2/party-wizard/party-types/${age}`);
+      const response = await fetch(`${API_BASE_URL}/api/v2/party-wizard/party-types/${age}`);
       if (response.ok) {
         const suggestions = await response.json();
         setPartyTypeSuggestions(suggestions);
