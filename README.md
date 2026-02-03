@@ -1,154 +1,134 @@
-# PartyScout Frontend 🎉
+# PartyScout Frontend
 
-React web application for finding birthday party venues. Modern UI with real-time venue search and beautiful results display.
-
-## Features
-
-- 🎂 Intuitive search form (age, ZIP code, date/time)
-- 📍 Real-time venue search
-- ⭐ Beautiful venue cards with ratings and details
-- 🎪 Kid-friendly feature badges
-- 📱 Responsive design for mobile and desktop
-- ✨ Smooth animations and transitions
-- 🎨 Modern gradient UI design
+React-based wizard interface for the PartyScout birthday party planning application.
 
 ## Tech Stack
 
-- **React** 19
-- **Vite** 7.2.4
-- **Modern CSS** with animations
-- **Fetch API** for backend communication
+- **Framework**: React 19.2.0
+- **Build Tool**: Vite 7.x
+- **Styling**: CSS with custom properties
+- **State**: React Context API
+- **Server**: nginx (production)
 
-## Prerequisites
+## Quick Start
 
-- Node.js 16 or higher
-- PartyScout Backend running on http://localhost:8080
+### Prerequisites
 
-## Setup
+- Node.js 20+
+- Backend running at `http://localhost:8080`
 
-### 1. Install Dependencies
+### Local Development
 
-```bash
-npm install
-```
+1. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-### 2. Configure Backend URL
+2. **Start development server**:
+   ```bash
+   npm run dev
+   ```
 
-The app is configured to call the backend at `http://localhost:8080`. If your backend is running on a different URL, update the fetch URL in `src/App.jsx`:
-
-```javascript
-const response = await fetch('http://localhost:8080/api/birthdays/search', {
-  // ...
-})
-```
-
-### 3. Start Development Server
-
-```bash
-npm run dev
-```
-
-The app will start on http://localhost:5173
+3. **Open browser**:
+   ```
+   http://localhost:5173
+   ```
 
 ## Project Structure
 
 ```
 src/
-├── App.jsx                      # Main app component
-├── App.css                      # App styles
+├── App.jsx                      # Main component
+├── App.css                      # Design system
+├── context/
+│   └── PartyPlannerContext.jsx  # State management
 ├── components/
-│   ├── SearchForm.jsx           # Search form component
-│   ├── SearchForm.css           # Form styles
-│   ├── VenueResults.jsx         # Results display component
-│   └── VenueResults.css         # Results styles
-├── main.jsx                     # Entry point
-└── index.css                    # Global styles
+│   ├── wizard/                  # Wizard steps
+│   │   ├── WizardContainer.jsx
+│   │   ├── StepIndicator.jsx
+│   │   ├── Step1_ChildInfo.jsx
+│   │   ├── Step2_Preferences.jsx
+│   │   ├── Step3_Location.jsx
+│   │   ├── Step4_VenueResults.jsx
+│   │   └── Step5_PartyDetails.jsx
+│   ├── venue/                   # Venue components
+│   │   ├── VenueCard.jsx
+│   │   └── VenueCompare.jsx
+│   └── common/                  # Reusable UI
+│       ├── Button.jsx
+│       ├── Input.jsx
+│       └── Slider.jsx
+└── main.jsx                     # Entry point
 ```
 
-## Usage
+## Wizard Flow
 
-1. Open http://localhost:5173 in your browser
-2. Fill in the search form:
-   - **Age**: Enter the birthday person's age (1-150)
-   - **ZIP Code**: Enter a 5-digit US ZIP code (e.g., 94102)
-   - **Date & Time**: Select the party date and time
-3. Click "🎉 Find Venues"
-4. Browse results with:
-   - Venue name and rating
-   - Address and distance
-   - Price range and capacity
-   - Kid-friendly features
-   - Contact information
-
-## Screenshots
-
-### Search Form
-Clean, modern form with validation and real-time feedback.
-
-### Venue Results
-Beautiful cards displaying:
-- Venue rating with star icon
-- Distance from your location
-- Price range and estimated capacity
-- Kid-friendly features (play area, kids menu, high chairs)
-- Entertainment options
-- Phone number and website links
-
-## Features in Detail
-
-### Age-Based Search
-The app automatically searches for age-appropriate venues:
-- **Kids (≤12)**: Playgrounds, amusement parks, bowling alleys
-- **Teens (13-18)**: Arcades, movie theaters, sports complexes
-- **Adults (18+)**: Restaurants, bars, banquet halls
-
-### Responsive Design
-- Mobile-friendly grid layout
-- Touch-optimized buttons
-- Readable fonts on all screen sizes
-- Smooth scrolling and transitions
-
-### Error Handling
-- Form validation
-- Network error messages
-- Empty state handling
-- Loading indicators
-
-## Building for Production
-
-```bash
-npm run build
 ```
-
-The production build will be in the `dist/` directory.
-
-Preview production build:
-```bash
-npm run preview
+Step 1: Child Info
+   ↓
+Step 2: Party Preferences
+   ↓
+Step 3: Location
+   ↓
+Step 4: Venue Results
+   ↓
+Step 5: Party Details
 ```
-
-## Backend
-
-The backend Kotlin Spring Boot API is in a separate repository: [partyScout-backend](https://github.com/GouriKA/partyScout-backend)
 
 ## Environment Variables
 
-No environment variables required. The backend URL is hardcoded in `App.jsx`.
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `VITE_API_URL` | Backend API URL | `http://localhost:8080` |
 
-To use environment variables:
-
-1. Create `.env` file:
-```env
-VITE_API_URL=http://localhost:8080
+Set at build time:
+```bash
+VITE_API_URL=https://api.example.com npm run build
 ```
 
-2. Update `App.jsx`:
-```javascript
-const response = await fetch(`${import.meta.env.VITE_API_URL}/api/birthdays/search`, {
-  // ...
-})
+## Available Scripts
+
+```bash
+npm run dev      # Start dev server
+npm run build    # Production build
+npm run preview  # Preview production build
+npm run lint     # Run ESLint
+```
+
+## Deployment
+
+### Cloud Run
+
+Uses `cloudbuild.yaml` for CI/CD:
+
+```bash
+gcloud builds submit --config=cloudbuild.yaml \
+  --substitutions=_VITE_API_URL="https://your-backend.run.app"
+```
+
+### Docker
+
+```bash
+docker build \
+  --build-arg VITE_API_URL=https://your-backend.run.app \
+  -t partyscout-frontend .
+
+docker run -p 8080:8080 partyscout-frontend
+```
+
+## Design System
+
+CSS custom properties in `App.css`:
+
+```css
+:root {
+  --primary: #6366f1;      /* Indigo */
+  --secondary: #ec4899;    /* Pink */
+  --success: #10b981;      /* Green */
+  --warning: #f59e0b;      /* Amber */
+}
 ```
 
 ## License
 
-MIT License
+Private - All rights reserved
