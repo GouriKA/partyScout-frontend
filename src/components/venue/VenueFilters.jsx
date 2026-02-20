@@ -1,7 +1,7 @@
 import './VenueFilters.css';
 
 export default function VenueFilters({
-  filters,
+  filters = {},
   onFilterChange,
   venueCount = 0
 }) {
