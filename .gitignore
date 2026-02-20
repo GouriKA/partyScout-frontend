@@ -28,6 +28,10 @@ sa-key.json
 *-sa-key.json
 *.pem
 
+# Test artifacts
+playwright-report/
+test-results/
+
 # Environment
 .env
 .env.local
