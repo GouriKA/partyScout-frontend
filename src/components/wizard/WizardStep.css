@@ -152,6 +152,33 @@
   font-weight: bold;
 }
 
+/* Budget estimate info */
+.budget-estimate-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.budget-category {
+  color: var(--primary, #6366f1);
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.budget-per-person {
+  color: var(--neutral-600, #4b5563);
+}
+
+.budget-loading {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--neutral-500, #6b7280);
+  font-style: italic;
+}
+
 /* Mobile adjustments */
 @media (max-width: 600px) {
   .step-title {

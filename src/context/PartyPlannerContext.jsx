@@ -25,7 +25,9 @@ const initialState = {
   error: null,
   selectedVenue: null,
   compareVenues: [], // up to 3
-  partyTypeSuggestions: []
+  partyTypeSuggestions: [],
+  budgetEstimate: null,       // { estimatedTotal, estimatedPerPerson, budgetCategory }
+  budgetEstimateLoading: false
 };
 
 const actionTypes = {
@@ -42,6 +44,8 @@ const actionTypes = {
   TOGGLE_COMPARE_VENUE: 'TOGGLE_COMPARE_VENUE',
   CLEAR_COMPARE: 'CLEAR_COMPARE',
   SET_PARTY_TYPE_SUGGESTIONS: 'SET_PARTY_TYPE_SUGGESTIONS',
+  SET_BUDGET_ESTIMATE: 'SET_BUDGET_ESTIMATE',
+  SET_BUDGET_ESTIMATE_LOADING: 'SET_BUDGET_ESTIMATE_LOADING',
   RESET: 'RESET'
 };
 
@@ -109,6 +113,12 @@ function partyPlannerReducer(state, action) {
 
     case actionTypes.SET_PARTY_TYPE_SUGGESTIONS:
       return { ...state, partyTypeSuggestions: action.payload };
+
+    case actionTypes.SET_BUDGET_ESTIMATE:
+      return { ...state, budgetEstimate: action.payload, budgetEstimateLoading: false };
+
+    case actionTypes.SET_BUDGET_ESTIMATE_LOADING:
+      return { ...state, budgetEstimateLoading: action.payload };
 
     case actionTypes.RESET:
       return initialState;
@@ -237,6 +247,26 @@ export function PartyPlannerProvider({ children }) {
     }
   }, [setPartyTypeSuggestions]);
 
+  // Fetch budget estimate from API
+  const fetchBudgetEstimate = useCallback(async (partyTypes, guestCount, priceLevel) => {
+    if (!partyTypes.length || guestCount < 1) return;
+    dispatch({ type: actionTypes.SET_BUDGET_ESTIMATE_LOADING, payload: true });
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v2/party-wizard/estimate-budget`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ partyTypes, guestCount, priceLevel: priceLevel || 2 })
+      });
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: actionTypes.SET_BUDGET_ESTIMATE, payload: data });
+      }
+    } catch (err) {
+      console.error('Failed to fetch budget estimate:', err);
+      dispatch({ type: actionTypes.SET_BUDGET_ESTIMATE_LOADING, payload: false });
+    }
+  }, []);
+
   const value = {
     // State
     ...state,
@@ -264,6 +294,9 @@ export function PartyPlannerProvider({ children }) {
     // Party types
     setPartyTypeSuggestions,
     fetchPartyTypeSuggestions,
+
+    // Budget estimate
+    fetchBudgetEstimate,
 
     // API
     searchVenues,

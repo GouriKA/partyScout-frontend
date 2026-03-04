@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { usePartyPlanner } from '../../context/PartyPlannerContext';
 import PartyTypeSelector from '../common/PartyTypeSelector';
 import Input from '../common/Input';
@@ -11,6 +12,9 @@ export default function Step2_Preferences() {
     preferences,
     updatePreferences,
     partyTypeSuggestions,
+    budgetEstimate,
+    budgetEstimateLoading,
+    fetchBudgetEstimate,
     nextStep,
     prevStep
   } = usePartyPlanner();
@@ -39,8 +43,20 @@ export default function Step2_Preferences() {
 
   const formatBudget = (value) => `$${value}`;
 
-  // Calculate estimated cost based on selections
-  const estimatedCost = preferences.guestCount * 30; // Rough estimate
+  // Debounced fetch of budget estimate when partyTypes or guestCount change
+  const debounceRef = useRef(null);
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      if (preferences.partyTypes.length > 0 && preferences.guestCount >= 1) {
+        fetchBudgetEstimate(preferences.partyTypes, preferences.guestCount);
+      }
+    }, 500);
+    return () => clearTimeout(debounceRef.current);
+  }, [preferences.partyTypes, preferences.guestCount, fetchBudgetEstimate]);
+
+  // Use API estimate when available, fall back to rough estimate
+  const estimatedCost = budgetEstimate?.estimatedTotal ?? preferences.guestCount * 30;
   const isOverBudget = estimatedCost > preferences.budget.max;
 
   const handleGuestCountBlur = () => {
@@ -103,6 +119,17 @@ export default function Step2_Preferences() {
             step={50}
             formatValue={formatBudget}
           />
+          {budgetEstimate && (
+            <div className="budget-estimate-info">
+              <span className="budget-category">{budgetEstimate.budgetCategory}</span>
+              <span className="budget-per-person">
+                ~${budgetEstimate.estimatedPerPerson}/person
+              </span>
+            </div>
+          )}
+          {budgetEstimateLoading && (
+            <span className="budget-loading">Estimating...</span>
+          )}
           {isOverBudget && (
             <p className="budget-warning">
               Estimated cost (~${estimatedCost}) may exceed your budget
