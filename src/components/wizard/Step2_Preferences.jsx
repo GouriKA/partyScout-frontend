@@ -15,6 +15,10 @@ export default function Step2_Preferences() {
     budgetEstimate,
     budgetEstimateLoading,
     fetchBudgetEstimate,
+    allPartyTypes,
+    fetchAllPartyTypes,
+    partyDetails,
+    fetchPartyDetails,
     nextStep,
     prevStep
   } = usePartyPlanner();
@@ -43,17 +47,26 @@ export default function Step2_Preferences() {
 
   const formatBudget = (value) => `$${value}`;
 
-  // Debounced fetch of budget estimate when partyTypes or guestCount change
+  // Fetch all party types on mount as fallback
+  useEffect(() => {
+    fetchAllPartyTypes();
+  }, [fetchAllPartyTypes]);
+
+  // Use age-filtered suggestions when available, otherwise show all party types
+  const partyTypeOptions = partyTypeSuggestions.length > 0 ? partyTypeSuggestions : allPartyTypes;
+
+  // Debounced fetch of budget estimate and party details when partyTypes or guestCount change
   const debounceRef = useRef(null);
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       if (preferences.partyTypes.length > 0 && preferences.guestCount >= 1) {
         fetchBudgetEstimate(preferences.partyTypes, preferences.guestCount);
+        fetchPartyDetails(preferences.partyTypes, preferences.guestCount);
       }
     }, 500);
     return () => clearTimeout(debounceRef.current);
-  }, [preferences.partyTypes, preferences.guestCount, fetchBudgetEstimate]);
+  }, [preferences.partyTypes, preferences.guestCount, fetchBudgetEstimate, fetchPartyDetails]);
 
   // Use API estimate when available, fall back to rough estimate
   const estimatedCost = budgetEstimate?.estimatedTotal ?? preferences.guestCount * 30;
@@ -89,7 +102,7 @@ export default function Step2_Preferences() {
         <div className="form-section">
           <label className="section-label">Party Type</label>
           <PartyTypeSelector
-            options={partyTypeSuggestions}
+            options={partyTypeOptions}
             selected={preferences.partyTypes}
             onChange={handlePartyTypesChange}
             maxSelections={3}
@@ -136,6 +149,27 @@ export default function Step2_Preferences() {
             </p>
           )}
         </div>
+
+        {partyDetails && (
+          <div className="party-details-preview">
+            <h4 className="preview-title">What's typically included</h4>
+            <ul className="preview-list">
+              {partyDetails.includedItems.slice(0, 4).map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
+            </ul>
+            {partyDetails.whatToBring && partyDetails.whatToBring.length > 0 && (
+              <>
+                <h4 className="preview-title">What to bring</h4>
+                <ul className="preview-list bring-list">
+                  {partyDetails.whatToBring.slice(0, 3).map((item, i) => (
+                    <li key={i}>{item}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="step-actions">

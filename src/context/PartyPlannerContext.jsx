@@ -27,7 +27,9 @@ const initialState = {
   compareVenues: [], // up to 3
   partyTypeSuggestions: [],
   budgetEstimate: null,       // { estimatedTotal, estimatedPerPerson, budgetCategory }
-  budgetEstimateLoading: false
+  budgetEstimateLoading: false,
+  allPartyTypes: [],          // full taxonomy from GET /party-types (no age filter)
+  partyDetails: null          // { includedItems, notIncluded, suggestedAddOns, whatToBring, typicalDuration, ageAppropriatenessDescription }
 };
 
 const actionTypes = {
@@ -46,6 +48,8 @@ const actionTypes = {
   SET_PARTY_TYPE_SUGGESTIONS: 'SET_PARTY_TYPE_SUGGESTIONS',
   SET_BUDGET_ESTIMATE: 'SET_BUDGET_ESTIMATE',
   SET_BUDGET_ESTIMATE_LOADING: 'SET_BUDGET_ESTIMATE_LOADING',
+  SET_ALL_PARTY_TYPES: 'SET_ALL_PARTY_TYPES',
+  SET_PARTY_DETAILS: 'SET_PARTY_DETAILS',
   RESET: 'RESET'
 };
 
@@ -119,6 +123,12 @@ function partyPlannerReducer(state, action) {
 
     case actionTypes.SET_BUDGET_ESTIMATE_LOADING:
       return { ...state, budgetEstimateLoading: action.payload };
+
+    case actionTypes.SET_ALL_PARTY_TYPES:
+      return { ...state, allPartyTypes: action.payload };
+
+    case actionTypes.SET_PARTY_DETAILS:
+      return { ...state, partyDetails: action.payload };
 
     case actionTypes.RESET:
       return initialState;
@@ -267,6 +277,37 @@ export function PartyPlannerProvider({ children }) {
     }
   }, []);
 
+  // Fetch all party types (no age filter)
+  const fetchAllPartyTypes = useCallback(async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v2/party-wizard/party-types`);
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: actionTypes.SET_ALL_PARTY_TYPES, payload: data });
+      }
+    } catch (err) {
+      console.error('Failed to fetch all party types:', err);
+    }
+  }, []);
+
+  // Fetch party details for selected types
+  const fetchPartyDetails = useCallback(async (partyTypes, guestCount, priceLevel) => {
+    if (!partyTypes.length || guestCount < 1) return;
+    try {
+      const params = new URLSearchParams();
+      partyTypes.forEach(t => params.append('partyTypes', t));
+      params.append('guestCount', guestCount);
+      if (priceLevel) params.append('priceLevel', priceLevel);
+      const response = await fetch(`${API_BASE_URL}/api/v2/party-wizard/party-details?${params}`);
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: actionTypes.SET_PARTY_DETAILS, payload: data });
+      }
+    } catch (err) {
+      console.error('Failed to fetch party details:', err);
+    }
+  }, []);
+
   const value = {
     // State
     ...state,
@@ -297,6 +338,10 @@ export function PartyPlannerProvider({ children }) {
 
     // Budget estimate
     fetchBudgetEstimate,
+
+    // All party types & details
+    fetchAllPartyTypes,
+    fetchPartyDetails,
 
     // API
     searchVenues,

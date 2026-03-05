@@ -18,6 +18,19 @@
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
+/* Venue photo */
+.venue-photo {
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+}
+
+.venue-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 /* Compare checkbox */
 .venue-compare-checkbox {
   position: absolute;
@@ -133,6 +146,12 @@
   color: var(--neutral-600, #4b5563);
   font-size: 0.75rem;
   text-transform: capitalize;
+}
+
+.venue-age-range {
+  font-size: 0.75rem;
+  color: var(--primary, #6366f1);
+  font-weight: 500;
 }
 
 .venue-address {

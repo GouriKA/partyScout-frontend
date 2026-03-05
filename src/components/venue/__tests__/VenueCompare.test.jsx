@@ -121,8 +121,8 @@ describe('VenueCompare', () => {
   it('renders max capacities', () => {
     render(<VenueCompare {...defaultProps} />);
 
-    expect(screen.getByText('25 guests')).toBeInTheDocument();
-    expect(screen.getByText('30 guests')).toBeInTheDocument();
+    expect(screen.getByText('Up to 25 guests')).toBeInTheDocument();
+    expect(screen.getByText('Up to 30 guests')).toBeInTheDocument();
   });
 
   it('renders included items', () => {
@@ -194,7 +194,7 @@ describe('VenueCompare', () => {
     expect(screen.getByText('Per Person')).toBeInTheDocument();
     expect(screen.getByText('Setting')).toBeInTheDocument();
     expect(screen.getByText('Duration')).toBeInTheDocument();
-    expect(screen.getByText('Max Capacity')).toBeInTheDocument();
+    expect(screen.getByText('Capacity')).toBeInTheDocument();
     expect(screen.getByText('Included')).toBeInTheDocument();
     expect(screen.getByText('Why It Matches')).toBeInTheDocument();
   });

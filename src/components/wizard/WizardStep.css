@@ -179,6 +179,44 @@
   font-style: italic;
 }
 
+/* Party details preview */
+.party-details-preview {
+  padding: 1rem;
+  background: var(--neutral-50, #f9fafb);
+  border: 1px solid var(--neutral-200, #e5e7eb);
+  border-radius: 0.75rem;
+}
+
+.preview-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--neutral-700, #374151);
+  margin: 0 0 0.5rem;
+}
+
+.preview-title:not(:first-child) {
+  margin-top: 0.75rem;
+}
+
+.preview-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.8125rem;
+  color: var(--neutral-600, #4b5563);
+}
+
+.preview-list li {
+  margin-bottom: 0.25rem;
+}
+
+.preview-list li::marker {
+  color: var(--success, #10b981);
+}
+
+.preview-list.bring-list li::marker {
+  color: var(--warning, #f59e0b);
+}
+
 /* Mobile adjustments */
 @media (max-width: 600px) {
   .step-title {

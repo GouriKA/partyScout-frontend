@@ -33,6 +33,12 @@ export default function VenueCard({
 
   return (
     <div className={`venue-card ${isSelected ? 'selected' : ''}`}>
+      {venue.photos && venue.photos.length > 0 && (
+        <div className="venue-photo">
+          <img src={venue.photos[0]} alt={venue.name} />
+        </div>
+      )}
+
       {showCompareCheckbox && (
         <label className="venue-compare-checkbox">
           <input
@@ -66,6 +72,9 @@ export default function VenueCard({
           )}
           <span className="venue-distance">{venue.distanceInMiles} mi</span>
           <span className="venue-setting">{venue.setting}</span>
+          {venue.popularForAges && (
+            <span className="venue-age-range">{venue.popularForAges}</span>
+          )}
         </div>
 
         <p className="venue-address">{venue.address}</p>

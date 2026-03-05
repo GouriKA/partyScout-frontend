@@ -75,6 +75,16 @@ export default function Step5_PartyDetails() {
             <h3 className="venue-hero-name">{selectedVenue.name}</h3>
             <p className="venue-hero-address">{selectedVenue.address}</p>
 
+            {selectedVenue.placeTypes && selectedVenue.placeTypes.length > 0 && (
+              <div className="venue-place-types">
+                {selectedVenue.placeTypes.slice(0, 3).map((type, i) => (
+                  <span key={i} className="place-type-tag">
+                    {type.replace(/_/g, ' ')}
+                  </span>
+                ))}
+              </div>
+            )}
+
             <div className="venue-hero-meta">
               {selectedVenue.rating > 0 && (
                 <span className="venue-hero-rating">
@@ -83,6 +93,9 @@ export default function Step5_PartyDetails() {
               )}
               <span className="venue-hero-distance">{selectedVenue.distanceInMiles} mi away</span>
               <span className="venue-hero-setting">{selectedVenue.setting}</span>
+              {selectedVenue.popularForAges && (
+                <span className="venue-hero-ages">{selectedVenue.popularForAges}</span>
+              )}
             </div>
           </div>
 
@@ -93,6 +106,17 @@ export default function Step5_PartyDetails() {
             </div>
           </div>
         </div>
+
+        {/* Venue Photos */}
+        {selectedVenue.photos && selectedVenue.photos.length > 0 && (
+          <div className="venue-photos">
+            {selectedVenue.photos.slice(0, 4).map((photo, index) => (
+              <div key={index} className="venue-photo-thumb">
+                <img src={photo} alt={`${selectedVenue.name} photo ${index + 1}`} />
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Party Info */}
         <div className="party-info-grid">
@@ -119,6 +143,20 @@ export default function Step5_PartyDetails() {
               <span className="info-value">{selectedVenue.typicalPartyDuration}</span>
             </div>
           </div>
+
+          {selectedVenue.maxCapacity && (
+            <div className="info-card">
+              <div className="info-icon">🏟️</div>
+              <div className="info-content">
+                <span className="info-label">Capacity</span>
+                <span className="info-value">
+                  {selectedVenue.minCapacity && selectedVenue.minCapacity !== selectedVenue.maxCapacity
+                    ? `${selectedVenue.minCapacity}\u2013${selectedVenue.maxCapacity} guests`
+                    : `Up to ${selectedVenue.maxCapacity} guests`}
+                </span>
+              </div>
+            </div>
+          )}
 
           <div className="info-card highlight">
             <div className="info-icon">💰</div>

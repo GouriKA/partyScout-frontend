@@ -20,7 +20,12 @@ export default function VenueCompare({ venues, onClose, onSelect }) {
     { key: 'estimatedPricePerPerson', label: 'Per Person', render: (v) => formatPrice(v) },
     { key: 'setting', label: 'Setting', render: (v) => v },
     { key: 'typicalPartyDuration', label: 'Duration', render: (v) => v },
-    { key: 'maxCapacity', label: 'Max Capacity', render: (v) => `${v} guests` }
+    { key: 'maxCapacity', label: 'Capacity', render: (v, venue) => {
+      if (venue.minCapacity && venue.minCapacity !== v) {
+        return `${venue.minCapacity}\u2013${v} guests`;
+      }
+      return `Up to ${v} guests`;
+    }}
   ];
 
   // Find the best value for each field
@@ -75,7 +80,7 @@ export default function VenueCompare({ venues, onClose, onSelect }) {
                           key={venue.id}
                           className={`compare-value ${isBest ? 'best' : ''}`}
                         >
-                          {field.render(value)}
+                          {field.render(value, venue)}
                           {isBest && <span className="best-badge">Best</span>}
                         </td>
                       );
