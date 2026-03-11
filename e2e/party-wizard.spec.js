@@ -26,7 +26,8 @@ test.describe('Party Wizard E2E Tests', () => {
    * Helper: select party type on Step 2 and advance to Step 3
    */
   async function fillStep2AndAdvance(page) {
-    await page.locator('.party-type-card').first().click();
+    await page.locator('.party-type-trigger').click();
+    await page.locator('.party-type-option').first().click();
     await page.getByRole('button', { name: /continue to location/i }).click();
   }
 

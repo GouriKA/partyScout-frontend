@@ -277,8 +277,9 @@ export async function navigateToVenueResults(page) {
 
   await page.getByRole('button', { name: /continue to party type/i }).click();
 
-  // Step 2: Select a party type and proceed
-  await page.locator('.party-type-card').first().click();
+  // Step 2: Open dropdown and select first party type
+  await page.locator('.party-type-trigger').click();
+  await page.locator('.party-type-option').first().click();
   await page.getByRole('button', { name: /continue to location/i }).click();
 
   // Step 3: Fill ZIP code and search

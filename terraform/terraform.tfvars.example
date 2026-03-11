@@ -1,0 +1,5 @@
+project_id            = "bionic-upgrade-485121-h5"
+region                = "us-central1"
+domain                = "partyscout.app"
+frontend_service_name = "partyscout-frontend"
+backend_service_name  = "partyscout-backend"
