@@ -13,7 +13,7 @@ output "backend_url" {
   value       = "https://${var.domain}/api"
 }
 
-output "ssl_certificate_status" {
-  description = "SSL certificate provisioning status (ACTIVE once DNS is pointing to the LB IP)"
-  value       = google_compute_managed_ssl_certificate.main.managed[0].status
+output "ssl_certificate_expire_time" {
+  description = "SSL certificate expiry time (populated once the cert is provisioned)"
+  value       = google_compute_managed_ssl_certificate.main.expire_time
 }

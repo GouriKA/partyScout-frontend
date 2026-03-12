@@ -86,7 +86,6 @@ resource "google_compute_backend_service" "frontend" {
   name                  = "partyscout-frontend-service"
   protocol              = "HTTPS"
   load_balancing_scheme = "EXTERNAL"
-  timeout_sec           = 30
   enable_cdn            = true
 
   cdn_policy {
@@ -96,6 +95,7 @@ resource "google_compute_backend_service" "frontend" {
     client_ttl                   = 3600
     negative_caching             = true
     serve_while_stale            = 86400
+    signed_url_cache_max_age_sec = 0
   }
 
   backend {
@@ -107,7 +107,6 @@ resource "google_compute_backend_service" "backend" {
   name                  = "partyscout-backend-service"
   protocol              = "HTTPS"
   load_balancing_scheme = "EXTERNAL"
-  timeout_sec           = 60  # API calls can take longer
 
   backend {
     group = google_compute_region_network_endpoint_group.backend.id
