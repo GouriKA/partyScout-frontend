@@ -45,13 +45,17 @@ resource "google_compute_global_address" "main" {
 # Google-managed SSL certificate
 # ─────────────────────────────────────────────
 resource "google_compute_managed_ssl_certificate" "main" {
-  name = "partyscout-ssl-cert"
+  name = "partyscout-ssl-cert-2"
 
   managed {
     domains = [var.domain]
   }
 
   depends_on = [google_project_service.certificatemanager]
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # ─────────────────────────────────────────────

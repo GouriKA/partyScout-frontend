@@ -31,7 +31,8 @@ export default function Step4_VenueResults() {
     selectVenue,
     nextStep,
     prevStep,
-    preferences
+    preferences,
+    searchVenues
   } = usePartyPlanner();
 
   const [sortBy, setSortBy] = useState('matchScore');
@@ -97,8 +98,38 @@ export default function Step4_VenueResults() {
           <span className="error-icon">!</span>
           <h3>Something went wrong</h3>
           <p>{error}</p>
+          <div className="error-actions">
+            <Button onClick={searchVenues}>
+              Try Again
+            </Button>
+            <Button onClick={prevStep} variant="outline">
+              Go Back
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!loading && !error && venues.length === 0) {
+    return (
+      <div className="wizard-step">
+        <div className="step-top-nav">
+          <button type="button" className="btn-back" onClick={prevStep}>
+            Back
+          </button>
+        </div>
+        <div className="empty-state">
+          <span className="empty-icon">🔍</span>
+          <h3>No venues found near you</h3>
+          <p>We couldn't find any venues matching your search. Try:</p>
+          <ul style={{ textAlign: 'left', marginTop: '0.5rem', marginBottom: '1.5rem' }}>
+            <li>Increasing your max distance</li>
+            <li>Trying a different ZIP code</li>
+            <li>Selecting a different party type</li>
+          </ul>
           <Button onClick={prevStep} variant="outline">
-            Go Back
+            Modify Search
           </Button>
         </div>
       </div>

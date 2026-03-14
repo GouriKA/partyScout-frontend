@@ -28,6 +28,7 @@ const initialState = {
   partyTypeSuggestions: [],
   budgetEstimate: null,       // { estimatedTotal, estimatedPerPerson, budgetCategory }
   budgetEstimateLoading: false,
+  budgetEstimateError: null,
   allPartyTypes: [],          // full taxonomy from GET /party-types (no age filter)
   partyDetails: null          // { includedItems, notIncluded, suggestedAddOns, whatToBring, typicalDuration, ageAppropriatenessDescription }
 };
@@ -48,6 +49,7 @@ const actionTypes = {
   SET_PARTY_TYPE_SUGGESTIONS: 'SET_PARTY_TYPE_SUGGESTIONS',
   SET_BUDGET_ESTIMATE: 'SET_BUDGET_ESTIMATE',
   SET_BUDGET_ESTIMATE_LOADING: 'SET_BUDGET_ESTIMATE_LOADING',
+  SET_BUDGET_ESTIMATE_ERROR: 'SET_BUDGET_ESTIMATE_ERROR',
   SET_ALL_PARTY_TYPES: 'SET_ALL_PARTY_TYPES',
   SET_PARTY_DETAILS: 'SET_PARTY_DETAILS',
   RESET: 'RESET'
@@ -119,10 +121,13 @@ function partyPlannerReducer(state, action) {
       return { ...state, partyTypeSuggestions: action.payload };
 
     case actionTypes.SET_BUDGET_ESTIMATE:
-      return { ...state, budgetEstimate: action.payload, budgetEstimateLoading: false };
+      return { ...state, budgetEstimate: action.payload, budgetEstimateLoading: false, budgetEstimateError: null };
 
     case actionTypes.SET_BUDGET_ESTIMATE_LOADING:
-      return { ...state, budgetEstimateLoading: action.payload };
+      return { ...state, budgetEstimateLoading: action.payload, budgetEstimateError: null };
+
+    case actionTypes.SET_BUDGET_ESTIMATE_ERROR:
+      return { ...state, budgetEstimateError: action.payload, budgetEstimateLoading: false };
 
     case actionTypes.SET_ALL_PARTY_TYPES:
       return { ...state, allPartyTypes: action.payload };
@@ -233,14 +238,30 @@ export function PartyPlannerProvider({ children }) {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to search venues');
+        let message = 'Failed to search venues. Please try again.';
+        try {
+          const errorData = await response.json();
+          if (errorData.message) message = errorData.message;
+        } catch {}
+        if (response.status === 503) {
+          message = 'Venue search is temporarily unavailable. Please try again in a moment.';
+        } else if (response.status >= 500) {
+          message = 'Server error. Please try again in a moment.';
+        } else if (response.status === 400) {
+          message = 'Invalid search parameters. Please check your inputs and try again.';
+        }
+        throw new Error(message);
       }
 
       const data = await response.json();
       setVenues(data.venues || []);
       setPartyTypeSuggestions(data.partyTypeSuggestions || []);
     } catch (err) {
-      setError(err.message);
+      if (err.name === 'TypeError') {
+        setError('Unable to connect. Please check your internet connection and try again.');
+      } else {
+        setError(err.message);
+      }
     }
   }, [state.childInfo, state.preferences, state.location, setLoading, setError, setVenues, setPartyTypeSuggestions]);
 
@@ -270,10 +291,11 @@ export function PartyPlannerProvider({ children }) {
       if (response.ok) {
         const data = await response.json();
         dispatch({ type: actionTypes.SET_BUDGET_ESTIMATE, payload: data });
+      } else {
+        dispatch({ type: actionTypes.SET_BUDGET_ESTIMATE_ERROR, payload: 'Could not load budget estimate' });
       }
     } catch (err) {
-      console.error('Failed to fetch budget estimate:', err);
-      dispatch({ type: actionTypes.SET_BUDGET_ESTIMATE_LOADING, payload: false });
+      dispatch({ type: actionTypes.SET_BUDGET_ESTIMATE_ERROR, payload: 'Could not load budget estimate' });
     }
   }, []);
 
@@ -338,6 +360,7 @@ export function PartyPlannerProvider({ children }) {
 
     // Budget estimate
     fetchBudgetEstimate,
+    budgetEstimateError: state.budgetEstimateError,
 
     // All party types & details
     fetchAllPartyTypes,

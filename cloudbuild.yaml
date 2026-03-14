@@ -33,7 +33,7 @@ steps:
       - '256Mi'
 
 substitutions:
-  _VITE_API_URL: 'https://partyscout.app'
+  _VITE_API_URL: 'https://partyscout.live'
 
 images:
   - 'gcr.io/$PROJECT_ID/partyscout-frontend:$COMMIT_SHA'

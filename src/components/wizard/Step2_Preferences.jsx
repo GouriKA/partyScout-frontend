@@ -14,6 +14,7 @@ export default function Step2_Preferences() {
     partyTypeSuggestions,
     budgetEstimate,
     budgetEstimateLoading,
+    budgetEstimateError,
     fetchBudgetEstimate,
     allPartyTypes,
     fetchAllPartyTypes,
@@ -142,6 +143,9 @@ export default function Step2_Preferences() {
           )}
           {budgetEstimateLoading && (
             <span className="budget-loading">Estimating...</span>
+          )}
+          {budgetEstimateError && !budgetEstimateLoading && (
+            <span className="budget-estimate-error">{budgetEstimateError}</span>
           )}
           {isOverBudget && (
             <p className="budget-warning">

@@ -12,7 +12,7 @@ variable "region" {
 variable "domain" {
   description = "Custom domain for the load balancer and SSL certificate"
   type        = string
-  default     = "partyscout.app"
+  default     = "partyscout.live"
 }
 
 variable "frontend_service_name" {
