@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePartyPlanner } from '../../context/PartyPlannerContext';
 import { useAuth } from '../../context/AuthContext';
 import StepIndicator from './StepIndicator';
@@ -9,22 +9,27 @@ import Step4_VenueResults from './Step4_VenueResults';
 import Step5_PartyDetails from './Step5_PartyDetails';
 import AuthModal from '../auth/AuthModal';
 import UserMenu from '../auth/UserMenu';
+import Logo from '../common/Logo';
 import { firebaseConfigured } from '../../firebase';
 import './WizardContainer.css';
 
 export default function WizardContainer() {
-  const { currentStep, goToStep, childInfo } = usePartyPlanner();
+  const { currentStep, goToStep } = usePartyPlanner();
   const { user, loading: authLoading } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
+
+  useEffect(() => {
+    if (user) setShowAuthModal(false);
+  }, [user]);
 
   const renderStep = () => {
     switch (currentStep) {
       case 1:
         return <Step1_ChildInfo />;
       case 2:
-        return <Step2_Preferences />;
-      case 3:
         return <Step3_Location />;
+      case 3:
+        return <Step2_Preferences />;
       case 4:
         return <Step4_VenueResults />;
       case 5:
@@ -38,25 +43,22 @@ export default function WizardContainer() {
     <div className="wizard-container">
       <header className="wizard-header">
         <div className="wizard-header-top">
+          <div className="wizard-header-logo">
+            <Logo size="md" />
+          </div>
           <div className="wizard-header-titles">
-            <h1 className="wizard-title">
-              {childInfo.name
-                ? `Plan ${childInfo.name}'s Birthday Party`
-                : 'Plan Your Birthday Party'}
-            </h1>
+            <h1 className="wizard-title">Your next party is waiting!</h1>
             <p className="wizard-subtitle">
               Find the perfect venue in just a few steps
             </p>
           </div>
-          {firebaseConfigured && (
-            <div className="wizard-header-auth">
-              {!authLoading && (
-                user
-                  ? <UserMenu />
-                  : <button className="sign-in-btn" onClick={() => setShowAuthModal(true)}>Sign In</button>
-              )}
-            </div>
-          )}
+          <div className="wizard-header-auth">
+            {firebaseConfigured && !authLoading && (
+              user
+                ? <UserMenu />
+                : <button className="sign-in-btn" onClick={() => setShowAuthModal(true)}>Sign In</button>
+            )}
+          </div>
         </div>
       </header>
 
