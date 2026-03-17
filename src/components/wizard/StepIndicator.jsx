@@ -2,8 +2,8 @@ import './StepIndicator.css';
 
 const steps = [
   { number: 1, label: 'Child Info', icon: '👶' },
-  { number: 2, label: 'Party Type', icon: '🎉' },
-  { number: 3, label: 'Location', icon: '📍' },
+  { number: 2, label: 'Location', icon: '📍' },
+  { number: 3, label: 'Party Type', icon: '🎉' },
   { number: 4, label: 'Venues', icon: '🏠' },
   { number: 5, label: 'Details', icon: '📋' }
 ];

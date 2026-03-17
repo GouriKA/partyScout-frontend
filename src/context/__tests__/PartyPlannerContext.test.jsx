@@ -353,4 +353,95 @@ describe('PartyPlannerContext', () => {
       expect(result.current.partyTypeSuggestions).toEqual([]);
     });
   });
+
+  describe('Weather', () => {
+    it('should have initial state with weather null and weatherLoading false', () => {
+      const { result } = renderHook(() => usePartyPlanner(), { wrapper });
+
+      expect(result.current.weather).toBeNull();
+      expect(result.current.weatherLoading).toBe(false);
+    });
+
+    it('fetchWeatherForecast sets weatherLoading true while fetching', async () => {
+      let resolveResponse;
+      global.fetch.mockReturnValueOnce(
+        new Promise((resolve) => { resolveResponse = resolve; })
+      );
+
+      const { result } = renderHook(() => usePartyPlanner(), { wrapper });
+
+      act(() => {
+        result.current.fetchWeatherForecast('94105', '2026-04-15T14:00');
+      });
+
+      await waitFor(() => {
+        expect(result.current.weatherLoading).toBe(true);
+      });
+
+      // Resolve the fetch to clean up
+      resolveResponse({ ok: true, json: () => Promise.resolve({}) });
+    });
+
+    it('fetchWeatherForecast sets weather data from successful API response', async () => {
+      const mockWeatherData = {
+        temperatureHighF: 72,
+        temperatureLowF: 55,
+        condition: 'Partly Cloudy',
+        conditionType: 'PARTLY_CLOUDY',
+        precipitationProbability: 15,
+        forecastType: 'FORECAST'
+      };
+
+      global.fetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve(mockWeatherData)
+      });
+
+      const { result } = renderHook(() => usePartyPlanner(), { wrapper });
+
+      await act(async () => {
+        await result.current.fetchWeatherForecast('94105', '2026-04-15T14:00');
+      });
+
+      expect(result.current.weather).toEqual(mockWeatherData);
+      expect(result.current.weatherLoading).toBe(false);
+    });
+
+    it('fetchWeatherForecast sets weather to null when API returns non-ok', async () => {
+      global.fetch.mockResolvedValueOnce({ ok: false });
+
+      const { result } = renderHook(() => usePartyPlanner(), { wrapper });
+
+      await act(async () => {
+        await result.current.fetchWeatherForecast('94105', '2026-04-15T14:00');
+      });
+
+      expect(result.current.weather).toBeNull();
+      expect(result.current.weatherLoading).toBe(false);
+    });
+
+    it('fetchWeatherForecast does nothing when zipCode is not 5 digits', async () => {
+      const { result } = renderHook(() => usePartyPlanner(), { wrapper });
+
+      await act(async () => {
+        await result.current.fetchWeatherForecast('941', '2026-04-15T14:00');
+      });
+
+      expect(global.fetch).not.toHaveBeenCalled();
+      expect(result.current.weatherLoading).toBe(false);
+      expect(result.current.weather).toBeNull();
+    });
+
+    it('fetchWeatherForecast does nothing when date is missing', async () => {
+      const { result } = renderHook(() => usePartyPlanner(), { wrapper });
+
+      await act(async () => {
+        await result.current.fetchWeatherForecast('94105', null);
+      });
+
+      expect(global.fetch).not.toHaveBeenCalled();
+      expect(result.current.weatherLoading).toBe(false);
+      expect(result.current.weather).toBeNull();
+    });
+  });
 });

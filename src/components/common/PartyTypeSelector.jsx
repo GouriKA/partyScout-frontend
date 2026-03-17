@@ -45,6 +45,7 @@ export default function PartyTypeSelector({
       onChange(selected.filter(t => t !== type));
     } else if (selected.length < maxSelections) {
       onChange([...selected, type]);
+      setIsOpen(false);
     }
   };
 

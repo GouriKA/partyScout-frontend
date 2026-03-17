@@ -11,7 +11,7 @@
 }
 
 .input-required {
-  color: var(--secondary, #ec4899);
+  color: #F0397A;
   margin-left: 0.25rem;
 }
 
@@ -20,7 +20,7 @@
   border: 2px solid var(--neutral-200, #e5e7eb);
   border-radius: 0.5rem;
   font-size: 1rem;
-  font-family: inherit;
+  font-family: 'Poppins', sans-serif;
   transition: all 0.2s ease;
   background: white;
   color: var(--neutral-900, #111827);
@@ -28,8 +28,8 @@
 
 .input-field:focus {
   outline: none;
-  border-color: var(--primary, #6366f1);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  border-color: #F0397A;
+  box-shadow: 0 0 0 3px rgba(240, 57, 122, 0.12);
 }
 
 .input-field:disabled {
@@ -60,18 +60,10 @@
   font-size: 0.875rem;
 }
 
-/* Number input specific */
-input[type="number"].input-field {
-  -moz-appearance: textfield;
-}
-
+input[type="number"].input-field { -moz-appearance: textfield; }
 input[type="number"].input-field::-webkit-inner-spin-button,
 input[type="number"].input-field::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
-/* Date/time input specific */
-input[type="datetime-local"].input-field {
-  cursor: pointer;
-}
+input[type="datetime-local"].input-field { cursor: pointer; }

@@ -30,7 +30,7 @@
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.3s ease;
-  font-family: inherit;
+  font-family: 'Poppins', sans-serif;
 }
 
 .form-group input:focus {

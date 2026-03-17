@@ -1,11 +1,36 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import WizardContainer from '../WizardContainer';
 import { PartyPlannerProvider, usePartyPlanner } from '../../../context/PartyPlannerContext';
 import { useEffect } from 'react';
 
 // Mock fetch
 global.fetch = vi.fn();
+
+// Mutable firebase configured flag so tests can control it
+let mockFirebaseConfigured = false;
+
+// Mock AuthContext so WizardContainer can destructure useAuth() in all tests
+vi.mock('../../../context/AuthContext', () => ({
+  useAuth: vi.fn()
+}));
+
+// Mock firebase using a getter so individual tests can flip the flag
+vi.mock('../../../firebase', () => ({
+  get firebaseConfigured() { return mockFirebaseConfigured; },
+  auth: null
+}));
+
+// Mock auth child components to keep rendering simple
+vi.mock('../../auth/AuthModal', () => ({
+  default: ({ onClose }) => <div data-testid="auth-modal"><button onClick={onClose}>Close</button></div>
+}));
+
+vi.mock('../../auth/UserMenu', () => ({
+  default: () => <div data-testid="user-menu">UserMenu</div>
+}));
+
+import { useAuth } from '../../../context/AuthContext';
 
 // Helper component to set context values
 function TestWrapper({ children, step = 1, childName = '' }) {
@@ -33,10 +58,13 @@ function ContextSetter({ step, childName }) {
 describe('WizardContainer', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockFirebaseConfigured = false;
     global.fetch.mockResolvedValue({
       ok: true,
       json: () => Promise.resolve([])
     });
+    // Default auth state: no user, not loading
+    useAuth.mockReturnValue({ user: null, loading: false });
   });
 
   it('renders wizard header', () => {
@@ -142,5 +170,58 @@ describe('WizardContainer', () => {
 
     // Should render Step1_ChildInfo as default
     expect(screen.getByText(/tell us about/i)).toBeInTheDocument();
+  });
+});
+
+describe('auth modal auto-close', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockFirebaseConfigured = true;
+    global.fetch.mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve([])
+    });
+  });
+
+  it('auth modal is not shown by default', () => {
+    useAuth.mockReturnValue({ user: null, loading: false });
+
+    render(
+      <TestWrapper>
+        <WizardContainer />
+      </TestWrapper>
+    );
+
+    expect(screen.queryByTestId('auth-modal')).not.toBeInTheDocument();
+  });
+
+  it('auth modal closes when user becomes authenticated', async () => {
+    // Start with no user — Sign In button is visible (firebaseConfigured=true)
+    useAuth.mockReturnValue({ user: null, loading: false });
+
+    const { rerender } = render(
+      <TestWrapper>
+        <WizardContainer />
+      </TestWrapper>
+    );
+
+    // Click Sign In to open the modal
+    const signInBtn = screen.getByRole('button', { name: /sign in/i });
+    fireEvent.click(signInBtn);
+
+    expect(screen.getByTestId('auth-modal')).toBeInTheDocument();
+
+    // Simulate user becoming authenticated
+    useAuth.mockReturnValue({ user: { uid: 'user-123', email: 'test@example.com' }, loading: false });
+
+    rerender(
+      <TestWrapper>
+        <WizardContainer />
+      </TestWrapper>
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('auth-modal')).not.toBeInTheDocument();
+    });
   });
 });

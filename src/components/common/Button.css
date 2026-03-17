@@ -8,88 +8,68 @@
   cursor: pointer;
   transition: all 0.2s ease;
   border: 2px solid transparent;
-  font-family: inherit;
+  font-family: 'Poppins', sans-serif;
 }
 
 .btn:disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: not-allowed;
 }
 
-/* Sizes */
-.btn-small {
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-}
+.btn-small  { padding: 0.5rem 1rem;   font-size: 0.875rem; }
+.btn-medium { padding: 0.75rem 1.5rem; font-size: 1rem; }
+.btn-large  { padding: 1rem 2rem;     font-size: 1.125rem; }
 
-.btn-medium {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-}
-
-.btn-large {
-  padding: 1rem 2rem;
-  font-size: 1.125rem;
-}
-
-/* Variants */
+/* Primary — pink */
 .btn-primary {
-  background: var(--primary, #6366f1);
+  background: #F0397A;
   color: white;
-  border-color: var(--primary, #6366f1);
+  border-color: #F0397A;
 }
-
 .btn-primary:hover:not(:disabled) {
-  background: var(--primary-dark, #4f46e5);
-  border-color: var(--primary-dark, #4f46e5);
+  background: #c82a63;
+  border-color: #c82a63;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 14px rgba(240, 57, 122, 0.4);
 }
 
+/* Secondary — orange */
 .btn-secondary {
-  background: var(--secondary, #ec4899);
+  background: #FF8C42;
   color: white;
-  border-color: var(--secondary, #ec4899);
+  border-color: #FF8C42;
 }
-
 .btn-secondary:hover:not(:disabled) {
-  background: var(--secondary-dark, #db2777);
-  border-color: var(--secondary-dark, #db2777);
+  background: #e07030;
+  border-color: #e07030;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+  box-shadow: 0 4px 14px rgba(255, 140, 66, 0.4);
 }
 
+/* Outline */
 .btn-outline {
   background: transparent;
-  color: var(--primary, #6366f1);
-  border-color: var(--primary, #6366f1);
+  color: #F0397A;
+  border-color: #F0397A;
 }
-
 .btn-outline:hover:not(:disabled) {
-  background: var(--primary, #6366f1);
+  background: #F0397A;
   color: white;
 }
 
+/* Ghost */
 .btn-ghost {
   background: transparent;
   color: var(--neutral-700, #374151);
   border-color: transparent;
 }
-
 .btn-ghost:hover:not(:disabled) {
   background: var(--neutral-100, #f3f4f6);
 }
 
-/* Full width */
-.btn-full-width {
-  width: 100%;
-}
+.btn-full-width { width: 100%; }
 
-/* Loading state */
-.btn-loading {
-  position: relative;
-}
-
+/* Loading */
 .btn-spinner {
   width: 1rem;
   height: 1rem;
@@ -99,12 +79,8 @@
   animation: spin 0.8s linear infinite;
 }
 
-.btn-content-loading {
-  opacity: 0.7;
-}
+.btn-content-loading { opacity: 0.7; }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }

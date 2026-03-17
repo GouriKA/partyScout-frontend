@@ -315,3 +315,166 @@ describe('Step5_PartyDetails', () => {
     expect(screen.queryByText('Suggested Add-ons')).not.toBeInTheDocument();
   });
 });
+
+describe('weather card', () => {
+  const outdoorVenue = {
+    ...mockVenue,
+    setting: 'outdoor'
+  };
+
+  const mockWeatherData = {
+    temperatureHighF: 78,
+    temperatureLowF: 60,
+    condition: 'Partly Cloudy',
+    conditionType: 'PARTLY_CLOUDY',
+    precipitationProbability: 10,
+    forecastType: 'FORECAST'
+  };
+
+  // Wrapper that sets weather state via mocked fetchWeatherForecast
+  function WeatherTestWrapper({ children, selectedVenue, weatherData, weatherLoading: simulateLoading }) {
+    return (
+      <PartyPlannerProvider>
+        <WeatherContextSetter
+          selectedVenue={selectedVenue}
+          weatherData={weatherData}
+          simulateLoading={simulateLoading}
+        />
+        {children}
+      </PartyPlannerProvider>
+    );
+  }
+
+  function WeatherContextSetter({ selectedVenue, weatherData, simulateLoading }) {
+    const { selectVenue, updateChildInfo, updatePreferences, updateLocation, fetchWeatherForecast } = usePartyPlanner();
+
+    useEffect(() => {
+      updateChildInfo({ name: 'Emma', partyDate: '2026-04-01T14:00' });
+      updatePreferences({ guestCount: 15 });
+      updateLocation({ zipCode: '94105' });
+      if (selectedVenue) {
+        selectVenue(selectedVenue);
+      }
+      if (weatherData || simulateLoading) {
+        if (weatherData && !simulateLoading) {
+          global.fetch.mockResolvedValueOnce({
+            ok: true,
+            json: () => Promise.resolve(weatherData)
+          });
+        }
+        if (simulateLoading) {
+          global.fetch.mockReturnValueOnce(new Promise(() => {}));
+        }
+        fetchWeatherForecast('94105', '2026-04-01T14:00');
+      }
+    }, [selectedVenue, weatherData, simulateLoading]);
+
+    return null;
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({})
+    });
+  });
+
+  it('does not show weather card for indoor venue', () => {
+    render(
+      <TestWrapper selectedVenue={mockVenue}>
+        <Step5_PartyDetails />
+      </TestWrapper>
+    );
+
+    expect(screen.queryByText(/loading weather forecast/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/rain chance/i)).not.toBeInTheDocument();
+  });
+
+  it('shows weather loading state for outdoor venue when weatherLoading is true', async () => {
+    const { waitFor } = await import('@testing-library/react');
+
+    render(
+      <WeatherTestWrapper selectedVenue={outdoorVenue} weatherLoading={true}>
+        <Step5_PartyDetails />
+      </WeatherTestWrapper>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/loading weather forecast/i)).toBeInTheDocument();
+    });
+  });
+
+  it('shows weather temperature for outdoor venue when weather data exists', async () => {
+    const { waitFor } = await import('@testing-library/react');
+
+    render(
+      <WeatherTestWrapper selectedVenue={outdoorVenue} weatherData={mockWeatherData}>
+        <Step5_PartyDetails />
+      </WeatherTestWrapper>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('78°F')).toBeInTheDocument();
+    });
+  });
+
+  it('shows rain probability for outdoor venue', async () => {
+    const { waitFor } = await import('@testing-library/react');
+
+    render(
+      <WeatherTestWrapper selectedVenue={outdoorVenue} weatherData={mockWeatherData}>
+        <Step5_PartyDetails />
+      </WeatherTestWrapper>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/rain chance: 10%/i)).toBeInTheDocument();
+    });
+  });
+
+  it('shows "Typical for this time of year" for CLIMATE_AVERAGE forecastType', async () => {
+    const { waitFor } = await import('@testing-library/react');
+    const historicalWeather = { ...mockWeatherData, forecastType: 'CLIMATE_AVERAGE' };
+
+    render(
+      <WeatherTestWrapper selectedVenue={outdoorVenue} weatherData={historicalWeather}>
+        <Step5_PartyDetails />
+      </WeatherTestWrapper>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Typical for this time of year')).toBeInTheDocument();
+    });
+  });
+
+  it('shows risk label "Great weather" for low precip', async () => {
+    const { waitFor } = await import('@testing-library/react');
+    const lowRiskWeather = { ...mockWeatherData, precipitationProbability: 10 };
+
+    render(
+      <WeatherTestWrapper selectedVenue={outdoorVenue} weatherData={lowRiskWeather}>
+        <Step5_PartyDetails />
+      </WeatherTestWrapper>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Great weather')).toBeInTheDocument();
+    });
+  });
+
+  it('shows risk label "High chance of rain" for high precip', async () => {
+    const { waitFor } = await import('@testing-library/react');
+    const highRiskWeather = { ...mockWeatherData, precipitationProbability: 60 };
+
+    render(
+      <WeatherTestWrapper selectedVenue={outdoorVenue} weatherData={highRiskWeather}>
+        <Step5_PartyDetails />
+      </WeatherTestWrapper>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('High chance of rain')).toBeInTheDocument();
+    });
+  });
+});

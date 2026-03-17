@@ -9,6 +9,7 @@ import './WizardStep.css';
 export default function Step2_Preferences() {
   const {
     childInfo,
+    location,
     preferences,
     updatePreferences,
     partyTypeSuggestions,
@@ -20,6 +21,8 @@ export default function Step2_Preferences() {
     fetchAllPartyTypes,
     partyDetails,
     fetchPartyDetails,
+    searchVenues,
+    loading,
     nextStep,
     prevStep
   } = usePartyPlanner();
@@ -54,7 +57,27 @@ export default function Step2_Preferences() {
   }, [fetchAllPartyTypes]);
 
   // Use age-filtered suggestions when available, otherwise show all party types
-  const partyTypeOptions = partyTypeSuggestions.length > 0 ? partyTypeSuggestions : allPartyTypes;
+  const allOptions = partyTypeSuggestions.length > 0 ? partyTypeSuggestions : allPartyTypes;
+
+  // Types shown for outdoor: everything except social_dining (restaurant-focused)
+  const INDOOR_ONLY_TYPES = new Set(['social_dining']);
+  // Types shown for indoor: everything except outdoor
+  const OUTDOOR_ONLY_TYPES = new Set(['outdoor']);
+
+  const partyTypeOptions = allOptions.filter(option => {
+    if (location.setting === 'indoor')  return !OUTDOOR_ONLY_TYPES.has(option.type);
+    if (location.setting === 'outdoor') return !INDOOR_ONLY_TYPES.has(option.type);
+    return true;
+  });
+
+  // Remove selected types that are no longer valid for current location setting
+  useEffect(() => {
+    const validTypes = new Set(partyTypeOptions.map(o => o.type));
+    const stillValid = preferences.partyTypes.filter(t => validTypes.has(t));
+    if (stillValid.length !== preferences.partyTypes.length) {
+      updatePreferences({ partyTypes: stillValid });
+    }
+  }, [location.setting]);
 
   // Debounced fetch of budget estimate and party details when partyTypes or guestCount change
   const debounceRef = useRef(null);
@@ -82,6 +105,11 @@ export default function Step2_Preferences() {
 
   const canProceed = preferences.partyTypes.length > 0 && preferences.guestCount >= 1;
 
+  const handleSearch = async () => {
+    await searchVenues();
+    nextStep();
+  };
+
   return (
     <div className="wizard-step">
       <div className="step-top-nav">
@@ -94,8 +122,8 @@ export default function Step2_Preferences() {
         <h2 className="step-title">What kind of party?</h2>
         <p className="step-description">
           {childInfo.age
-            ? `Here are popular party ideas for ${childInfo.age}-year-olds`
-            : 'Select the types of parties you\'re interested in'}
+            ? `Popular ideas for ${childInfo.age}-year-olds near ${location.zipCode}`
+            : `What's available near ${location.zipCode}`}
         </p>
       </div>
 
@@ -179,11 +207,12 @@ export default function Step2_Preferences() {
       <div className="step-actions">
         <div /> {/* Spacer */}
         <Button
-          onClick={nextStep}
+          onClick={handleSearch}
           disabled={!canProceed}
+          loading={loading}
           size="large"
         >
-          Continue to Location
+          Find Venues
         </Button>
       </div>
     </div>

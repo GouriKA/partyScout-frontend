@@ -266,14 +266,14 @@ export function getFutureDate() {
  */
 export async function navigateToVenueResults(page) {
   // Step 1: Fill child info
-  await page.getByLabel(/child's name/i).fill('Emma');
-
   // Start waiting for party-types response before filling age (which triggers the fetch)
   const partyTypesPromise = page.waitForResponse('**/api/v2/party-wizard/party-types/*');
   await page.getByLabel(/how old/i).fill('7');
   await partyTypesPromise;
 
-  await page.getByLabel(/when is the party/i).fill(getFutureDate());
+  const futureDate = getFutureDate();
+  await page.getByLabel(/Party date/i).fill(futureDate.slice(0, 10));
+  await page.getByLabel(/Start time/i).fill(futureDate.slice(11, 16));
 
   await page.getByRole('button', { name: /continue to party type/i }).click();
 

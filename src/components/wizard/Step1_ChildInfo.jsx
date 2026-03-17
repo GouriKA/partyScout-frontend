@@ -32,12 +32,19 @@ export default function Step1_ChildInfo() {
     updateChildInfo({ age });
   };
 
+  const getDatePart = () => (childInfo.partyDate ? childInfo.partyDate.slice(0, 10) : '');
+  const getTimePart = () => (childInfo.partyDate ? childInfo.partyDate.slice(11, 16) : '');
+
   const handleDateChange = (e) => {
-    updateChildInfo({ partyDate: e.target.value || null });
+    const date = e.target.value;
+    const time = getTimePart() || '12:00';
+    updateChildInfo({ partyDate: date ? `${date}T${time}` : null });
   };
 
-  const handleNameChange = (e) => {
-    updateChildInfo({ name: e.target.value });
+  const handleTimeChange = (e) => {
+    const time = e.target.value;
+    const date = getDatePart();
+    updateChildInfo({ partyDate: date ? `${date}T${time}` : null });
   };
 
   const canProceed = childInfo.age !== null && childInfo.age >= 1 && childInfo.partyDate;
@@ -53,15 +60,6 @@ export default function Step1_ChildInfo() {
 
       <div className="step-form">
         <Input
-          label="Child's name"
-          type="text"
-          value={childInfo.name}
-          onChange={handleNameChange}
-          placeholder="e.g., Emma"
-          hint="Optional - used to personalize your experience"
-        />
-
-        <Input
           label="How old will they be turning?"
           type="number"
           value={childInfo.age ?? ''}
@@ -73,15 +71,28 @@ export default function Step1_ChildInfo() {
           hint="We'll suggest party types perfect for this age"
         />
 
-        <Input
-          label="When is the party?"
-          type="datetime-local"
-          value={childInfo.partyDate || ''}
-          onChange={handleDateChange}
-          min={getMinDateTime()}
-          required
-          hint="We'll check venue availability"
-        />
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <div style={{ flex: 1 }}>
+            <Input
+              label="Party date"
+              type="date"
+              value={getDatePart()}
+              onChange={handleDateChange}
+              min={getMinDateTime().slice(0, 10)}
+              required
+              hint="Day of the party"
+            />
+          </div>
+          <div style={{ flex: 1 }}>
+            <Input
+              label="Start time"
+              type="time"
+              value={getTimePart()}
+              onChange={handleTimeChange}
+              hint="e.g., 2:00 PM"
+            />
+          </div>
+        </div>
       </div>
 
       <div className="step-actions">

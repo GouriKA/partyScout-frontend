@@ -207,3 +207,145 @@ describe('VenueCard', () => {
     expect(screen.getByText('Possible Match')).toBeInTheDocument();
   });
 });
+
+describe('weather badge', () => {
+  const outdoorVenue = {
+    ...mockVenue,
+    setting: 'outdoor'
+  };
+
+  const mockWeather = {
+    temperatureHighF: 75,
+    temperatureLowF: 58,
+    condition: 'Light Rain',
+    conditionType: 'LIGHT_RAIN',
+    precipitationProbability: 10,
+    forecastType: 'FORECAST'
+  };
+
+  const defaultOutdoorProps = {
+    venue: outdoorVenue,
+    onSelect: vi.fn(),
+    onToggleCompare: vi.fn(),
+    isComparing: false
+  };
+
+  it('does not show weather badge for indoor venue even when weather data is provided', () => {
+    render(
+      <VenueCard
+        {...defaultOutdoorProps}
+        venue={mockVenue}
+        weather={mockWeather}
+      />
+    );
+
+    expect(screen.queryByText('Loading forecast…')).not.toBeInTheDocument();
+    expect(screen.queryByText('Light Rain')).not.toBeInTheDocument();
+    expect(screen.queryByText(/75°F/)).not.toBeInTheDocument();
+  });
+
+  it('shows loading text for outdoor venue when weatherLoading is true', () => {
+    render(
+      <VenueCard
+        {...defaultOutdoorProps}
+        weatherLoading={true}
+      />
+    );
+
+    expect(screen.getByText('Loading forecast…')).toBeInTheDocument();
+  });
+
+  it('shows temperature when weather data is provided for outdoor venue', () => {
+    render(
+      <VenueCard
+        {...defaultOutdoorProps}
+        weather={mockWeather}
+      />
+    );
+
+    expect(screen.getByText('75°F')).toBeInTheDocument();
+  });
+
+  it('shows condition text when weather data is provided for outdoor venue', () => {
+    render(
+      <VenueCard
+        {...defaultOutdoorProps}
+        weather={mockWeather}
+      />
+    );
+
+    expect(screen.getByText('Light Rain')).toBeInTheDocument();
+  });
+
+  it('shows green risk dot for low precip probability (< 20%)', () => {
+    const lowPrecipWeather = { ...mockWeather, precipitationProbability: 10 };
+    render(
+      <VenueCard
+        {...defaultOutdoorProps}
+        weather={lowPrecipWeather}
+      />
+    );
+
+    expect(screen.getByText('🟢')).toBeInTheDocument();
+  });
+
+  it('shows yellow risk dot for moderate precip probability (20-49%)', () => {
+    const moderatePrecipWeather = { ...mockWeather, precipitationProbability: 35 };
+    render(
+      <VenueCard
+        {...defaultOutdoorProps}
+        weather={moderatePrecipWeather}
+      />
+    );
+
+    expect(screen.getByText('🟡')).toBeInTheDocument();
+  });
+
+  it('shows red risk dot for high precip probability (>= 50%)', () => {
+    const highPrecipWeather = { ...mockWeather, precipitationProbability: 60 };
+    render(
+      <VenueCard
+        {...defaultOutdoorProps}
+        weather={highPrecipWeather}
+      />
+    );
+
+    expect(screen.getByText('🔴')).toBeInTheDocument();
+  });
+
+  it('shows "Typical this time of year" label for CLIMATE_AVERAGE forecastType', () => {
+    const historicalWeather = { ...mockWeather, forecastType: 'CLIMATE_AVERAGE' };
+    render(
+      <VenueCard
+        {...defaultOutdoorProps}
+        weather={historicalWeather}
+      />
+    );
+
+    expect(screen.getByText('Typical this time of year')).toBeInTheDocument();
+  });
+
+  it('does not show "Typical this time of year" for FORECAST forecastType', () => {
+    render(
+      <VenueCard
+        {...defaultOutdoorProps}
+        weather={mockWeather}
+      />
+    );
+
+    expect(screen.queryByText('Typical this time of year')).not.toBeInTheDocument();
+  });
+
+  it('does not show weather badge when venue is outdoor but no weather or weatherLoading', () => {
+    render(
+      <VenueCard
+        {...defaultOutdoorProps}
+      />
+    );
+
+    expect(screen.queryByText('Loading forecast…')).not.toBeInTheDocument();
+    expect(screen.queryByText('🟢')).not.toBeInTheDocument();
+    expect(screen.queryByText('🟡')).not.toBeInTheDocument();
+    expect(screen.queryByText('🔴')).not.toBeInTheDocument();
+  });
+});

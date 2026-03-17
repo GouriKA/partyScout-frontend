@@ -269,3 +269,133 @@ describe('Step4_VenueResults', () => {
     expect(screen.getByText(/select a venue to see full details/i)).toBeInTheDocument();
   });
 });
+
+describe('weather fetching', () => {
+  const indoorOnlyVenues = mockVenues.filter(v => v.setting === 'indoor');
+
+  const outdoorVenue = mockVenues.find(v => v.setting === 'outdoor');
+
+  // A date within the next 30 days from test date (2026-03-17)
+  const nearFutureDate = '2026-04-01T14:00';
+  const validZip = '94105';
+
+  function WeatherTestWrapper({ children, venues, partyDate, zipCode }) {
+    return (
+      <PartyPlannerProvider>
+        <WeatherContextSetter venues={venues} partyDate={partyDate} zipCode={zipCode} />
+        {children}
+      </PartyPlannerProvider>
+    );
+  }
+
+  function WeatherContextSetter({ venues, partyDate, zipCode }) {
+    const { setVenues, updatePreferences, updateChildInfo, updateLocation } = usePartyPlanner();
+
+    useEffect(() => {
+      updatePreferences({ guestCount: 15 });
+      updateChildInfo({ partyDate: partyDate || null });
+      updateLocation({ zipCode: zipCode || '' });
+      setVenues(venues);
+    }, [venues, partyDate, zipCode]);
+
+    return null;
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({})
+    });
+  });
+
+  it('does not call fetchWeatherForecast when all venues are indoor', async () => {
+    const { waitFor } = await import('@testing-library/react');
+
+    render(
+      <WeatherTestWrapper
+        venues={indoorOnlyVenues}
+        partyDate={nearFutureDate}
+        zipCode={validZip}
+      >
+        <Step4_VenueResults />
+      </WeatherTestWrapper>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/venues found/i)).toBeInTheDocument();
+    });
+
+    const weatherCalls = global.fetch.mock.calls.filter(
+      ([url]) => typeof url === 'string' && url.includes('/api/v2/weather/forecast')
+    );
+    expect(weatherCalls).toHaveLength(0);
+  });
+
+  it('calls fetchWeatherForecast when outdoor venue exists with date and 5-digit zip', async () => {
+    const { waitFor } = await import('@testing-library/react');
+
+    render(
+      <WeatherTestWrapper
+        venues={mockVenues}
+        partyDate={nearFutureDate}
+        zipCode={validZip}
+      >
+        <Step4_VenueResults />
+      </WeatherTestWrapper>
+    );
+
+    await waitFor(() => {
+      const weatherCalls = global.fetch.mock.calls.filter(
+        ([url]) => typeof url === 'string' && url.includes('/api/v2/weather/forecast')
+      );
+      expect(weatherCalls).toHaveLength(1);
+    });
+  });
+
+  it('does not call fetchWeatherForecast when zip is less than 5 digits', async () => {
+    const { waitFor } = await import('@testing-library/react');
+
+    render(
+      <WeatherTestWrapper
+        venues={mockVenues}
+        partyDate={nearFutureDate}
+        zipCode="941"
+      >
+        <Step4_VenueResults />
+      </WeatherTestWrapper>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/venues found/i)).toBeInTheDocument();
+    });
+
+    const weatherCalls = global.fetch.mock.calls.filter(
+      ([url]) => typeof url === 'string' && url.includes('/api/v2/weather/forecast')
+    );
+    expect(weatherCalls).toHaveLength(0);
+  });
+
+  it('does not call fetchWeatherForecast when partyDate is missing', async () => {
+    const { waitFor } = await import('@testing-library/react');
+
+    render(
+      <WeatherTestWrapper
+        venues={mockVenues}
+        partyDate={null}
+        zipCode={validZip}
+      >
+        <Step4_VenueResults />
+      </WeatherTestWrapper>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/venues found/i)).toBeInTheDocument();
+    });
+
+    const weatherCalls = global.fetch.mock.calls.filter(
+      ([url]) => typeof url === 'string' && url.includes('/api/v2/weather/forecast')
+    );
+    expect(weatherCalls).toHaveLength(0);
+  });
+});

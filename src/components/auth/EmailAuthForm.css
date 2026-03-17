@@ -26,8 +26,8 @@
 }
 
 .form-field input:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+  border-color: #F0397A;
+  box-shadow: 0 0 0 3px rgba(240, 57, 122, 0.12);
 }
 
 .form-field input:disabled {
@@ -37,7 +37,7 @@
 
 .auth-submit-btn {
   padding: 10px;
-  background: #6366f1;
+  background: #F0397A;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -48,7 +48,7 @@
 }
 
 .auth-submit-btn:hover:not(:disabled) {
-  background: #4f46e5;
+  background: #c82a63;
 }
 
 .auth-submit-btn:disabled {
@@ -59,7 +59,7 @@
 .auth-link-btn {
   background: none;
   border: none;
-  color: #6366f1;
+  color: #F0397A;
   font-size: 13px;
   cursor: pointer;
   padding: 0;
@@ -67,7 +67,7 @@
 }
 
 .auth-link-btn:hover:not(:disabled) {
-  color: #4f46e5;
+  color: #c82a63;
 }
 
 .auth-toggle {

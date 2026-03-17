@@ -12,7 +12,9 @@ test.describe('PartyScout Wizard', () => {
     const partyTypesPromise = page.waitForResponse('**/api/v2/party-wizard/party-types/*');
     await page.getByLabel(/How old will they be turning/i).fill('7');
     await partyTypesPromise;
-    await page.getByLabel(/When is the party/i).fill(getFutureDate());
+    const futureDate = getFutureDate();
+    await page.getByLabel(/Party date/i).fill(futureDate.slice(0, 10));
+    await page.getByLabel(/Start time/i).fill(futureDate.slice(11, 16));
     await page.getByRole('button', { name: /Continue to Party Type/i }).click();
   }
 
@@ -25,7 +27,7 @@ test.describe('PartyScout Wizard', () => {
   }
 
   test('shows wizard header and step 1 on load', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: /Plan Your Birthday Party/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Your next party is waiting/i })).toBeVisible();
     await expect(page.getByText('Find the perfect venue in just a few steps')).toBeVisible();
     await expect(page.getByRole('heading', { name: /Tell us about the birthday child/i })).toBeVisible();
   });
@@ -41,14 +43,10 @@ test.describe('PartyScout Wizard', () => {
   });
 
   test('Continue button enables when age and date are filled', async ({ page }) => {
+    const futureDate = getFutureDate();
     await page.getByLabel(/How old will they be turning/i).fill('7');
-    await page.getByLabel(/When is the party/i).fill(getFutureDate());
+    await page.getByLabel(/Party date/i).fill(futureDate.slice(0, 10));
     await expect(page.getByRole('button', { name: /Continue to Party Type/i })).toBeEnabled();
-  });
-
-  test('personalizes header title when name is entered', async ({ page }) => {
-    await page.getByLabel(/Child's name/i).fill('Emma');
-    await expect(page.getByRole('heading', { name: /Plan Emma's Birthday Party/i })).toBeVisible();
   });
 
   test('navigates from step 1 to step 2', async ({ page }) => {

@@ -15,9 +15,7 @@ export default function Step3_Location() {
     location,
     updateLocation,
     nextStep,
-    prevStep,
-    searchVenues,
-    loading
+    prevStep
   } = usePartyPlanner();
 
   const handleZipCodeChange = (e) => {
@@ -37,11 +35,6 @@ export default function Step3_Location() {
 
   const isValidZip = location.zipCode.length === 5;
   const canProceed = isValidZip;
-
-  const handleSearch = async () => {
-    await searchVenues();
-    nextStep();
-  };
 
   return (
     <div className="wizard-step">
@@ -102,12 +95,11 @@ export default function Step3_Location() {
       <div className="step-actions">
         <div /> {/* Spacer */}
         <Button
-          onClick={handleSearch}
+          onClick={nextStep}
           disabled={!canProceed}
-          loading={loading}
           size="large"
         >
-          Find Venues
+          Continue to Party Type
         </Button>
       </div>
     </div>

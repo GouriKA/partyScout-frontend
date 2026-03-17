@@ -24,7 +24,7 @@
   cursor: pointer;
   border-radius: 0.5rem;
   transition: all 0.2s ease;
-  font-family: inherit;
+  font-family: 'Poppins', sans-serif;
 }
 
 .step-top-nav .btn-back:hover {
@@ -106,7 +106,7 @@
   border-radius: 0.75rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-family: inherit;
+  font-family: 'Poppins', sans-serif;
 }
 
 .setting-option:hover {
