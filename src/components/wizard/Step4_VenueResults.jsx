@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePartyPlanner } from '../../context/PartyPlannerContext';
 import VenueCard from '../venue/VenueCard';
 import VenueCompare from '../venue/VenueCompare';
@@ -32,12 +32,32 @@ export default function Step4_VenueResults() {
     nextStep,
     prevStep,
     preferences,
-    searchVenues
+    searchVenues,
+    childInfo,
+    location,
+    weather,
+    weatherLoading,
+    fetchWeatherForecast,
   } = usePartyPlanner();
 
   const [sortBy, setSortBy] = useState('matchScore');
   const [filterBy, setFilterBy] = useState('all');
   const [showCompare, setShowCompare] = useState(false);
+
+  useEffect(() => {
+    const hasOutdoor = venues.some(v => v.setting === 'outdoor');
+    if (!hasOutdoor || !childInfo?.partyDate || location?.zipCode?.length !== 5) return;
+
+    const datePart = childInfo.partyDate.slice(0, 10);
+    const [y, m, d] = datePart.split('-').map(Number);
+    const partyDate = new Date(y, m - 1, d);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const daysUntil = Math.round((partyDate - today) / 86400000);
+    if (daysUntil < 0 || daysUntil > 30) return;
+
+    fetchWeatherForecast(location.zipCode, childInfo.partyDate);
+  }, [venues, childInfo?.partyDate, location?.zipCode, fetchWeatherForecast]);
 
   // Sort venues
   const sortedVenues = [...venues].sort((a, b) => {
@@ -215,6 +235,8 @@ export default function Step4_VenueResults() {
             <VenueCard
               key={venue.id}
               venue={venue}
+              weather={weather}
+              weatherLoading={weatherLoading}
               isComparing={compareVenues.some(v => v.id === venue.id)}
               onSelect={handleSelectVenue}
               onToggleCompare={toggleCompareVenue}

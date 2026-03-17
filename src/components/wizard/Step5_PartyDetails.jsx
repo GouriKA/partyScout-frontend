@@ -1,16 +1,44 @@
+import { useEffect } from 'react';
 import { usePartyPlanner } from '../../context/PartyPlannerContext';
 import Button from '../common/Button';
 import './WizardStep.css';
 import './Step5_PartyDetails.css';
+
+const CONDITION_ICONS = {
+  CLEAR: '☀️', MOSTLY_CLEAR: '🌤️', PARTLY_CLOUDY: '⛅',
+  MOSTLY_CLOUDY: '☁️', CLOUDY: '☁️', OVERCAST: '☁️',
+  WINDY: '💨', FOG: '🌫️', HAZE: '🌫️',
+  LIGHT_RAIN: '🌦️', RAIN: '🌧️', HEAVY_RAIN: '🌧️',
+  DRIZZLE: '🌦️', SHOWERS: '🌦️',
+  THUNDERSTORM: '⛈️',
+  LIGHT_SNOW: '❄️', SNOW: '❄️', HEAVY_SNOW: '❄️', SLEET: '🌨️',
+};
+
+function getWeatherRisk(precipProb) {
+  if (precipProb >= 50) return { dot: '🔴', label: 'High chance of rain', cls: 'bad' };
+  if (precipProb >= 20) return { dot: '🟡', label: 'Possible rain', cls: 'caution' };
+  return { dot: '🟢', label: 'Great weather', cls: 'good' };
+}
 
 export default function Step5_PartyDetails() {
   const {
     selectedVenue,
     childInfo,
     preferences,
+    location,
+    weather,
+    weatherLoading,
+    fetchWeatherForecast,
     prevStep,
     reset
   } = usePartyPlanner();
+
+  useEffect(() => {
+    if (selectedVenue?.setting === 'outdoor' && !weather && !weatherLoading
+        && childInfo?.partyDate && location?.zipCode?.length === 5) {
+      fetchWeatherForecast(location.zipCode, childInfo.partyDate);
+    }
+  }, [selectedVenue, weather, weatherLoading, childInfo?.partyDate, location?.zipCode, fetchWeatherForecast]);
 
   if (!selectedVenue) {
     return (
@@ -115,6 +143,36 @@ export default function Step5_PartyDetails() {
                 <img src={photo} alt={`${selectedVenue.name} photo ${index + 1}`} />
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Weather Card — outdoor venues only */}
+        {selectedVenue.setting === 'outdoor' && (weatherLoading || weather) && (
+          <div className={`details-weather-card ${weather ? `details-weather--${getWeatherRisk(weather.precipitationProbability).cls}` : ''}`}>
+            {weatherLoading ? (
+              <p className="details-weather-loading">Loading weather forecast…</p>
+            ) : (
+              <>
+                <div className="details-weather-left">
+                  <span className="details-weather-icon">{CONDITION_ICONS[weather.conditionType] ?? '🌡️'}</span>
+                  <div>
+                    <div className="details-weather-temp">{weather.temperatureHighF}°F</div>
+                    <div className="details-weather-condition">{weather.condition}</div>
+                    <div className="details-weather-low">Low {weather.temperatureLowF}°F</div>
+                  </div>
+                </div>
+                <div className="details-weather-right">
+                  <div className="details-weather-risk">
+                    <span className="details-weather-risk-dot">{getWeatherRisk(weather.precipitationProbability).dot}</span>
+                    <span className="details-weather-risk-label">{getWeatherRisk(weather.precipitationProbability).label}</span>
+                  </div>
+                  <div className="details-weather-precip">Rain chance: {weather.precipitationProbability}%</div>
+                  {weather.forecastType === 'CLIMATE_AVERAGE' && (
+                    <div className="details-weather-note">Typical for this time of year</div>
+                  )}
+                </div>
+              </>
+            )}
           </div>
         )}
 

@@ -21,6 +21,8 @@ const initialState = {
     accessibility: []
   },
   venues: [],
+  weather: null,
+  weatherLoading: false,
   loading: false,
   error: null,
   selectedVenue: null,
@@ -52,6 +54,8 @@ const actionTypes = {
   SET_BUDGET_ESTIMATE_ERROR: 'SET_BUDGET_ESTIMATE_ERROR',
   SET_ALL_PARTY_TYPES: 'SET_ALL_PARTY_TYPES',
   SET_PARTY_DETAILS: 'SET_PARTY_DETAILS',
+  SET_WEATHER: 'SET_WEATHER',
+  SET_WEATHER_LOADING: 'SET_WEATHER_LOADING',
   RESET: 'RESET'
 };
 
@@ -134,6 +138,12 @@ function partyPlannerReducer(state, action) {
 
     case actionTypes.SET_PARTY_DETAILS:
       return { ...state, partyDetails: action.payload };
+
+    case actionTypes.SET_WEATHER:
+      return { ...state, weather: action.payload, weatherLoading: false };
+
+    case actionTypes.SET_WEATHER_LOADING:
+      return { ...state, weatherLoading: action.payload };
 
     case actionTypes.RESET:
       return initialState;
@@ -312,6 +322,24 @@ export function PartyPlannerProvider({ children }) {
     }
   }, []);
 
+  // Fetch weather forecast for outdoor venues
+  const fetchWeatherForecast = useCallback(async (zipCode, date) => {
+    if (!zipCode || zipCode.length !== 5 || !date) return;
+    dispatch({ type: actionTypes.SET_WEATHER_LOADING, payload: true });
+    try {
+      const datePart = date.slice(0, 10);
+      const response = await fetch(`${API_BASE_URL}/api/v2/weather/forecast?zipCode=${zipCode}&date=${datePart}`);
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: actionTypes.SET_WEATHER, payload: data });
+      } else {
+        dispatch({ type: actionTypes.SET_WEATHER, payload: null });
+      }
+    } catch {
+      dispatch({ type: actionTypes.SET_WEATHER, payload: null });
+    }
+  }, []);
+
   // Fetch party details for selected types
   const fetchPartyDetails = useCallback(async (partyTypes, guestCount, priceLevel) => {
     if (!partyTypes.length || guestCount < 1) return;
@@ -365,6 +393,9 @@ export function PartyPlannerProvider({ children }) {
     // All party types & details
     fetchAllPartyTypes,
     fetchPartyDetails,
+
+    // Weather
+    fetchWeatherForecast,
 
     // API
     searchVenues,

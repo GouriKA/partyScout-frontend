@@ -1,7 +1,25 @@
 import './VenueCard.css';
 
+const CONDITION_ICONS = {
+  CLEAR: '☀️', MOSTLY_CLEAR: '🌤️', PARTLY_CLOUDY: '⛅',
+  MOSTLY_CLOUDY: '☁️', CLOUDY: '☁️', OVERCAST: '☁️',
+  WINDY: '💨', FOG: '🌫️', HAZE: '🌫️',
+  LIGHT_RAIN: '🌦️', RAIN: '🌧️', HEAVY_RAIN: '🌧️',
+  DRIZZLE: '🌦️', SHOWERS: '🌦️',
+  THUNDERSTORM: '⛈️',
+  LIGHT_SNOW: '❄️', SNOW: '❄️', HEAVY_SNOW: '❄️', SLEET: '🌨️',
+};
+
+function getWeatherRisk(precipProb) {
+  if (precipProb >= 50) return { dot: '🔴', label: 'High chance of rain' };
+  if (precipProb >= 20) return { dot: '🟡', label: 'Possible rain' };
+  return { dot: '🟢', label: 'Great weather' };
+}
+
 export default function VenueCard({
   venue,
+  weather = null,
+  weatherLoading = false,
   isSelected = false,
   isComparing = false,
   onSelect,
@@ -59,6 +77,34 @@ export default function VenueCard({
 
       <div className="venue-content" onClick={() => onSelect?.(venue)}>
         <h3 className="venue-name">{venue.name}</h3>
+
+        {venue.setting === 'outdoor' && (weatherLoading || weather) && (() => {
+          const risk = weather ? getWeatherRisk(weather.precipitationProbability) : null;
+          return (
+            <div className={`weather-badge weather-badge--${risk?.dot === '🔴' ? 'bad' : risk?.dot === '🟡' ? 'caution' : 'good'} ${weather?.forecastType === 'CLIMATE_AVERAGE' ? 'weather-badge--historical' : ''}`}>
+              {weatherLoading ? (
+                <span className="weather-badge-loading">Loading forecast…</span>
+              ) : (
+                <>
+                  <div className="weather-badge-left">
+                    <span className="weather-badge-icon">{CONDITION_ICONS[weather.conditionType] ?? '🌡️'}</span>
+                    <div className="weather-badge-temps">
+                      <span className="weather-badge-high">{weather.temperatureHighF}°F</span>
+                      <span className="weather-badge-condition">{weather.condition}</span>
+                    </div>
+                  </div>
+                  <div className="weather-badge-right">
+                    <span className="weather-badge-risk-dot">{risk.dot}</span>
+                    <span className="weather-badge-risk-label">{risk.label}</span>
+                    {weather.forecastType === 'CLIMATE_AVERAGE' && (
+                      <span className="weather-badge-historical-label">Typical this time of year</span>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          );
+        })()}
 
         <div className="venue-meta">
           {venue.rating > 0 && (
