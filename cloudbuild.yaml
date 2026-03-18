@@ -48,7 +48,7 @@ options:
   logging: CLOUD_LOGGING_ONLY
 
 substitutions:
-  _VITE_API_URL: 'https://partyscout.live'
+  _VITE_API_URL: 'https://partyscout-backend-canary-3f6x32ha2a-ue.a.run.app'
   _VITE_FIREBASE_API_KEY: ''
   _VITE_FIREBASE_AUTH_DOMAIN: ''
   _VITE_FIREBASE_PROJECT_ID: ''
