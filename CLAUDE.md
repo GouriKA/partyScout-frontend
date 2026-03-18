@@ -149,6 +149,15 @@ substitutions:
   _VITE_API_URL: 'https://partyscout.app'
 ```
 
+## Testing Convention
+
+After every code commit, create a separate follow-up commit with tests:
+- **Unit tests**: Vitest + React Testing Library (`src/**/__tests__/`)
+- **Integration tests**: `src/integration/__tests__/`
+- **E2E tests**: Playwright (`e2e/`)
+
+Never bundle test changes in the same commit as feature/fix code.
+
 ## E2E Testing Pattern
 
 ```js
