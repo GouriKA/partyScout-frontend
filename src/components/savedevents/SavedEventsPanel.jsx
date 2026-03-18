@@ -113,7 +113,7 @@ function SavedEventCard({ ev, onUnsave }) {
           aria-label={`Remove ${ev.venueName}`}
           title="Remove"
         >
-          ♥
+          ✕
         </button>
       </div>
 

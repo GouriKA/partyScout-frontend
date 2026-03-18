@@ -103,18 +103,19 @@
 .saved-event-unsave {
   background: none;
   border: none;
-  font-size: 1.1rem;
-  color: #F0397A;
+  font-size: 0.9rem;
+  color: var(--neutral-400, #9ca3af);
   cursor: pointer;
-  padding: 0.125rem 0.25rem;
+  padding: 0.125rem 0.375rem;
   flex-shrink: 0;
-  transition: transform 0.15s, opacity 0.15s;
+  transition: color 0.15s, background 0.15s;
   line-height: 1;
+  border-radius: 0.25rem;
 }
 
 .saved-event-unsave:hover {
-  opacity: 0.5;
-  transform: scale(1.2);
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.08);
 }
 
 /* ── Detail chips ── */
