@@ -22,7 +22,8 @@ function formatPartyTypes(types) {
     .join(' · ')
 }
 
-function venueLink(googlePlaceId, venueName) {
+function venueLink(venueWebsite, googlePlaceId, venueName) {
+  if (venueWebsite) return venueWebsite
   if (googlePlaceId) return `https://www.google.com/maps/place/?q=place_id:${googlePlaceId}`
   return `https://www.google.com/maps/search/${encodeURIComponent(venueName)}`
 }
@@ -90,7 +91,8 @@ function SavedGroup({ title, events, onUnsave }) {
 function SavedEventCard({ ev, onUnsave }) {
   const date = formatDate(ev.eventDate)
   const types = formatPartyTypes(ev.partyTypes)
-  const link = venueLink(ev.googlePlaceId, ev.venueName)
+  const link = venueLink(ev.venueWebsite, ev.googlePlaceId, ev.venueName)
+  const linkTitle = ev.venueWebsite ? 'Open venue website' : 'Open in Google Maps'
 
   return (
     <li className="saved-event-card">
@@ -100,7 +102,7 @@ function SavedEventCard({ ev, onUnsave }) {
           href={link}
           target="_blank"
           rel="noopener noreferrer"
-          title="Open in Google Maps"
+          title={linkTitle}
         >
           {ev.venueName}
           <span className="saved-event-link-icon">↗</span>

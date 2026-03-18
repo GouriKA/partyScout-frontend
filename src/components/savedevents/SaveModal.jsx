@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useSavedEvents } from '../../context/SavedEventsContext'
 import './SaveModal.css'
 
-export default function SaveModal({ venue, eventDate, partyTypes, guestCount, onClose }) {
+export default function SaveModal({ venue, eventDate, partyTypes, guestCount, venueWebsite, onClose }) {
   const { profiles, saveEvent, createProfile } = useSavedEvents()
   const [selected, setSelected] = useState(null) // null = "Just save it", profile id/localId otherwise
   const [showAddChild, setShowAddChild] = useState(false)
@@ -26,7 +26,7 @@ export default function SaveModal({ venue, eventDate, partyTypes, guestCount, on
         const profile = await createProfile(childName.trim() || null, age)
         profileId = profile.id ?? profile.localId
       }
-      await saveEvent(venue, profileId, { eventDate, partyTypes, guestCount })
+      await saveEvent(venue, profileId, { eventDate, partyTypes, guestCount, venueWebsite })
       onClose()
     } catch {
       setError('Could not save. Please try again.')

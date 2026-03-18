@@ -95,6 +95,7 @@ export function SavedEventsProvider({ children }) {
         eventDate: ev.eventDate ?? null,
         partyTypes: ev.partyTypes ?? null,
         guestCount: ev.guestCount ?? null,
+        venueWebsite: ev.venueWebsite ?? null,
       }
     })
 
@@ -132,7 +133,11 @@ export function SavedEventsProvider({ children }) {
 
   // ── isSaved helper ──────────────────────────────────────────────────────────
 
-  function isSaved(googlePlaceId, profileId = null) {
+  function isSaved(googlePlaceId, profileId = undefined) {
+    if (profileId === undefined) {
+      // Check if saved for any profile (or general)
+      return savedEvents.some((ev) => ev.googlePlaceId === googlePlaceId)
+    }
     if (user) {
       return savedEvents.some(
         (ev) => ev.googlePlaceId === googlePlaceId && (ev.profileId ?? null) === profileId
@@ -150,7 +155,7 @@ export function SavedEventsProvider({ children }) {
 
   async function saveEvent(venue, profileId = null, extra = {}) {
     const googlePlaceId = venue.googlePlaceId || venue.id
-    const { eventDate = null, partyTypes = null, guestCount = null } = extra
+    const { eventDate = null, partyTypes = null, guestCount = null, venueWebsite = null } = extra
 
     if (user) {
       // Optimistic update
@@ -162,13 +167,14 @@ export function SavedEventsProvider({ children }) {
         eventDate,
         partyTypes,
         guestCount,
+        venueWebsite,
         createdAt: new Date().toISOString(),
       }
       setSavedEvents((prev) => [...prev, optimistic])
       try {
         const saved = await authFetch('/api/v2/saved-events', {
           method: 'POST',
-          body: JSON.stringify({ googlePlaceId, venueName: venue.name, profileId, eventDate, partyTypes, guestCount }),
+          body: JSON.stringify({ googlePlaceId, venueName: venue.name, profileId, eventDate, partyTypes, guestCount, venueWebsite }),
         })
         setSavedEvents((prev) =>
           prev.map((ev) => (ev.id === optimistic.id ? saved : ev))
@@ -192,6 +198,7 @@ export function SavedEventsProvider({ children }) {
         eventDate,
         partyTypes,
         guestCount,
+        venueWebsite,
         savedAt: new Date().toISOString(),
       }
       guest.savedEvents.push(newEvent)

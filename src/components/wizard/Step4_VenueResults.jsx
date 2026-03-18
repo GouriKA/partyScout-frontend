@@ -106,15 +106,16 @@ export default function Step4_VenueResults() {
 
   function handleHeartClick(venue) {
     const googlePlaceId = venue.googlePlaceId || venue.id;
-    const saved = savedEvents.find((ev) => ev.googlePlaceId === googlePlaceId && (ev.profileId ?? null) === null);
-    if (saved) {
-      unsaveEvent(saved.id ?? saved.localId);
+    const allSaves = savedEvents.filter((ev) => ev.googlePlaceId === googlePlaceId);
+    if (allSaves.length > 0) {
+      allSaves.forEach((ev) => unsaveEvent(ev.id ?? ev.localId));
     } else {
       setSaveTarget({
         venue,
         eventDate: childInfo?.partyDate?.slice(0, 10) ?? null,
         partyTypes: preferences?.partyTypes?.join(',') ?? null,
         guestCount: preferences?.guestCount ?? null,
+        venueWebsite: venue.website ?? null,
       });
     }
   }
@@ -286,6 +287,7 @@ export default function Step4_VenueResults() {
           eventDate={saveTarget.eventDate}
           partyTypes={saveTarget.partyTypes}
           guestCount={saveTarget.guestCount}
+          venueWebsite={saveTarget.venueWebsite}
           onClose={() => setSaveTarget(null)}
         />
       )}
