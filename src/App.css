@@ -2,6 +2,27 @@
    PartyScout Design System
    ============================================ */
 
+.early-access-banner {
+  width: 100%;
+  background: #1f2937;
+  color: #f3f4f6;
+  text-align: center;
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0.01em;
+}
+
+.early-access-banner a {
+  color: #f0397a;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.early-access-banner a:hover {
+  text-decoration: underline;
+}
+
 :root {
   --primary:       #F0397A;
   --primary-dark:  #c82a63;

@@ -9,6 +9,10 @@ function App() {
     <ErrorBoundary>
       <AuthProvider>
         <PartyPlannerProvider>
+          <div className="early-access-banner">
+            🚧 Early Access — Some features may change.{' '}
+            <a href="mailto:feedback@partyscout.live">Share feedback →</a>
+          </div>
           <div className="app">
             <WizardContainer />
           </div>
