@@ -126,12 +126,9 @@ export function SavedEventsProvider({ children }) {
       } else {
         loadFromApi()
       }
-    } else if (!wasLoggedIn) {
-      // Was already a guest (initial load or page refresh while logged out)
+    } else {
       loadFromGuest()
     }
-    // If wasLoggedIn and now logged out: keep current saves visible in memory
-    // until the user refreshes the page (avoids jarring empty-state on sign-out)
   }, [user]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── isSaved helper ──────────────────────────────────────────────────────────
