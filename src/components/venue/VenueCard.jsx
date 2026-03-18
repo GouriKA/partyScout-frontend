@@ -144,13 +144,31 @@ export default function VenueCard({
         </div>
 
         <div className="venue-pricing">
-          <div className="price-estimate">
-            <span className="price-label">Estimated Total</span>
-            <span className="price-value">{formatPrice(venue.estimatedTotal)}</span>
+          <div className="venue-pricing-estimates">
+            <div className="price-estimate">
+              <span className="price-label">Est. Total</span>
+              <span className="price-value">{formatPrice(venue.estimatedTotal)}</span>
+            </div>
+            <div className="price-per-person">
+              <span className="price-label">Per Person</span>
+              <span className="price-value">{formatPrice(venue.estimatedPricePerPerson)}</span>
+            </div>
           </div>
-          <div className="price-per-person">
-            <span className="price-label">Per Person</span>
-            <span className="price-value">{formatPrice(venue.estimatedPricePerPerson)}</span>
+          <div className="venue-pricing-footer">
+            <span className="price-disclaimer">Estimate based on price level</span>
+            {venue.website ? (
+              <a
+                href={venue.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="price-check-link"
+                onClick={(e) => e.stopPropagation()}
+              >
+                Check pricing ↗
+              </a>
+            ) : (
+              <span className="price-check-unavailable">Pricing unavailable</span>
+            )}
           </div>
         </div>
 
