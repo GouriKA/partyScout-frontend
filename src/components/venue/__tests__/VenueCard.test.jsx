@@ -208,6 +208,49 @@ describe('VenueCard', () => {
   });
 });
 
+describe('heart icon (save feature)', () => {
+  const defaultProps = {
+    venue: mockVenue,
+    onSelect: vi.fn(),
+    onToggleCompare: vi.fn(),
+    isComparing: false,
+  };
+
+  it('renders ♡ when isSaved is false', () => {
+    render(<VenueCard {...defaultProps} isSaved={false} />);
+
+    expect(screen.getByRole('button', { name: /save venue/i })).toBeInTheDocument();
+    expect(screen.getByText('♡')).toBeInTheDocument();
+  });
+
+  it('renders ♥ when isSaved is true', () => {
+    render(<VenueCard {...defaultProps} isSaved={true} />);
+
+    expect(screen.getByRole('button', { name: /unsave venue/i })).toBeInTheDocument();
+    expect(screen.getByText('♥')).toBeInTheDocument();
+  });
+
+  it('clicking heart calls onSave with the venue', () => {
+    const onSave = vi.fn();
+    render(<VenueCard {...defaultProps} onSave={onSave} />);
+
+    fireEvent.click(screen.getByRole('button', { name: /save venue/i }));
+
+    expect(onSave).toHaveBeenCalledWith(mockVenue);
+  });
+
+  it('heart click does NOT propagate to onSelect (stopPropagation)', () => {
+    const onSave = vi.fn();
+    const onSelect = vi.fn();
+    render(<VenueCard {...defaultProps} onSave={onSave} onSelect={onSelect} />);
+
+    fireEvent.click(screen.getByRole('button', { name: /save venue/i }));
+
+    expect(onSave).toHaveBeenCalledWith(mockVenue);
+    expect(onSelect).not.toHaveBeenCalled();
+  });
+});
+
 describe('weather badge', () => {
   const outdoorVenue = {
     ...mockVenue,
