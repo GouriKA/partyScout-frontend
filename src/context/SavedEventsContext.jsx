@@ -94,6 +94,7 @@ export function SavedEventsProvider({ children }) {
         profileAge: prof?.age ?? null,
         eventDate: ev.eventDate ?? null,
         partyTypes: ev.partyTypes ?? null,
+        guestCount: ev.guestCount ?? null,
       }
     })
 
@@ -147,27 +148,27 @@ export function SavedEventsProvider({ children }) {
 
   // ── saveEvent ───────────────────────────────────────────────────────────────
 
-  async function saveEvent(venue, profileId = null) {
+  async function saveEvent(venue, profileId = null, extra = {}) {
+    const googlePlaceId = venue.googlePlaceId || venue.id
+    const { eventDate = null, partyTypes = null, guestCount = null } = extra
+
     if (user) {
       // Optimistic update
       const optimistic = {
         id: `optimistic-${uuid()}`,
-        googlePlaceId: venue.googlePlaceId || venue.id,
+        googlePlaceId,
         venueName: venue.name,
         profileId,
-        eventDate: null,
-        partyTypes: null,
+        eventDate,
+        partyTypes,
+        guestCount,
         createdAt: new Date().toISOString(),
       }
       setSavedEvents((prev) => [...prev, optimistic])
       try {
         const saved = await authFetch('/api/v2/saved-events', {
           method: 'POST',
-          body: JSON.stringify({
-            googlePlaceId: venue.googlePlaceId || venue.id,
-            venueName: venue.name,
-            profileId,
-          }),
+          body: JSON.stringify({ googlePlaceId, venueName: venue.name, profileId, eventDate, partyTypes, guestCount }),
         })
         setSavedEvents((prev) =>
           prev.map((ev) => (ev.id === optimistic.id ? saved : ev))
@@ -179,7 +180,6 @@ export function SavedEventsProvider({ children }) {
     } else {
       // Guest mode — write to localStorage immediately
       const guest = readGuest()
-      const googlePlaceId = venue.googlePlaceId || venue.id
       const alreadyExists = guest.savedEvents.some(
         (ev) => ev.googlePlaceId === googlePlaceId && (ev.profileLocalId ?? null) === (profileId ?? null)
       )
@@ -189,8 +189,9 @@ export function SavedEventsProvider({ children }) {
         googlePlaceId,
         venueName: venue.name,
         profileLocalId: profileId ?? null,
-        eventDate: null,
-        partyTypes: null,
+        eventDate,
+        partyTypes,
+        guestCount,
         savedAt: new Date().toISOString(),
       }
       guest.savedEvents.push(newEvent)

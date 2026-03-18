@@ -63,12 +63,11 @@ export default function WizardContainer() {
               className={`header-saved-btn${savedEvents.length > 0 ? ' header-saved-btn--active' : ''}`}
               onClick={() => setShowSaved(true)}
               aria-label="Saved venues"
-              title="Saved venues"
             >
-              ♥
-              {savedEvents.length > 0 && (
-                <span className="header-saved-count">{savedEvents.length}</span>
-              )}
+              <span className="header-saved-heart">♥</span>
+              <span className="header-saved-label">
+                Saved{savedEvents.length > 0 ? ` (${savedEvents.length})` : ''}
+              </span>
             </button>
             {firebaseConfigured && !authLoading && (
               user

@@ -47,7 +47,7 @@ export default function Step4_VenueResults() {
   const [sortBy, setSortBy] = useState('matchScore');
   const [filterBy, setFilterBy] = useState('all');
   const [showCompare, setShowCompare] = useState(false);
-  const [saveTarget, setSaveTarget] = useState(null); // venue to save, or null
+  const [saveTarget, setSaveTarget] = useState(null); // { venue, eventDate, partyTypes, guestCount }
 
   useEffect(() => {
     const hasOutdoor = venues.some(v => v.setting === 'outdoor');
@@ -110,7 +110,12 @@ export default function Step4_VenueResults() {
     if (saved) {
       unsaveEvent(saved.id ?? saved.localId);
     } else {
-      setSaveTarget(venue);
+      setSaveTarget({
+        venue,
+        eventDate: childInfo?.partyDate?.slice(0, 10) ?? null,
+        partyTypes: preferences?.partyTypes?.join(',') ?? null,
+        guestCount: preferences?.guestCount ?? null,
+      });
     }
   }
 
@@ -276,7 +281,10 @@ export default function Step4_VenueResults() {
 
       {saveTarget && (
         <SaveModal
-          venue={saveTarget}
+          venue={saveTarget.venue}
+          eventDate={saveTarget.eventDate}
+          partyTypes={saveTarget.partyTypes}
+          guestCount={saveTarget.guestCount}
           onClose={() => setSaveTarget(null)}
         />
       )}
