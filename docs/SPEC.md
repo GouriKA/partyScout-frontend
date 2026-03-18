@@ -17,13 +17,13 @@ Planning a child's birthday party is stressful for parents:
 A guided 5-step wizard that mirrors how parents actually think about party planning:
 
 ```
-"I need to plan Emma's 7th birthday"
+"I need to plan a 7th birthday"
+        ↓
+"Indoor or outdoor? How far?"
         ↓
 "What kind of party should I throw?"
         ↓
 "What's my budget? How many kids?"
-        ↓
-"Indoor or outdoor? How far?"
         ↓
 "Which venues can handle this?"
         ↓
@@ -38,25 +38,25 @@ A guided 5-step wizard that mirrors how parents actually think about party plann
 ## Core Features
 
 ### 1. Child Information (Step 1)
-- Child's name (optional, for personalization)
 - Child's age (drives party type suggestions)
-- Party date selection
+- Party date: separate date and time inputs (stored as ISO datetime string)
 
-### 2. Party Preferences (Step 2)
-- **Party Type Selection**: 6 broad categories
-  - Active Play (trampoline, gymnastics, skating, swimming)
-  - Creative (arts, crafts, cooking, science)
-  - Amusement (arcade, movies, escape rooms, bowling)
-  - Outdoor (parks, zoos, farms, adventure)
-  - Characters & Performers (magicians, princesses, entertainers)
-  - Social & Dining (restaurants, cafes, party rooms)
-- Guest count input
-- Budget range slider
-
-### 3. Location & Logistics (Step 3)
+### 2. Location & Logistics (Step 2)
 - ZIP code entry
 - Indoor/Outdoor/Any preference
 - Maximum distance willing to travel (miles)
+
+### 3. Party Preferences (Step 3)
+- **Party Type Selection**: 6 broad categories, filtered by indoor/outdoor setting from Step 2
+  - Active Play (trampoline, gymnastics, skating, swimming)
+  - Creative (arts, crafts, cooking, science)
+  - Amusement (arcade, movies, escape rooms, bowling)
+  - Outdoor (parks, zoos, farms, adventure) — hidden for indoor setting
+  - Characters & Performers (magicians, princesses, entertainers)
+  - Social & Dining (restaurants, cafes, party rooms) — hidden for outdoor setting
+- Guest count input
+- Budget range slider
+- Venue search triggered directly from this step
 
 ### 4. Venue Results (Step 4)
 - Smart-matched venues sorted by relevance
@@ -70,6 +70,8 @@ A guided 5-step wizard that mirrors how parents actually think about party plann
 - Filter chips (All, Indoor, Outdoor, 4+ Stars)
 - Sort options (Best Match, Highest Rated, Closest, Lowest Price)
 - Compare mode (select up to 3 venues)
+- Color-coded weather badge on outdoor venue cards (green/amber/red): temperature, condition, rain risk
+  - Weather fetched from `/api/v2/weather/forecast` when outdoor venues + party date + ZIP are present
 
 ### 5. Party Details (Step 5)
 - Selected venue information
@@ -78,6 +80,7 @@ A guided 5-step wizard that mirrors how parents actually think about party plann
 - Suggested add-ons
 - Contact/booking information
 - Estimated total cost
+- Full-width weather card for outdoor venues: high/low temp, rain %, condition, and "Typical for this time of year" label for CLIMATE_AVERAGE forecast type
 
 ## Technical Architecture
 
@@ -85,12 +88,14 @@ A guided 5-step wizard that mirrors how parents actually think about party plann
 - **Framework**: React 19 with Vite
 - **State Management**: React Context API
 - **Styling**: Custom CSS with CSS variables
+- **Authentication**: Firebase Auth (Google + email/password)
 - **Hosting**: Google Cloud Run
 
 ### Backend
 - **Framework**: Spring Boot 3.3.5 with Kotlin
 - **API Style**: RESTful JSON
-- **External APIs**: Google Places API (New)
+- **External APIs**: Google Places API (New), Weather API
+- **Authentication**: Firebase Admin SDK
 - **Hosting**: Google Cloud Run
 - **Secrets**: Google Secret Manager
 
@@ -144,7 +149,8 @@ A guided 5-step wizard that mirrors how parents actually think about party plann
 
 ### Security
 - No PII stored
-- API keys in Secret Manager
+- API keys and service account credentials in Secret Manager
+- Firebase Authentication for user sign-in
 - HTTPS only
 
 ### Availability
@@ -154,7 +160,8 @@ A guided 5-step wizard that mirrors how parents actually think about party plann
 ## Future Enhancements
 
 ### Phase 2
-- [ ] User accounts and saved searches
+- [x] User accounts (Firebase Authentication — Google + email/password)
+- [ ] Saved searches
 - [ ] Venue reviews from parents
 - [ ] Direct booking integration
 - [ ] Party checklist generator
