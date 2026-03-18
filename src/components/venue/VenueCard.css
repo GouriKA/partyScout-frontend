@@ -222,6 +222,13 @@
   gap: 0.125rem;
 }
 
+.weather-badge-date {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--neutral-600, #4b5563);
+  white-space: nowrap;
+}
+
 .weather-badge-risk-dot {
   font-size: 1.25rem;
   line-height: 1;

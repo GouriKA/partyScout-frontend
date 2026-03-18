@@ -257,6 +257,7 @@ export default function Step4_VenueResults() {
               venue={venue}
               weather={weather}
               weatherLoading={weatherLoading}
+              partyDate={childInfo?.partyDate?.slice(0, 10)}
               isComparing={compareVenues.some(v => v.id === venue.id)}
               isSaved={isSaved(venue.googlePlaceId || venue.id)}
               onSelect={handleSelectVenue}

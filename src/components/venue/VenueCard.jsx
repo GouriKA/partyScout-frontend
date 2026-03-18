@@ -21,6 +21,7 @@ export default function VenueCard({
   venue,
   weather = null,
   weatherLoading = false,
+  partyDate = null,
   isSelected = false,
   isComparing = false,
   isSaved = false,
@@ -92,6 +93,12 @@ export default function VenueCard({
 
         {venue.setting === 'outdoor' && (weatherLoading || weather) && (() => {
           const risk = weather ? getWeatherRisk(weather.precipitationProbability) : null;
+          const formattedDate = partyDate ? (() => {
+            try {
+              const [y, m, d] = partyDate.split('-').map(Number);
+              return new Date(y, m - 1, d).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+            } catch { return partyDate; }
+          })() : null;
           return (
             <div className={`weather-badge weather-badge--${risk?.dot === '🔴' ? 'bad' : risk?.dot === '🟡' ? 'caution' : 'good'} ${weather?.forecastType === 'CLIMATE_AVERAGE' ? 'weather-badge--historical' : ''}`}>
               {weatherLoading ? (
@@ -106,6 +113,9 @@ export default function VenueCard({
                     </div>
                   </div>
                   <div className="weather-badge-right">
+                    {formattedDate && (
+                      <span className="weather-badge-date">{formattedDate}</span>
+                    )}
                     <span className="weather-badge-risk-dot">{risk.dot}</span>
                     <span className="weather-badge-risk-label">{risk.label}</span>
                     {weather.forecastType === 'CLIMATE_AVERAGE' && (
