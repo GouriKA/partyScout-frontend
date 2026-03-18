@@ -16,5 +16,8 @@ steps:
       - '--memory'
       - '256Mi'
 
+options:
+  logging: CLOUD_LOGGING_ONLY
+
 substitutions:
   _IMAGE_TAG: 'latest'
