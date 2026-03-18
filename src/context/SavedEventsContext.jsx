@@ -219,6 +219,23 @@ export function SavedEventsProvider({ children }) {
     }
   }
 
+  // ── deleteProfile ───────────────────────────────────────────────────────────
+
+  async function deleteProfile(profileId) {
+    if (user) {
+      await authFetch(`/api/v2/profiles/${profileId}`, { method: 'DELETE' })
+      setProfiles((prev) => prev.filter((p) => p.id !== profileId))
+      setSavedEvents((prev) => prev.filter((ev) => ev.profileId !== profileId))
+    } else {
+      const guest = readGuest()
+      guest.profiles = guest.profiles.filter((p) => p.localId !== profileId)
+      guest.savedEvents = guest.savedEvents.filter((ev) => ev.profileLocalId !== profileId)
+      writeGuest(guest)
+      setProfiles([...guest.profiles])
+      setSavedEvents([...guest.savedEvents])
+    }
+  }
+
   // ── createProfile ───────────────────────────────────────────────────────────
 
   async function createProfile(name, age) {
@@ -249,6 +266,7 @@ export function SavedEventsProvider({ children }) {
         saveEvent,
         unsaveEvent,
         createProfile,
+        deleteProfile,
         mergeGuestData,
       }}
     >

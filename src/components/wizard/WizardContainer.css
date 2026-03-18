@@ -23,7 +23,52 @@
 
 .wizard-header-logo  { flex: 1; display: flex; align-items: center; }
 .wizard-header-titles { flex: 1; text-align: center; }
-.wizard-header-auth  { flex: 1; display: flex; justify-content: flex-end; align-items: center; }
+.wizard-header-auth  { flex: 1; display: flex; justify-content: flex-end; align-items: center; gap: 0.625rem; }
+
+/* ---- Saved venues button ---- */
+.header-saved-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  border: none;
+  background: var(--neutral-100, #f3f4f6);
+  color: var(--neutral-400, #9ca3af);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+
+.header-saved-btn:hover {
+  background: rgba(240, 57, 122, 0.1);
+  color: #F0397A;
+}
+
+.header-saved-btn--active {
+  color: #F0397A;
+  background: rgba(240, 57, 122, 0.1);
+}
+
+.header-saved-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #F0397A;
+  color: white;
+  font-size: 0.625rem;
+  font-weight: 700;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
 
 /* ---- Title ---- */
 .wizard-title {

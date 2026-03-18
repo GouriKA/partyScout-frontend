@@ -1,0 +1,305 @@
+.account-section {
+  margin-bottom: 2rem;
+}
+
+.account-section-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--neutral-400, #9ca3af);
+  margin: 0 0 0.75rem;
+}
+
+.account-section-title--danger {
+  color: #ef4444;
+}
+
+.account-info-card {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1rem;
+  background: var(--neutral-50, #f9fafb);
+  border-radius: 0.75rem;
+  border: 1px solid var(--neutral-100, #f3f4f6);
+}
+
+.account-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #6366f1;
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.account-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.account-info-details {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.account-info-name {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--neutral-900, #111827);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.account-info-email {
+  font-size: 0.8125rem;
+  color: var(--neutral-500, #6b7280);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.account-provider-badge {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  padding: 0.125rem 0.5rem;
+  background: rgba(240, 57, 122, 0.1);
+  color: #F0397A;
+  border-radius: 1rem;
+  margin-top: 0.125rem;
+}
+
+.account-empty-hint {
+  font-size: 0.875rem;
+  color: var(--neutral-400, #9ca3af);
+  margin: 0 0 0.75rem;
+}
+
+.account-profiles-list {
+  list-style: none;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.account-profile-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  background: var(--neutral-50, #f9fafb);
+  border-radius: 0.625rem;
+  border: 1px solid var(--neutral-100, #f3f4f6);
+}
+
+.account-profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(240, 57, 122, 0.12);
+  color: #F0397A;
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.account-profile-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.account-profile-name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--neutral-900, #111827);
+}
+
+.account-profile-age {
+  font-size: 0.75rem;
+  color: var(--neutral-500, #6b7280);
+}
+
+.account-profile-delete {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--neutral-300, #d1d5db);
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+
+.account-profile-delete:hover {
+  color: #ef4444;
+}
+
+.account-add-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: var(--neutral-50, #f9fafb);
+  border-radius: 0.625rem;
+  border: 1px solid var(--neutral-100, #f3f4f6);
+}
+
+.account-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1.5px solid var(--neutral-200, #e5e7eb);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-family: 'Poppins', sans-serif;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.account-input:focus {
+  border-color: #F0397A;
+  box-shadow: 0 0 0 3px rgba(240, 57, 122, 0.1);
+}
+
+.account-error {
+  font-size: 0.8125rem;
+  color: #ef4444;
+  margin: 0;
+}
+
+.account-add-profile-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.account-btn-add {
+  background: none;
+  border: 1.5px dashed var(--neutral-200, #e5e7eb);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #F0397A;
+  cursor: pointer;
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.account-btn-add:hover {
+  background: rgba(240, 57, 122, 0.05);
+  border-color: #F0397A;
+}
+
+.account-btn-primary {
+  padding: 0.5rem 1rem;
+  background: #F0397A;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  transition: background 0.15s;
+}
+
+.account-btn-primary:hover:not(:disabled) { background: #c82a63; }
+.account-btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.account-btn-ghost {
+  padding: 0.5rem 1rem;
+  background: white;
+  color: var(--neutral-600, #4b5563);
+  border: 1.5px solid var(--neutral-200, #e5e7eb);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  transition: background 0.15s;
+}
+
+.account-btn-ghost:hover:not(:disabled) { background: var(--neutral-50, #f9fafb); }
+.account-btn-ghost:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.account-btn-signout {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  background: var(--neutral-100, #f3f4f6);
+  color: var(--neutral-700, #374151);
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  transition: background 0.15s;
+  text-align: center;
+}
+
+.account-btn-signout:hover { background: var(--neutral-200, #e5e7eb); }
+
+.account-section--danger {
+  border-top: 1px solid var(--neutral-100, #f3f4f6);
+  padding-top: 1.5rem;
+}
+
+.account-delete-confirm p {
+  font-size: 0.875rem;
+  color: var(--neutral-600, #4b5563);
+  margin: 0 0 0.75rem;
+}
+
+.account-btn-delete {
+  background: none;
+  border: 1.5px solid #ef4444;
+  border-radius: 0.5rem;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ef4444;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  transition: background 0.15s;
+}
+
+.account-btn-delete:hover { background: rgba(239, 68, 68, 0.06); }
+
+.account-btn-danger {
+  padding: 0.5rem 1rem;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  transition: background 0.15s;
+}
+
+.account-btn-danger:hover { background: #dc2626; }

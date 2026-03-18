@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import './UserMenu.css'
 
-export default function UserMenu() {
+export default function UserMenu({ onAccountClick }) {
   const { user, profile, signOut } = useAuth()
   const [open, setOpen] = useState(false)
   const menuRef = useRef(null)
@@ -50,6 +50,14 @@ export default function UserMenu() {
             <p className="user-menu-display-name">{displayName}</p>
             <p className="user-menu-email">{user?.email}</p>
           </div>
+          <hr className="user-menu-divider" />
+          <button
+            className="user-menu-item"
+            role="menuitem"
+            onClick={() => { setOpen(false); onAccountClick?.() }}
+          >
+            My Account
+          </button>
           <hr className="user-menu-divider" />
           <button
             className="user-menu-item user-menu-signout"
