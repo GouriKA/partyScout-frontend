@@ -1,0 +1,20 @@
+steps:
+  # Deploy to prod (us-central1) — manually triggered only
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'partyscout-frontend'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/partyscout-frontend:${_IMAGE_TAG}'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--memory'
+      - '256Mi'
+
+substitutions:
+  _IMAGE_TAG: 'latest'

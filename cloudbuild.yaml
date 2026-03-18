@@ -27,17 +27,17 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/partyscout-frontend:$COMMIT_SHA']
 
-  # Deploy to Cloud Run
+  # Deploy to canary (us-east1)
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
       - 'run'
       - 'deploy'
-      - 'partyscout-frontend'
+      - 'partyscout-frontend-canary'
       - '--image'
       - 'gcr.io/$PROJECT_ID/partyscout-frontend:$COMMIT_SHA'
       - '--region'
-      - 'us-central1'
+      - 'us-east1'
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
