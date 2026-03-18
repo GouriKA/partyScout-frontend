@@ -44,6 +44,9 @@ steps:
       - '--memory'
       - '256Mi'
 
+options:
+  logging: CLOUD_LOGGING_ONLY
+
 substitutions:
   _VITE_API_URL: 'https://partyscout.live'
   _VITE_FIREBASE_API_KEY: ''
