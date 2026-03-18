@@ -49,12 +49,12 @@ options:
 
 substitutions:
   _VITE_API_URL: 'https://partyscout-backend-canary-3f6x32ha2a-ue.a.run.app'
-  _VITE_FIREBASE_API_KEY: ''
-  _VITE_FIREBASE_AUTH_DOMAIN: ''
-  _VITE_FIREBASE_PROJECT_ID: ''
-  _VITE_FIREBASE_STORAGE_BUCKET: ''
-  _VITE_FIREBASE_MESSAGING_SENDER_ID: ''
-  _VITE_FIREBASE_APP_ID: ''
+  _VITE_FIREBASE_API_KEY: 'AIzaSyDiWsJLElP6j6bxJXdd6zWr3JsnpzAJHv0'
+  _VITE_FIREBASE_AUTH_DOMAIN: 'bionic-upgrade-485121-h5.firebaseapp.com'
+  _VITE_FIREBASE_PROJECT_ID: 'bionic-upgrade-485121-h5'
+  _VITE_FIREBASE_STORAGE_BUCKET: 'bionic-upgrade-485121-h5.firebasestorage.app'
+  _VITE_FIREBASE_MESSAGING_SENDER_ID: '869352526308'
+  _VITE_FIREBASE_APP_ID: '1:869352526308:web:fdb2b9c9724319eb9b37f1'
 
 images:
   - 'gcr.io/$PROJECT_ID/partyscout-frontend:$COMMIT_SHA'
