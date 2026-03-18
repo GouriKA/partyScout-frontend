@@ -13,13 +13,18 @@
   letter-spacing: 0.01em;
 }
 
-.early-access-banner a {
+.banner-feedback-btn {
+  background: none;
+  border: none;
   color: #f0397a;
-  text-decoration: none;
   font-weight: 600;
+  font-size: 0.8rem;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  padding: 0;
 }
 
-.early-access-banner a:hover {
+.banner-feedback-btn:hover {
   text-decoration: underline;
 }
 
