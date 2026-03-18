@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { usePartyPlanner } from '../../context/PartyPlannerContext';
+import { useSavedEvents } from '../../context/SavedEventsContext';
 import VenueCard from '../venue/VenueCard';
 import VenueCompare from '../venue/VenueCompare';
+import SaveModal from '../savedevents/SaveModal';
 import Button from '../common/Button';
 import './WizardStep.css';
 import './Step4_VenueResults.css';
@@ -40,9 +42,12 @@ export default function Step4_VenueResults() {
     fetchWeatherForecast,
   } = usePartyPlanner();
 
+  const { isSaved, unsaveEvent, savedEvents } = useSavedEvents();
+
   const [sortBy, setSortBy] = useState('matchScore');
   const [filterBy, setFilterBy] = useState('all');
   const [showCompare, setShowCompare] = useState(false);
+  const [saveTarget, setSaveTarget] = useState(null); // venue to save, or null
 
   useEffect(() => {
     const hasOutdoor = venues.some(v => v.setting === 'outdoor');
@@ -98,6 +103,16 @@ export default function Step4_VenueResults() {
     setShowCompare(false);
     handleSelectVenue(venue);
   };
+
+  function handleHeartClick(venue) {
+    const googlePlaceId = venue.googlePlaceId || venue.id;
+    const saved = savedEvents.find((ev) => ev.googlePlaceId === googlePlaceId && (ev.profileId ?? null) === null);
+    if (saved) {
+      unsaveEvent(saved.id ?? saved.localId);
+    } else {
+      setSaveTarget(venue);
+    }
+  }
 
   if (loading) {
     return (
@@ -238,8 +253,10 @@ export default function Step4_VenueResults() {
               weather={weather}
               weatherLoading={weatherLoading}
               isComparing={compareVenues.some(v => v.id === venue.id)}
+              isSaved={isSaved(venue.googlePlaceId || venue.id)}
               onSelect={handleSelectVenue}
               onToggleCompare={toggleCompareVenue}
+              onSave={handleHeartClick}
             />
           ))}
         </div>
@@ -254,6 +271,13 @@ export default function Step4_VenueResults() {
           venues={compareVenues}
           onClose={() => setShowCompare(false)}
           onSelect={handleCompareSelect}
+        />
+      )}
+
+      {saveTarget && (
+        <SaveModal
+          venue={saveTarget}
+          onClose={() => setSaveTarget(null)}
         />
       )}
     </div>

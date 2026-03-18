@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { PartyPlannerProvider } from './context/PartyPlannerContext'
 import { AuthProvider } from './context/AuthContext'
+import { SavedEventsProvider } from './context/SavedEventsContext'
 import WizardContainer from './components/wizard/WizardContainer'
 import ErrorBoundary from './components/common/ErrorBoundary'
 import FeedbackModal from './components/common/FeedbackModal'
@@ -12,6 +13,7 @@ function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
+        <SavedEventsProvider>
         <PartyPlannerProvider>
           <div className="early-access-banner">
             🚧 Early Access — Some features may change.{' '}
@@ -24,6 +26,7 @@ function App() {
           </div>
           {showFeedback && <FeedbackModal onClose={() => setShowFeedback(false)} />}
         </PartyPlannerProvider>
+        </SavedEventsProvider>
       </AuthProvider>
     </ErrorBoundary>
   )

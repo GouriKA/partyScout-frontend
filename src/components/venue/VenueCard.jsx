@@ -1,5 +1,6 @@
 import './VenueCard.css';
 
+
 const CONDITION_ICONS = {
   CLEAR: '☀️', MOSTLY_CLEAR: '🌤️', PARTLY_CLOUDY: '⛅',
   MOSTLY_CLOUDY: '☁️', CLOUDY: '☁️', OVERCAST: '☁️',
@@ -22,8 +23,10 @@ export default function VenueCard({
   weatherLoading = false,
   isSelected = false,
   isComparing = false,
+  isSaved = false,
   onSelect,
   onToggleCompare,
+  onSave,
   showCompareCheckbox = true
 }) {
   const getMatchScoreColor = (score) => {
@@ -56,6 +59,15 @@ export default function VenueCard({
           <img src={venue.photos[0]} alt={venue.name} />
         </div>
       )}
+
+      <button
+        className={`venue-heart-btn${isSaved ? ' venue-heart-btn--saved' : ''}`}
+        onClick={(e) => { e.stopPropagation(); onSave?.(venue) }}
+        aria-label={isSaved ? 'Unsave venue' : 'Save venue'}
+        title={isSaved ? 'Saved' : 'Save'}
+      >
+        {isSaved ? '♥' : '♡'}
+      </button>
 
       {showCompareCheckbox && (
         <label className="venue-compare-checkbox">
