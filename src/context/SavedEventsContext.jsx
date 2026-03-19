@@ -126,7 +126,12 @@ export function SavedEventsProvider({ children }) {
       } else {
         loadFromApi()
       }
+    } else if (wasLoggedIn) {
+      // Just signed out — clear saved state immediately
+      setSavedEvents([])
+      setProfiles([])
     } else {
+      // Initial load while not signed in — load any guest data
       loadFromGuest()
     }
   }, [user]) // eslint-disable-line react-hooks/exhaustive-deps
