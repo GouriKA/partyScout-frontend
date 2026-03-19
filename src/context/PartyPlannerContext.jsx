@@ -21,6 +21,8 @@ const initialState = {
     accessibility: []
   },
   venues: [],
+  persona: null,           // e.g. "Kids", "Teens", "Adults"
+  llmFilterApplied: null,  // null = not yet searched; true/false after search
   weather: null,
   weatherLoading: false,
   loading: false,
@@ -89,7 +91,14 @@ function partyPlannerReducer(state, action) {
       };
 
     case actionTypes.SET_VENUES:
-      return { ...state, venues: action.payload, loading: false, error: null };
+      return {
+        ...state,
+        venues: action.payload.venues,
+        persona: action.payload.persona ?? null,
+        llmFilterApplied: action.payload.llmFilterApplied ?? null,
+        loading: false,
+        error: null,
+      };
 
     case actionTypes.SET_LOADING:
       return { ...state, loading: action.payload };
@@ -110,7 +119,7 @@ function partyPlannerReducer(state, action) {
           compareVenues: state.compareVenues.filter(v => v.id !== venueId)
         };
       } else if (state.compareVenues.length < 3) {
-        const venue = state.venues.find(v => v.id === venueId);
+        const venue = (state.venues || []).find(v => v.id === venueId);
         return {
           ...state,
           compareVenues: venue ? [...state.compareVenues, venue] : state.compareVenues
@@ -186,8 +195,8 @@ export function PartyPlannerProvider({ children }) {
   }, []);
 
   // Venue actions
-  const setVenues = useCallback((venues) => {
-    dispatch({ type: actionTypes.SET_VENUES, payload: venues });
+  const setVenues = useCallback((payload) => {
+    dispatch({ type: actionTypes.SET_VENUES, payload });
   }, []);
 
   const selectVenue = useCallback((venue) => {
@@ -264,7 +273,11 @@ export function PartyPlannerProvider({ children }) {
       }
 
       const data = await response.json();
-      setVenues(data.venues || []);
+      setVenues({
+        venues: data.venues || [],
+        persona: data.persona ?? null,
+        llmFilterApplied: data.llmFilterApplied ?? null,
+      });
       setPartyTypeSuggestions(data.partyTypeSuggestions || []);
     } catch (err) {
       if (err.name === 'TypeError') {

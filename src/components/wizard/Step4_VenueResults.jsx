@@ -40,6 +40,8 @@ export default function Step4_VenueResults() {
     weather,
     weatherLoading,
     fetchWeatherForecast,
+    llmFilterApplied,
+    persona,
   } = usePartyPlanner();
 
   const { isSaved, unsaveEvent, savedEvents } = useSavedEvents();
@@ -190,8 +192,13 @@ export default function Step4_VenueResults() {
           {filteredVenues.length} Venue{filteredVenues.length !== 1 ? 's' : ''} Found
         </h2>
         <p className="step-description">
-          Sorted by best match for your {preferences.guestCount}-guest party
+          {persona ? `${persona} picks — ` : ''}Sorted by best match for your {preferences.guestCount}-guest party
         </p>
+        {llmFilterApplied === false && (
+          <p className="step-unfiltered-notice">
+            Showing unfiltered results — smart filtering unavailable right now
+          </p>
+        )}
       </div>
 
       <div className="results-controls">

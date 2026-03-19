@@ -1,5 +1,12 @@
 .step-venue-results { max-width: 100%; }
 
+.step-unfiltered-notice {
+  font-size: 0.75rem;
+  color: var(--neutral-400, #9ca3af);
+  margin: 0.25rem 0 0;
+  font-style: italic;
+}
+
 .results-controls {
   display: flex;
   justify-content: space-between;
