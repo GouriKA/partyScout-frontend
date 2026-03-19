@@ -1,0 +1,614 @@
+/* ============================================================
+   LandingPage — scoped to .lp-* prefix, no global overrides
+   ============================================================ */
+
+.lp {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* ── Color helpers ────────────────────────────────────────── */
+.lp-pink   { color: #F0287A; }
+.lp-orange { color: #F5923E; }
+
+/* ── 1. Early access bar ──────────────────────────────────── */
+.lp-early-bar {
+  background: #0a0a0a;
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+  padding: 9px 48px;
+  letter-spacing: 0.02em;
+  /* full-bleed: break out of the centered max-width container */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+}
+
+.lp-early-cta {
+  color: #F5923E;
+  font-weight: 500;
+  margin-left: 6px;
+  cursor: pointer;
+}
+
+/* ── 2. Navbar ────────────────────────────────────────────── */
+.lp-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  height: 56px;
+  border-bottom: 0.5px solid #ebebeb;
+  background: #fff;
+}
+
+.lp-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lp-logo-icon {
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #F0287A, #F5923E);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 16px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.lp-logo-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0a0a0a;
+  letter-spacing: -0.02em;
+}
+
+.lp-logo-party {
+  color: #F0287A;
+}
+
+.lp-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Saved bookmark */
+.lp-nav-saved {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 15px;
+  color: #666;
+  padding-right: 14px;
+  border: none;
+  border-right: 0.5px solid #e0e0e0;
+  margin-right: 4px;
+  cursor: pointer;
+  background: none;
+  font-family: 'Poppins', sans-serif;
+}
+
+.lp-nav-saved-heart {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.lp-nav-saved--active {
+  color: #F0287A;
+}
+
+/* Sign in / Sign up */
+.lp-btn {
+  font-size: 15px;
+  font-weight: 500;
+  padding: 8px 18px;
+  cursor: pointer;
+  border-radius: 0;
+  line-height: 1;
+  font-family: 'Poppins', sans-serif;
+  transition: background 0.15s, color 0.15s;
+}
+
+.lp-btn-signin {
+  background: #fff;
+  color: #0a0a0a;
+  border: 1px solid #0a0a0a;
+}
+
+.lp-btn-signin:hover {
+  background: #f5f5f5;
+}
+
+.lp-btn-signup {
+  background: #F0287A;
+  color: #fff;
+  border: 1px solid #F0287A;
+}
+
+.lp-btn-signup:hover {
+  background: #d41f6a;
+}
+
+/* ── 3. Hero ──────────────────────────────────────────────── */
+.lp-hero-body {
+  max-width: 640px;
+  margin: 0 auto 0 8%;
+}
+
+.lp-hero {
+  padding: 48px 48px 44px;
+  background: #fff;
+  border-bottom: 0.5px solid #ebebeb;
+}
+
+.lp-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  background: #F0287A;
+  padding: 5px 10px;
+  border-radius: 0;
+  margin-bottom: 20px;
+}
+
+.lp-hero-title {
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #0a0a0a;
+  letter-spacing: -0.04em;
+  margin-bottom: 10px;
+}
+
+.lp-hero-sub {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.65;
+  max-width: 440px;
+  margin-bottom: 24px;
+}
+
+/* Occasion pills */
+.lp-occasion-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.lp-pill {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 0;
+  color: #444;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Poppins', sans-serif;
+  transition: border-color 0.15s;
+}
+
+.lp-pill:hover:not(.lp-pill--active) {
+  border-color: #0a0a0a;
+}
+
+.lp-pill--active {
+  background: #F0287A;
+  color: #fff;
+  border-color: #F0287A;
+}
+
+/* City dropdown search bar */
+.lp-search-wrap {
+  display: flex;
+  align-items: stretch;
+  max-width: 420px;
+}
+
+.lp-search-left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #0a0a0a;
+  border-right: none;
+  padding: 0 12px;
+  gap: 8px;
+}
+
+.lp-search-icon {
+  width: 15px;
+  height: 15px;
+  color: #999;
+  flex-shrink: 0;
+}
+
+.lp-city-input {
+  flex: 1;
+  padding: 12px 0;
+  font-size: 15px;
+  border: none;
+  outline: none;
+  color: #0a0a0a;
+  background: transparent;
+  font-family: 'Poppins', sans-serif;
+  min-width: 0;
+  width: 100%;
+}
+
+.lp-city-input::placeholder {
+  color: #bbb;
+}
+
+.lp-search-btn {
+  padding: 0 22px;
+  background: #0a0a0a;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  border: 1.5px solid #0a0a0a;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+
+.lp-search-btn:hover {
+  opacity: 0.9;
+}
+
+/* ── 4. Celebrating someone specific? ────────────────────── */
+.lp-for-who {
+  padding: 28px 48px;
+  background: #fafafa;
+  border-bottom: 0.5px solid #ebebeb;
+}
+
+.lp-for-who-header {
+  margin-bottom: 0;
+}
+
+.lp-for-who-sub {
+  font-size: 15px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.lp-section-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0a0a0a;
+  letter-spacing: -0.01em;
+}
+
+.lp-section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.lp-section-link {
+  font-size: 14px;
+  color: #F0287A;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.lp-persona-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.lp-persona-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 14px 0;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 0;
+  background: #fff;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.lp-persona-chip-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0a0a0a;
+}
+
+.lp-persona-chip-range {
+  font-size: 12px;
+  color: #999;
+}
+
+.lp-persona-chip:hover:not(.lp-persona-chip--active) {
+  border-color: #F0287A;
+}
+
+.lp-persona-chip:hover:not(.lp-persona-chip--active) .lp-persona-chip-label {
+  color: #F0287A;
+}
+
+.lp-persona-chip--active {
+  border-color: #F0287A;
+  background: #fff8fb;
+}
+
+.lp-persona-chip--active .lp-persona-chip-label {
+  color: #F0287A;
+}
+
+.lp-persona-chip--active .lp-persona-chip-range {
+  color: #F0287A;
+  opacity: 0.7;
+}
+
+/* ── 5. Top ideas card row ────────────────────────────────── */
+.lp-cards-section {
+  padding: 28px 48px 0;
+  background: #fff;
+  border-bottom: 0.5px solid #ebebeb;
+}
+
+.lp-cards-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  padding-bottom: 28px;
+}
+
+.lp-card {
+  border: 0.5px solid #e8e8e8;
+  overflow: hidden;
+  background: #fff;
+  transition: border-color 0.15s;
+}
+
+.lp-card:hover {
+  border-color: #F0287A;
+}
+
+.lp-card-img {
+  height: 100px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 8px;
+}
+
+.lp-card-badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #0a0a0a;
+}
+
+.lp-card-heart {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 26px;
+  height: 26px;
+  background: #fff;
+  border: 0.5px solid #e8e8e8;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  font-size: 14px;
+  color: #bbb;
+}
+
+.lp-card-heart--saved {
+  color: #F0287A;
+}
+
+.lp-card-body {
+  padding: 10px 12px 12px;
+  cursor: pointer;
+}
+
+.lp-card-cat {
+  font-size: 12px;
+  font-weight: 600;
+  color: #F0287A;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.lp-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0a0a0a;
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+
+.lp-card-meta {
+  font-size: 13px;
+  color: #999;
+}
+
+/* ── 6. How it works ──────────────────────────────────────── */
+.lp-how {
+  padding: 32px 48px;
+  background: #fff;
+  border-bottom: 0.5px solid #ebebeb;
+}
+
+.lp-how-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: #ebebeb;
+  margin-top: 16px;
+}
+
+.lp-step {
+  background: #fff;
+  padding: 18px 16px;
+}
+
+.lp-step-num {
+  font-size: 13px;
+  font-weight: 700;
+  color: #F0287A;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.lp-step-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0a0a0a;
+  margin-bottom: 5px;
+}
+
+.lp-step-desc {
+  font-size: 14px;
+  color: #888;
+  line-height: 1.6;
+}
+
+/* ── 7. Footer CTA ────────────────────────────────────────── */
+.lp-footer-cta {
+  padding: 36px 48px;
+  background: #0a0a0a;
+  text-align: center;
+  /* full-bleed: break out of the centered max-width container */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+}
+
+.lp-footer-cta h2 {
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.04em;
+  margin-bottom: 8px;
+}
+
+.lp-footer-cta p {
+  font-size: 15px;
+  color: #666;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.lp-cta-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.lp-cta-primary {
+  padding: 11px 28px;
+  background: #F0287A;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  border-radius: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.lp-cta-secondary {
+  padding: 11px 28px;
+  background: transparent;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  border: 1px solid #333;
+  cursor: pointer;
+  border-radius: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* ── Mobile (< 640px) ─────────────────────────────────────── */
+@media (max-width: 640px) {
+  .lp-early-bar,
+  .lp-nav        { padding-left: 20px; padding-right: 20px; }
+  .lp-hero       { padding: 36px 20px 32px; }
+  .lp-for-who,
+  .lp-cards-section,
+  .lp-how,
+  .lp-footer-cta { padding-left: 20px; padding-right: 20px; }
+
+  .lp-hero-title { font-size: 30px; }
+
+  /* Stacked search bar */
+  .lp-search-wrap {
+    flex-direction: column;
+    max-width: 100%;
+  }
+
+  .lp-search-left {
+    border-right: 1.5px solid #0a0a0a;
+  }
+
+  .lp-search-btn {
+    padding: 13px 22px;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Cards: horizontal scroll on mobile */
+  .lp-cards-row {
+    grid-template-columns: repeat(5, 160px);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Persona chips: 1 column on mobile */
+  .lp-persona-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* How it works: 1 column */
+  .lp-how-steps {
+    grid-template-columns: 1fr;
+  }
+
+  /* Footer buttons: stack */
+  .lp-cta-row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .lp-cta-primary,
+  .lp-cta-secondary {
+    width: 100%;
+    max-width: 320px;
+  }
+}

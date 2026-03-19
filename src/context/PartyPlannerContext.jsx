@@ -15,7 +15,7 @@ const initialState = {
     budget: { min: 0, max: 500 }
   },
   location: {
-    zipCode: '',
+    city: '',
     setting: 'any', // indoor | outdoor | any
     maxDistance: 10,
     accessibility: []
@@ -230,6 +230,40 @@ export function PartyPlannerProvider({ children }) {
     dispatch({ type: actionTypes.RESET });
   }, []);
 
+  // Quick search by free-text query (used from landing page cards)
+  const searchVenuesByQuery = useCallback(async (textQuery, city) => {
+    setLoading(true);
+    setError(null);
+
+    const requestBody = {
+      age: state.childInfo.age ?? 7,
+      guestCount: state.preferences.guestCount,
+      city: city || state.location.city || 'London',
+      setting: 'any',
+      maxDistanceMiles: state.location.maxDistance,
+      textQuery,
+    };
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v2/party-wizard/search`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) throw new Error('Search failed');
+
+      const data = await response.json();
+      setVenues({
+        venues: data.venues || [],
+        persona: data.persona ?? null,
+        llmFilterApplied: data.llmFilterApplied ?? null,
+      });
+    } catch (err) {
+      setError('Unable to load results. Please try again.');
+    }
+  }, [state.childInfo.age, state.preferences.guestCount, state.location, setLoading, setError, setVenues]);
+
   // API call to search venues
   const searchVenues = useCallback(async () => {
     setLoading(true);
@@ -241,7 +275,7 @@ export function PartyPlannerProvider({ children }) {
       guestCount: state.preferences.guestCount,
       budgetMin: state.preferences.budget.min,
       budgetMax: state.preferences.budget.max,
-      zipCode: state.location.zipCode,
+      city: state.location.city,
       setting: state.location.setting,
       maxDistanceMiles: state.location.maxDistance,
       date: state.childInfo.partyDate
@@ -412,6 +446,7 @@ export function PartyPlannerProvider({ children }) {
 
     // API
     searchVenues,
+    searchVenuesByQuery,
 
     // Reset
     reset

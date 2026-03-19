@@ -5,25 +5,55 @@
   box-sizing: border-box;
 }
 
-/* ---- Header ---- */
+/* ---- Slim nav header ---- */
 .wizard-header {
-  margin-bottom: 1.5rem;
-  padding: 1.25rem 1.5rem;
-  background: #fff;
-  border-radius: 1rem;
-  border: 2px solid #050505;
-}
-
-.wizard-header-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  height: 56px;
+  padding: 0 0 0 4px;
+  margin-bottom: 1.25rem;
+  border-bottom: 0.5px solid #ebebeb;
+  background: #fff;
 }
 
-.wizard-header-logo  { flex: 1; display: flex; align-items: center; }
-.wizard-header-titles { flex: 1; text-align: center; }
-.wizard-header-auth  { flex: 1; display: flex; justify-content: flex-end; align-items: center; gap: 0.625rem; }
+.wizard-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wizard-logo-icon {
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #F0287A, #F5923E);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 14px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.wizard-logo-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0a0a0a;
+  letter-spacing: -0.02em;
+  font-family: 'Poppins', sans-serif;
+}
+
+.wizard-logo-party {
+  color: #F0287A;
+}
+
+/* ---- Right side auth area ---- */
+.wizard-header-auth {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 
 /* ---- Saved venues button ---- */
 .header-saved-btn {
@@ -31,8 +61,8 @@
   align-items: center;
   gap: 0.375rem;
   padding: 6px 14px;
-  border-radius: 24px;
-  border: 1.5px solid var(--neutral-200, #e5e7eb);
+  border-radius: 0;
+  border: 1px solid #e0e0e0;
   background: white;
   color: var(--neutral-500, #6b7280);
   font-size: 0.8125rem;
@@ -45,15 +75,15 @@
 }
 
 .header-saved-btn:hover {
-  border-color: #F0397A;
-  color: #F0397A;
-  background: rgba(240, 57, 122, 0.04);
+  border-color: #F0287A;
+  color: #F0287A;
+  background: rgba(240, 40, 122, 0.04);
 }
 
 .header-saved-btn--active {
-  border-color: #F0397A;
-  color: #F0397A;
-  background: rgba(240, 57, 122, 0.06);
+  border-color: #F0287A;
+  color: #F0287A;
+  background: rgba(240, 40, 122, 0.06);
 }
 
 .header-saved-heart {
@@ -64,48 +94,45 @@
   line-height: 1;
 }
 
-/* ---- Title ---- */
-.wizard-title {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #050505;
-  margin: 0 0 0.2rem;
-  line-height: 1.2;
-  white-space: nowrap;
-}
-
-.wizard-subtitle {
-  font-size: 0.875rem;
-  color: var(--neutral-500, #6b7280);
-  margin: 0;
-  font-weight: 400;
-}
-
-/* ---- Sign in button ---- */
-.sign-in-btn {
-  padding: 8px 20px;
-  background: #F0397A;
-  color: #fff;
-  border: none;
-  border-radius: 24px;
-  font-size: 14px;
-  font-weight: 600;
+/* ---- Sign In / Sign Up buttons ---- */
+.wizard-btn-signin {
+  padding: 7px 16px;
+  background: #fff;
+  color: #0a0a0a;
+  border: 1px solid #0a0a0a;
+  border-radius: 0;
+  font-size: 13px;
+  font-weight: 500;
   font-family: 'Poppins', sans-serif;
   cursor: pointer;
-  transition: background 0.15s, box-shadow 0.15s;
-  box-shadow: 0 2px 10px rgba(240,57,122,0.3);
-  white-space: nowrap;
+  transition: background 0.15s;
 }
 
-.sign-in-btn:hover {
-  background: #c82a63;
-  box-shadow: 0 4px 16px rgba(240,57,122,0.45);
+.wizard-btn-signin:hover {
+  background: #f5f5f5;
+}
+
+.wizard-btn-signup {
+  padding: 7px 16px;
+  background: #F0287A;
+  color: #fff;
+  border: 1px solid #F0287A;
+  border-radius: 0;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.wizard-btn-signup:hover {
+  background: #c0206a;
 }
 
 /* ---- Content card ---- */
 .wizard-content {
   background: #fff;
-  border-radius: 1rem;
+  border-radius: 0;
   border: 2px solid #050505;
   padding: 2rem;
   animation: slideUp 0.25s ease;
@@ -117,7 +144,6 @@
 }
 
 @media (max-width: 600px) {
-  .wizard-header { padding: 1rem; }
-  .wizard-title  { font-size: 1.1rem; }
-  .wizard-content { padding: 1.25rem 1rem; border-radius: 0.75rem; }
+  .wizard-header { padding: 0 4px; }
+  .wizard-content { padding: 1.25rem 1rem; border-radius: 0; }
 }

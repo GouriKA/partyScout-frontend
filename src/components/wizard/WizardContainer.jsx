@@ -12,11 +12,10 @@ import AuthModal from '../auth/AuthModal';
 import UserMenu from '../auth/UserMenu';
 import SavedEventsPanel from '../savedevents/SavedEventsPanel';
 import AccountPanel from '../account/AccountPanel';
-import Logo from '../common/Logo';
 import { firebaseConfigured } from '../../firebase';
 import './WizardContainer.css';
 
-export default function WizardContainer() {
+export default function WizardContainer({ onHome }) {
   const { currentStep, goToStep } = usePartyPlanner();
   const { user, loading: authLoading } = useAuth();
   const { savedEvents } = useSavedEvents();
@@ -48,33 +47,33 @@ export default function WizardContainer() {
   return (
     <div className="wizard-container">
       <header className="wizard-header">
-        <div className="wizard-header-top">
-          <div className="wizard-header-logo">
-            <Logo size="md" />
-          </div>
-          <div className="wizard-header-titles">
-            <h1 className="wizard-title">Your next party is waiting!</h1>
-            <p className="wizard-subtitle">
-              Find the perfect venue in just a few steps
-            </p>
-          </div>
-          <div className="wizard-header-auth">
-            <button
-              className={`header-saved-btn${savedEvents.length > 0 ? ' header-saved-btn--active' : ''}`}
-              onClick={() => setShowSaved(true)}
-              aria-label="Saved venues"
-            >
-              <span className="header-saved-heart">♥</span>
-              <span className="header-saved-label">
-                Saved{savedEvents.length > 0 ? ` (${savedEvents.length})` : ''}
-              </span>
-            </button>
-            {firebaseConfigured && !authLoading && (
-              user
-                ? <UserMenu onAccountClick={() => setShowAccount(true)} />
-                : <button className="sign-in-btn" onClick={() => setShowAuthModal(true)}>Sign In</button>
-            )}
-          </div>
+        <div className="wizard-logo" onClick={onHome} style={{ cursor: 'pointer' }}>
+          <div className="wizard-logo-icon">P</div>
+          <span className="wizard-logo-text">
+            <span className="wizard-logo-party">Party</span>Scout
+          </span>
+        </div>
+        <div className="wizard-header-auth">
+          <button
+            className={`header-saved-btn${savedEvents.length > 0 ? ' header-saved-btn--active' : ''}`}
+            onClick={() => setShowSaved(true)}
+            aria-label="Saved venues"
+          >
+            <span className="header-saved-heart">♥</span>
+            <span className="header-saved-label">
+              Saved{savedEvents.length > 0 ? ` (${savedEvents.length})` : ''}
+            </span>
+          </button>
+          {firebaseConfigured && !authLoading && (
+            user
+              ? <UserMenu onAccountClick={() => setShowAccount(true)} />
+              : (
+                <>
+                  <button className="wizard-btn-signin" onClick={() => setShowAuthModal(true)}>Sign In</button>
+                  <button className="wizard-btn-signup" onClick={() => setShowAuthModal(true)}>Sign Up</button>
+                </>
+              )
+          )}
         </div>
       </header>
 

@@ -1,13 +1,12 @@
 import { usePartyPlanner } from '../../context/PartyPlannerContext';
-import Input from '../common/Input';
 import Slider from '../common/Slider';
 import Button from '../common/Button';
 import './WizardStep.css';
 
 const settingOptions = [
-  { value: 'any', label: 'No preference', icon: '🏠' },
-  { value: 'indoor', label: 'Indoor', icon: '🏢' },
-  { value: 'outdoor', label: 'Outdoor', icon: '☀️' }
+  { value: 'any',     label: 'No preference', icon: '🏠' },
+  { value: 'indoor',  label: 'Indoor',         icon: '🏢' },
+  { value: 'outdoor', label: 'Outdoor',         icon: '☀️' }
 ];
 
 export default function Step3_Location() {
@@ -17,11 +16,6 @@ export default function Step3_Location() {
     nextStep,
     prevStep
   } = usePartyPlanner();
-
-  const handleZipCodeChange = (e) => {
-    const value = e.target.value.replace(/\D/g, '').slice(0, 5);
-    updateLocation({ zipCode: value });
-  };
 
   const handleSettingChange = (setting) => {
     updateLocation({ setting });
@@ -33,8 +27,7 @@ export default function Step3_Location() {
 
   const formatDistance = (value) => `${value} miles`;
 
-  const isValidZip = location.zipCode.length === 5;
-  const canProceed = isValidZip;
+  const canProceed = true;
 
   return (
     <div className="wizard-step">
@@ -52,18 +45,6 @@ export default function Step3_Location() {
       </div>
 
       <div className="step-form">
-        <Input
-          label="ZIP Code"
-          type="text"
-          value={location.zipCode}
-          onChange={handleZipCodeChange}
-          placeholder="e.g., 94105"
-          required
-          maxLength={5}
-          pattern="[0-9]{5}"
-          hint="We'll search for venues near this location"
-        />
-
         <div className="form-section">
           <label className="section-label">Indoor or Outdoor?</label>
           <div className="setting-options">

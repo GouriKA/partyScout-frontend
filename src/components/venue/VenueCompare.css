@@ -20,7 +20,7 @@
   max-width: 1000px;
   max-height: 90vh;
   background: white;
-  border-radius: 1rem 1rem 0 0;
+  border-radius: 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -111,7 +111,7 @@
   padding: 0.125rem 0.5rem;
   background: rgba(240, 57, 122, 0.08);
   color: #F0397A;
-  border-radius: 1rem;
+  border-radius: 0;
   font-size: 0.6875rem;
   font-weight: 500;
 }
@@ -131,7 +131,7 @@
   background: #F0397A;
   color: white;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 0;
   font-weight: 600;
   font-size: 0.9375rem;
   cursor: pointer;
@@ -142,7 +142,7 @@
 .compare-select-btn:hover { background: #c82a63; transform: translateY(-1px); }
 
 @media (max-width: 768px) {
-  .compare-panel { max-height: 95vh; border-radius: 1.5rem 1.5rem 0 0; }
+  .compare-panel { max-height: 95vh; border-radius: 0; }
   .compare-label-col { width: 100px; }
   .compare-venue-col { min-width: 150px; }
   .compare-actions { flex-direction: column; }
