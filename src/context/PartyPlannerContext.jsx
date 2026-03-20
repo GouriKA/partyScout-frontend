@@ -270,7 +270,7 @@ export function PartyPlannerProvider({ children }) {
     setError(null);
 
     const requestBody = {
-      age: state.childInfo.age,
+      age: state.childInfo.age ?? 7,
       partyTypes: state.preferences.partyTypes,
       guestCount: state.preferences.guestCount,
       budgetMin: state.preferences.budget.min,
