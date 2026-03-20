@@ -19,7 +19,7 @@ function App() {
         <SavedEventsProvider>
           <PartyPlannerProvider>
             <div className="early-access-banner">
-              Still in development — we'd love your feedback{' '}
+              We're still in development — we'd love your feedback!{' '}
               <button className="banner-feedback-btn" onClick={() => setShowFeedback(true)}>
                 Share thoughts →
               </button>

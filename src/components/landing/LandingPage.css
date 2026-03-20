@@ -77,7 +77,7 @@
 }
 
 .lp-nav-saved-heart {
-  font-size: 16px;
+  font-size: 22px;
   line-height: 1;
 }
 
@@ -212,9 +212,9 @@
 }
 
 .lp-search-icon {
-  width: 15px;
-  height: 15px;
-  color: #999;
+  width: 18px;
+  height: 18px;
+  color: #F0287A;
   flex-shrink: 0;
 }
 

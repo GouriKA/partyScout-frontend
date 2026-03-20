@@ -95,7 +95,7 @@ export default function VenueCompare({ venues, onClose, onSelect }) {
                 {venues.map((venue) => (
                   <td key={venue.id} className="compare-value compare-list">
                     <ul>
-                      {venue.includedItems.slice(0, 4).map((item, i) => (
+                      {venue.includedItems?.slice(0, 4).map((item, i) => (
                         <li key={i}>{item}</li>
                       ))}
                     </ul>
@@ -108,7 +108,7 @@ export default function VenueCompare({ venues, onClose, onSelect }) {
                 <td className="compare-label">Why It Matches</td>
                 {venues.map((venue) => (
                   <td key={venue.id} className="compare-value compare-reasons">
-                    {venue.matchReasons.map((reason, i) => (
+                    {venue.matchReasons?.map((reason, i) => (
                       <span key={i} className="compare-reason">{reason}</span>
                     ))}
                   </td>

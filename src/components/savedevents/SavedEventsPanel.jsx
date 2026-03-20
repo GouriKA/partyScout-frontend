@@ -50,10 +50,10 @@ export default function SavedEventsPanel({ open, onClose }) {
         <div className="saved-panel-empty">Loading…</div>
       ) : isEmpty ? (
         <div className="saved-panel-empty">
-          <span className="saved-panel-empty-icon">♡</span>
+          <span className="saved-panel-empty-icon">☆</span>
           <p>No saved venues yet</p>
           <p className="saved-panel-empty-hint">
-            Tap the heart on any venue to save it for later.
+            Tap the star on any venue to save it for later.
           </p>
         </div>
       ) : (

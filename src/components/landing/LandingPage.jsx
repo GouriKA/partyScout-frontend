@@ -62,6 +62,7 @@ export default function LandingPage({ onStart }) {
   const handlePersona = (label) => {
     setActivePersona(label);
     updateChildInfo({ age: PERSONA_AGES[label] });
+    if (cityValue) updateLocation({ city: cityValue });
     onStart();
   };
 
@@ -93,7 +94,7 @@ export default function LandingPage({ onStart }) {
             className={`lp-nav-saved${savedEvents.length > 0 ? ' lp-nav-saved--active' : ''}`}
             onClick={() => setShowSaved(true)}
           >
-            <span className="lp-nav-saved-heart">♥</span>
+            <span className="lp-nav-saved-heart">★</span>
             Saved{savedEvents.length > 0 ? ` (${savedEvents.length})` : ''}
           </button>
           {firebaseConfigured && !authLoading && (
@@ -140,8 +141,9 @@ export default function LandingPage({ onStart }) {
           {/* City dropdown + Find ideas */}
           <div className="lp-search-wrap">
             <div className="lp-search-left">
-              <svg className="lp-search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M8 1.5a4.5 4.5 0 100 9 4.5 4.5 0 000-9zM8 8v5.5M5.5 11l2.5 2.5 2.5-2.5" strokeLinecap="square" />
+              <svg className="lp-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+                <circle cx="12" cy="9" r="2.5" />
               </svg>
               <CityAutocomplete
                 value={cityValue}
@@ -193,16 +195,6 @@ export default function LandingPage({ onStart }) {
               <div className="lp-card-img">
                 <img src={card.img} alt={card.title} className="lp-card-photo" />
                 <span className="lp-card-badge">{card.badge}</span>
-                <button
-                  className="lp-card-heart"
-                  aria-label="Save"
-                  onClick={(e) => { e.stopPropagation(); handleCardClick(card); }}
-                >
-                  {card.saved
-                    ? <svg width="15" height="15" viewBox="0 0 16 16" fill="#1e2d6b" stroke="#1e2d6b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 1l1.8 3.6L14 5.6l-3 2.9.7 4.1L8 10.4l-3.7 2.2.7-4.1-3-2.9 4.2-.6z"/></svg>
-                    : <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#bbb" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 1l1.8 3.6L14 5.6l-3 2.9.7 4.1L8 10.4l-3.7 2.2.7-4.1-3-2.9 4.2-.6z"/></svg>
-                  }
-                </button>
               </div>
               <div className="lp-card-body">
                 <p className="lp-card-cat">{card.cat}</p>

@@ -17,7 +17,7 @@ const initialState = {
   location: {
     city: '',
     setting: 'any', // indoor | outdoor | any
-    maxDistance: 10,
+    maxDistance: 25,
     accessibility: []
   },
   venues: [],

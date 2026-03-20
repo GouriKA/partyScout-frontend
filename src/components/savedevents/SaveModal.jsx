@@ -113,7 +113,7 @@ export default function SaveModal({ venue, eventDate, partyTypes, guestCount, ve
             Cancel
           </button>
           <button className="save-btn-confirm" onClick={handleSave} disabled={saving}>
-            {saving ? 'Saving…' : 'Save ♥'}
+            {saving ? 'Saving…' : 'Save ★'}
           </button>
         </div>
       </div>

@@ -101,7 +101,12 @@ export default function Step5_PartyDetails() {
         <div className="venue-hero">
           <div className="venue-hero-content">
             <h3 className="venue-hero-name">{selectedVenue.name}</h3>
-            <p className="venue-hero-address">{selectedVenue.address}</p>
+            <a
+              className="venue-hero-address"
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedVenue.address)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >{selectedVenue.address}</a>
 
             {selectedVenue.placeTypes && selectedVenue.placeTypes.length > 0 && (
               <div className="venue-place-types">
@@ -219,7 +224,12 @@ export default function Step5_PartyDetails() {
           <div className="info-card highlight">
             <div className="info-icon">💰</div>
             <div className="info-content">
-              <span className="info-label">Estimated Total</span>
+              <span className="info-label">
+                Estimated Total
+                {selectedVenue.priceLevel != null && (
+                  <span className="info-price-level"> · {'$'.repeat(Math.max(1, selectedVenue.priceLevel))}</span>
+                )}
+              </span>
               <span className="info-value">{formatPrice(selectedVenue.estimatedTotal)}</span>
               <span className="info-sub">{formatPrice(selectedVenue.estimatedPricePerPerson)}/person</span>
             </div>
@@ -227,17 +237,19 @@ export default function Step5_PartyDetails() {
         </div>
 
         {/* What's Included */}
-        <div className="details-section">
-          <h4 className="section-title">
-            <span className="section-icon">✓</span>
-            What's Included
-          </h4>
-          <ul className="included-list">
-            {selectedVenue.includedItems.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
-        </div>
+        {selectedVenue.includedItems?.length > 0 && (
+          <div className="details-section">
+            <h4 className="section-title">
+              <span className="section-icon">✓</span>
+              What's Included
+            </h4>
+            <ul className="included-list">
+              {selectedVenue.includedItems.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* What's NOT Included */}
         <div className="details-section not-included">
@@ -246,7 +258,7 @@ export default function Step5_PartyDetails() {
             What You'll Need to Bring
           </h4>
           <ul className="not-included-list">
-            {selectedVenue.notIncluded.map((item, index) => (
+            {selectedVenue.notIncluded?.map((item, index) => (
               <li key={index}>{item}</li>
             ))}
           </ul>

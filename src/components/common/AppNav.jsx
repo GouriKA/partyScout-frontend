@@ -36,7 +36,7 @@ export default function AppNav({ onHome }) {
               onClick={() => setShowSaved(true)}
               aria-label="Saved venues"
             >
-              <span className="app-nav-saved-heart">♥</span>
+              <span className="app-nav-saved-heart">★</span>
               Saved{savedEvents.length > 0 ? ` (${savedEvents.length})` : ''}
             </button>
 

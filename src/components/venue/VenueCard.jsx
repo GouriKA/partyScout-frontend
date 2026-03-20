@@ -67,7 +67,7 @@ export default function VenueCard({
         aria-label={isSaved ? 'Unsave venue' : 'Save venue'}
         title={isSaved ? 'Saved' : 'Save'}
       >
-        {isSaved ? '♥' : '♡'}
+        {isSaved ? '★' : '☆'}
       </button>
 
       {showCompareCheckbox && (
@@ -145,10 +145,16 @@ export default function VenueCard({
           )}
         </div>
 
-        <p className="venue-address">{venue.address}</p>
+        <a
+          className="venue-address"
+          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(venue.address)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+        >{venue.address}</a>
 
         <div className="venue-match-reasons">
-          {venue.matchReasons.slice(0, 3).map((reason, index) => (
+          {venue.matchReasons?.slice(0, 3).map((reason, index) => (
             <span key={index} className="match-reason">{reason}</span>
           ))}
         </div>
@@ -165,7 +171,9 @@ export default function VenueCard({
             </div>
           </div>
           <div className="venue-pricing-footer">
-            <span className="price-disclaimer">Estimate based on price level</span>
+            {venue.priceLevel != null && (
+              <span className="price-level">{'$'.repeat(Math.max(1, venue.priceLevel))}</span>
+            )}
             {venue.website ? (
               <a
                 href={venue.website}
@@ -182,14 +190,16 @@ export default function VenueCard({
           </div>
         </div>
 
-        <div className="venue-includes">
-          <h4 className="includes-title">What's Included:</h4>
-          <ul className="includes-list">
-            {venue.includedItems.slice(0, 4).map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
-        </div>
+        {venue.includedItems?.length > 0 && (
+          <div className="venue-includes">
+            <h4 className="includes-title">What's Included:</h4>
+            <ul className="includes-list">
+              {venue.includedItems.slice(0, 4).map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
 
       <div className="venue-actions">

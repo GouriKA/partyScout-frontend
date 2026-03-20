@@ -131,6 +131,10 @@ select:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
   min-width: 0;
 }
 
+.city-ac-wrapper input:focus {
+  outline: none;
+}
+
 .city-ac-dropdown {
   position: absolute;
   top: calc(100% + 2px);
@@ -156,8 +160,7 @@ select:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 
 .city-ac-option:hover,
 .city-ac-option--active {
-  background: #fff8fb;
-  color: #F0287A;
+  background: #f5f5f5;
 }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
