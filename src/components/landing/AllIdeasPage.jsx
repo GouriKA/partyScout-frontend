@@ -10,6 +10,7 @@ import AccountPanel from '../account/AccountPanel';
 import { firebaseConfigured } from '../../firebase';
 import { IDEA_CARDS } from '../../data/ideaCards';
 import './AllIdeasPage.css';
+import './LandingPage.css';
 
 export default function AllIdeasPage({ initialCity = '', onBack, onStart }) {
   const { updateLocation, searchVenuesByQuery, goToStep } = usePartyPlanner();
@@ -43,29 +44,31 @@ export default function AllIdeasPage({ initialCity = '', onBack, onStart }) {
   return (
     <div className="ai-page">
       {/* Nav */}
-      <nav className="ai-nav">
-        <div className="ai-logo" onClick={onBack} style={{ cursor: 'pointer' }}>
-          <div className="ai-logo-icon">P</div>
-          <span className="ai-logo-text"><span className="ai-logo-party">Party</span>Scout</span>
-        </div>
-        <div className="ai-nav-right">
-          <button
-            className={`ai-nav-saved${savedEvents.length > 0 ? ' ai-nav-saved--active' : ''}`}
-            onClick={() => setShowSaved(true)}
-          >
-            <span className="ai-nav-saved-star">★</span>
-            Saved{savedEvents.length > 0 ? ` (${savedEvents.length})` : ''}
-          </button>
-          {firebaseConfigured && !authLoading && (
-            user
-              ? <UserMenu onAccountClick={() => setShowAccount(true)} />
-              : (
-                <>
-                  <button className="ai-btn ai-btn-signin" onClick={() => setShowAuthModal(true)}>Sign in</button>
-                  <button className="ai-btn ai-btn-signup" onClick={() => setShowAuthModal(true)}>Sign up</button>
-                </>
-              )
-          )}
+      <nav className="ai-nav-bar">
+        <div className="ai-nav-inner">
+          <div className="lp-logo" onClick={onBack} style={{ cursor: 'pointer' }}>
+            <div className="lp-logo-icon">P</div>
+            <span className="lp-logo-text"><span className="lp-logo-party">Party</span>Scout</span>
+          </div>
+          <div className="lp-nav-right">
+            <button
+              className={`lp-nav-saved${savedEvents.length > 0 ? ' lp-nav-saved--active' : ''}`}
+              onClick={() => setShowSaved(true)}
+            >
+              <span className="lp-nav-saved-heart">★</span>
+              Saved{savedEvents.length > 0 ? ` (${savedEvents.length})` : ''}
+            </button>
+            {firebaseConfigured && !authLoading && (
+              user
+                ? <UserMenu onAccountClick={() => setShowAccount(true)} />
+                : (
+                  <>
+                    <button className="lp-btn lp-btn-signin" onClick={() => setShowAuthModal(true)}>Sign in</button>
+                    <button className="lp-btn lp-btn-signup" onClick={() => setShowAuthModal(true)}>Sign up</button>
+                  </>
+                )
+            )}
+          </div>
         </div>
       </nav>
 

@@ -11,5 +11,5 @@ export const IDEA_CARDS = [
   { img: 'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?auto=format&fit=crop&w=400&h=200&q=80', badge: 'Unique',    cat: 'Experience',   title: 'Stargazing',      query: 'stargazing' },
   { img: 'https://images.unsplash.com/photo-1607962837359-5e7e89f86776?auto=format&fit=crop&w=400&h=200&q=80', badge: 'Kids fave', cat: 'Active',       title: 'Trampoline Park', query: 'trampoline park' },
   { img: 'https://images.unsplash.com/photo-1511882150382-421056c89033?auto=format&fit=crop&w=400&h=200&q=80', badge: 'Fun',       cat: 'Entertainment', title: 'Arcade',          query: 'arcade' },
-  { img: 'https://images.unsplash.com/photo-1566127992631-137a642a90f4?auto=format&fit=crop&w=400&h=200&q=80', badge: 'Cultural',  cat: 'Experience',   title: 'Museum',          query: 'museum' },
+  { img: '/museum.jpeg', badge: 'Cultural',  cat: 'Experience',   title: 'Museum',          query: 'museum' },
 ];
