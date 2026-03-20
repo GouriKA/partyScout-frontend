@@ -184,9 +184,10 @@ export function SavedEventsProvider({ children }) {
         setSavedEvents((prev) =>
           prev.map((ev) => (ev.id === optimistic.id ? saved : ev))
         )
-      } catch {
+      } catch (err) {
         // Rollback
         setSavedEvents((prev) => prev.filter((ev) => ev.id !== optimistic.id))
+        throw err
       }
     } else {
       // Guest mode — write to localStorage immediately

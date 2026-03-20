@@ -71,7 +71,7 @@ export default function LandingPage({ onStart, onSeeAll }) {
   };
 
   const handleSeeAll = () => {
-    onSeeAll(cityValue);
+    if (onSeeAll) onSeeAll(cityValue);
   };
 
   const handleCardClick = (card) => {
