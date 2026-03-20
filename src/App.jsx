@@ -3,14 +3,18 @@ import { PartyPlannerProvider } from './context/PartyPlannerContext'
 import { AuthProvider } from './context/AuthContext'
 import { SavedEventsProvider } from './context/SavedEventsContext'
 import LandingPage from './components/landing/LandingPage'
+import AllIdeasPage from './components/landing/AllIdeasPage'
 import WizardContainer from './components/wizard/WizardContainer'
 import AppNav from './components/common/AppNav'
 import ErrorBoundary from './components/common/ErrorBoundary'
 import FeedbackModal from './components/common/FeedbackModal'
 import './App.css'
 
+const SCREEN = { LANDING: 'landing', ALL_IDEAS: 'all-ideas', WIZARD: 'wizard' };
+
 function App() {
-  const [showLanding, setShowLanding] = useState(true);
+  const [screen, setScreen] = useState(SCREEN.LANDING);
+  const [allIdeasCity, setAllIdeasCity] = useState('');
   const [showFeedback, setShowFeedback] = useState(false);
 
   return (
@@ -24,13 +28,24 @@ function App() {
                 Share thoughts →
               </button>
             </div>
-            {showLanding ? (
-              <LandingPage onStart={() => setShowLanding(false)} />
-            ) : (
+            {screen === SCREEN.LANDING && (
+              <LandingPage
+                onStart={() => setScreen(SCREEN.WIZARD)}
+                onSeeAll={(city) => { setAllIdeasCity(city); setScreen(SCREEN.ALL_IDEAS); }}
+              />
+            )}
+            {screen === SCREEN.ALL_IDEAS && (
+              <AllIdeasPage
+                initialCity={allIdeasCity}
+                onBack={() => setScreen(SCREEN.LANDING)}
+                onStart={() => setScreen(SCREEN.WIZARD)}
+              />
+            )}
+            {screen === SCREEN.WIZARD && (
               <>
-                <AppNav onHome={() => setShowLanding(true)} />
+                <AppNav onHome={() => setScreen(SCREEN.LANDING)} />
                 <div className="app">
-                  <WizardContainer onHome={() => setShowLanding(true)} />
+                  <WizardContainer onHome={() => setScreen(SCREEN.LANDING)} />
                 </div>
               </>
             )}

@@ -1,0 +1,15 @@
+export const IDEA_CARDS = [
+  { img: '/escape-room.avif', badge: 'Birthday pick', cat: 'Experience',   title: 'Escape Room',     query: 'escape room' },
+  { img: '/boba-tea.webp',    badge: 'Kids fave',     cat: 'Food & Treat', title: 'Boba Tea',        query: 'boba tea' },
+  { img: 'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?auto=format&fit=crop&w=400&h=200&q=80', badge: 'Kids fave',  cat: 'Food & Treat',  title: 'Ice Cream',       query: 'ice cream parlour' },
+  { img: '/pottery.avif',     badge: 'Workshop',      cat: 'Creative',     title: 'Pottery',         query: 'pottery workshop' },
+  { img: '/archery.webp',     badge: 'Adventure',     cat: 'Adventure',    title: 'Archery',         query: 'archery experience' },
+  { img: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=400&h=200&q=80', badge: 'Group fun', cat: 'Entertainment', title: 'Karaoke',         query: 'karaoke' },
+  { img: 'https://images.unsplash.com/photo-1530866495561-507c9faab2ed?auto=format&fit=crop&w=400&h=200&q=80', badge: 'Thrill',    cat: 'Adventure',    title: 'River Rafting',   query: 'river rafting' },
+  { img: 'https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=400&h=200&q=80',    badge: 'Outdoors',  cat: 'Adventure',    title: 'Hiking',          query: 'hiking' },
+  { img: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&h=200&q=80',    badge: 'Relax',     cat: 'Wellness',     title: 'Spa',             query: 'spa' },
+  { img: 'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?auto=format&fit=crop&w=400&h=200&q=80', badge: 'Unique',    cat: 'Experience',   title: 'Stargazing',      query: 'stargazing' },
+  { img: 'https://images.unsplash.com/photo-1607962837359-5e7e89f86776?auto=format&fit=crop&w=400&h=200&q=80', badge: 'Kids fave', cat: 'Active',       title: 'Trampoline Park', query: 'trampoline park' },
+  { img: 'https://images.unsplash.com/photo-1511882150382-421056c89033?auto=format&fit=crop&w=400&h=200&q=80', badge: 'Fun',       cat: 'Entertainment', title: 'Arcade',          query: 'arcade' },
+  { img: 'https://images.unsplash.com/photo-1566127992631-137a642a90f4?auto=format&fit=crop&w=400&h=200&q=80', badge: 'Cultural',  cat: 'Experience',   title: 'Museum',          query: 'museum' },
+];

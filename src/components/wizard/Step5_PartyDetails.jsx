@@ -251,19 +251,6 @@ export default function Step5_PartyDetails() {
           </div>
         )}
 
-        {/* What's NOT Included */}
-        <div className="details-section not-included">
-          <h4 className="section-title">
-            <span className="section-icon">✗</span>
-            What You'll Need to Bring
-          </h4>
-          <ul className="not-included-list">
-            {selectedVenue.notIncluded?.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
-        </div>
-
         {/* Suggested Add-ons */}
         {selectedVenue.suggestedAddOns && selectedVenue.suggestedAddOns.length > 0 && (
           <div className="details-section">

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './VenueCard.css';
 
 
@@ -30,6 +31,8 @@ export default function VenueCard({
   onSave,
   showCompareCheckbox = true
 }) {
+  const [photoError, setPhotoError] = useState(false);
+
   const getMatchScoreColor = (score) => {
     if (score >= 80) return 'excellent';
     if (score >= 60) return 'good';
@@ -55,11 +58,19 @@ export default function VenueCard({
 
   return (
     <div className={`venue-card ${isSelected ? 'selected' : ''}`}>
-      {venue.photos && venue.photos.length > 0 && (
-        <div className="venue-photo">
-          <img src={venue.photos[0]} alt={venue.name} />
-        </div>
-      )}
+      <div className={`venue-photo${(!venue.photos?.length || photoError) ? ' venue-photo--placeholder' : ''}`}>
+        {venue.photos?.length > 0 && !photoError ? (
+          <img src={venue.photos[0]} alt={venue.name} onError={() => setPhotoError(true)} />
+        ) : (
+          <div className="venue-photo-empty">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+            <span>No photo available</span>
+          </div>
+        )}
+      </div>
 
       <button
         className={`venue-heart-btn${isSaved ? ' venue-heart-btn--saved' : ''}`}
@@ -151,7 +162,12 @@ export default function VenueCard({
           target="_blank"
           rel="noopener noreferrer"
           onClick={(e) => e.stopPropagation()}
-        >{venue.address}</a>
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+          </svg>
+          {venue.address}
+        </a>
 
         <div className="venue-match-reasons">
           {venue.matchReasons?.slice(0, 3).map((reason, index) => (
@@ -160,16 +176,6 @@ export default function VenueCard({
         </div>
 
         <div className="venue-pricing">
-          <div className="venue-pricing-estimates">
-            <div className="price-estimate">
-              <span className="price-label">Est. Total</span>
-              <span className="price-value">{formatPrice(venue.estimatedTotal)}</span>
-            </div>
-            <div className="price-per-person">
-              <span className="price-label">Per Person</span>
-              <span className="price-value">{formatPrice(venue.estimatedPricePerPerson)}</span>
-            </div>
-          </div>
           <div className="venue-pricing-footer">
             {venue.priceLevel != null && (
               <span className="price-level">{'$'.repeat(Math.max(1, venue.priceLevel))}</span>

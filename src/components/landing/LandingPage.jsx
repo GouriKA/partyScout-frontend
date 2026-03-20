@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { usePartyPlanner } from '../../context/PartyPlannerContext';
 import { useAuth } from '../../context/AuthContext';
 import { useSavedEvents } from '../../context/SavedEventsContext';
@@ -8,15 +8,8 @@ import UserMenu from '../auth/UserMenu';
 import SavedEventsPanel from '../savedevents/SavedEventsPanel';
 import AccountPanel from '../account/AccountPanel';
 import { firebaseConfigured } from '../../firebase';
+import { IDEA_CARDS } from '../../data/ideaCards';
 import './LandingPage.css';
-
-const IDEA_CARDS = [
-  { img: '/escape-room.avif', badge: 'Birthday pick', cat: 'Experience',   title: 'Escape Room',  saved: true,  query: 'escape room' },
-  { img: '/boba-tea.webp', badge: 'Kids fave',     cat: 'Food & Treat', title: 'Boba Tea',     saved: false, query: 'boba tea' },
-  { img: 'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?auto=format&fit=crop&w=400&h=200&q=80', badge: 'Kids fave',     cat: 'Food & Treat', title: 'Ice Cream',    saved: false, query: 'ice cream parlour' },
-  { img: '/pottery.avif', badge: 'Workshop',      cat: 'Creative',     title: 'Pottery',      saved: false, query: 'pottery workshop' },
-  { img: '/archery.webp', badge: 'Adventure',     cat: 'Adventure',    title: 'Archery',      saved: false, query: 'archery experience' },
-];
 
 const PERSONAS = [
   { label: 'Little Kids', age: 6,  range: 'Under 7'   },
@@ -33,7 +26,7 @@ const OCCASION_PILLS = [
 ];
 
 
-export default function LandingPage({ onStart }) {
+export default function LandingPage({ onStart, onSeeAll }) {
   const { updateChildInfo, updateLocation, searchVenuesByQuery, goToStep } = usePartyPlanner();
   const { user, loading: authLoading } = useAuth();
   const { savedEvents } = useSavedEvents();
@@ -44,6 +37,31 @@ export default function LandingPage({ onStart }) {
   const [showAuthModal,  setShowAuthModal]  = useState(false);
   const [showSaved,      setShowSaved]      = useState(false);
   const [showAccount,    setShowAccount]    = useState(false);
+  const [cityHighlight,  setCityHighlight]  = useState(false);
+  const [pendingCard,    setPendingCard]    = useState(null);
+  const carouselRef = useRef(null);
+  const searchWrapRef = useRef(null);
+
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+    const interval = setInterval(() => {
+      const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 4;
+      if (atEnd) {
+        el.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        el.scrollBy({ left: 212, behavior: 'smooth' });
+      }
+    }, 3000);
+    const pause = () => clearInterval(interval);
+    el.addEventListener('mouseenter', pause);
+    el.addEventListener('touchstart', pause);
+    return () => {
+      clearInterval(interval);
+      el.removeEventListener('mouseenter', pause);
+      el.removeEventListener('touchstart', pause);
+    };
+  }, []);
 
   const handleSearch = () => {
     if (cityValue) {
@@ -52,11 +70,34 @@ export default function LandingPage({ onStart }) {
     onStart();
   };
 
+  const handleSeeAll = () => {
+    onSeeAll(cityValue);
+  };
+
   const handleCardClick = (card) => {
-    if (cityValue) updateLocation({ city: cityValue });
+    if (!cityValue) {
+      setPendingCard(card);
+      searchWrapRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setCityHighlight(true);
+      setTimeout(() => setCityHighlight(false), 2000);
+      searchWrapRef.current?.querySelector('input')?.focus();
+      return;
+    }
+    updateLocation({ city: cityValue });
     goToStep(4);
     onStart();
     searchVenuesByQuery(card.query, cityValue);
+  };
+
+  const handleCityChange = (city) => {
+    setCityValue(city);
+    if (pendingCard && city) {
+      setPendingCard(null);
+      updateLocation({ city });
+      goToStep(4);
+      onStart();
+      searchVenuesByQuery(pendingCard.query, city);
+    }
   };
 
   const handlePersona = (label) => {
@@ -67,7 +108,7 @@ export default function LandingPage({ onStart }) {
   };
 
   const sectionTitle = activeOccasion === 'birthday'
-    ? 'Top birthday ideas near you'
+    ? 'Top party ideas near you'
     : 'Top ideas near you';
 
   // ── 1. Early access bar ──────────────────────────────────────────────────
@@ -116,14 +157,13 @@ export default function LandingPage({ onStart }) {
           <div className="lp-eyebrow">Plan the perfect party</div>
 
           <h1 className="lp-hero-title">
-            Every celebration<br />
-            deserves the <span className="lp-pink">best</span><br />
-            <span className="lp-orange">moment.</span>
+            Every celebration deserves<br />
+            the <span className="lp-pink">best</span> <span className="lp-orange">moment.</span>
           </h1>
 
           <p className="lp-hero-sub">
-            Find venues, experiences and activities for birthdays and special
-            occasions — curated for whoever you're celebrating.
+            Plan unforgettable birthdays and special moments —<br />
+            curated for the one you're celebrating.
           </p>
 
           <div className="lp-occasion-pills">
@@ -139,7 +179,7 @@ export default function LandingPage({ onStart }) {
           </div>
 
           {/* City dropdown + Find ideas */}
-          <div className="lp-search-wrap">
+          <div className={`lp-search-wrap${cityHighlight ? ' lp-search-wrap--highlight' : ''}`} ref={searchWrapRef}>
             <div className="lp-search-left">
               <svg className="lp-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
@@ -147,7 +187,7 @@ export default function LandingPage({ onStart }) {
               </svg>
               <CityAutocomplete
                 value={cityValue}
-                onChange={setCityValue}
+                onChange={handleCityChange}
                 className="lp-city-input"
                 placeholder="Your city..."
               />
@@ -187,9 +227,13 @@ export default function LandingPage({ onStart }) {
       <section className="lp-cards-section">
         <div className="lp-section-header">
           <span className="lp-section-title">{sectionTitle}</span>
-          <span className="lp-section-link" onClick={() => handleCardClick({ query: activeOccasion === 'birthday' ? 'birthday party venues' : 'party venues' })}>See all →</span>
+          <div className="lp-carousel-controls">
+            <button className="lp-carousel-btn" aria-label="Previous" onClick={() => carouselRef.current?.scrollBy({ left: -220, behavior: 'smooth' })}>‹</button>
+            <button className="lp-carousel-btn" aria-label="Next"     onClick={() => carouselRef.current?.scrollBy({ left:  220, behavior: 'smooth' })}>›</button>
+            <span className="lp-section-link" onClick={handleSeeAll}>See all →</span>
+          </div>
         </div>
-        <div className="lp-cards-row">
+        <div className="lp-cards-row" ref={carouselRef}>
           {IDEA_CARDS.map((card) => (
             <div className="lp-card" key={card.title} onClick={() => handleCardClick(card)} style={{ cursor: 'pointer' }}>
               <div className="lp-card-img">
