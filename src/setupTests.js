@@ -31,6 +31,9 @@ class MockIntersectionObserver {
 
 window.IntersectionObserver = MockIntersectionObserver;
 
+// Mock scrollIntoView (not implemented in jsdom)
+window.HTMLElement.prototype.scrollIntoView = vi.fn();
+
 // Reset all mocks between tests
 beforeEach(() => {
   vi.clearAllMocks();
