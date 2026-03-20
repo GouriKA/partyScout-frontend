@@ -1,0 +1,120 @@
+/* Full-width outer nav — border spans full viewport */
+.app-nav {
+  width: 100%;
+  background: #fff;
+  border-bottom: 0.5px solid #ebebeb;
+}
+
+/* Inner content constrained to match page max-width */
+.app-nav-inner {
+  max-width: 920px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 40px;
+  box-sizing: border-box;
+}
+
+/* Logo */
+.app-nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.app-nav-logo-icon {
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #F0287A, #F5923E);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 14px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.app-nav-logo-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0a0a0a;
+  letter-spacing: -0.02em;
+  font-family: 'Poppins', sans-serif;
+}
+
+.app-nav-logo-party {
+  color: #F0287A;
+}
+
+/* Right side */
+.app-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Saved button */
+.app-nav-saved {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: #666;
+  padding-right: 14px;
+  border: none;
+  border-right: 0.5px solid #e0e0e0;
+  margin-right: 4px;
+  cursor: pointer;
+  background: none;
+  font-family: 'Poppins', sans-serif;
+}
+
+.app-nav-saved--active {
+  color: #F0287A;
+}
+
+.app-nav-saved-heart {
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* Sign in / Sign up */
+.app-nav-btn {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 18px;
+  cursor: pointer;
+  border-radius: 0;
+  line-height: 1;
+  font-family: 'Poppins', sans-serif;
+  transition: background 0.15s, color 0.15s;
+}
+
+.app-nav-btn-signin {
+  background: #eef0f8;
+  color: #1e2d6b;
+  border: 1px solid #1e2d6b;
+}
+
+.app-nav-btn-signin:hover {
+  background: #dde1f0;
+}
+
+.app-nav-btn-signup {
+  background: #1e2d6b;
+  color: #fff;
+  border: 1px solid #1e2d6b;
+}
+
+.app-nav-btn-signup:hover {
+  background: #16235a;
+}
+
+@media (max-width: 600px) {
+  .app-nav-inner {
+    padding: 0 20px;
+  }
+}

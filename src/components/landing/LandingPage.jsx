@@ -2,13 +2,21 @@ import { useState } from 'react';
 import { usePartyPlanner } from '../../context/PartyPlannerContext';
 import { useAuth } from '../../context/AuthContext';
 import { useSavedEvents } from '../../context/SavedEventsContext';
+import CityAutocomplete from '../common/CityAutocomplete';
 import AuthModal from '../auth/AuthModal';
 import UserMenu from '../auth/UserMenu';
 import SavedEventsPanel from '../savedevents/SavedEventsPanel';
 import AccountPanel from '../account/AccountPanel';
 import { firebaseConfigured } from '../../firebase';
-import CityAutocomplete from '../common/CityAutocomplete';
 import './LandingPage.css';
+
+const IDEA_CARDS = [
+  { img: '/escape-room.avif', badge: 'Birthday pick', cat: 'Experience',   title: 'Escape Room',  saved: true,  query: 'escape room' },
+  { img: '/boba-tea.webp', badge: 'Kids fave',     cat: 'Food & Treat', title: 'Boba Tea',     saved: false, query: 'boba tea' },
+  { img: 'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?auto=format&fit=crop&w=400&h=200&q=80', badge: 'Kids fave',     cat: 'Food & Treat', title: 'Ice Cream',    saved: false, query: 'ice cream parlour' },
+  { img: '/pottery.avif', badge: 'Workshop',      cat: 'Creative',     title: 'Pottery',      saved: false, query: 'pottery workshop' },
+  { img: '/archery.webp', badge: 'Adventure',     cat: 'Adventure',    title: 'Archery',      saved: false, query: 'archery experience' },
+];
 
 const PERSONAS = [
   { label: 'Little Kids', age: 6,  range: 'Under 7'   },
@@ -24,26 +32,18 @@ const OCCASION_PILLS = [
   { label: '🥳 Just because', key: 'just-because' },
 ];
 
-const IDEA_CARDS = [
-  { bg: '#fce4ec', badge: 'Birthday pick', cat: 'Experience',   title: 'Escape Room',  meta: '0.4 mi · From £18pp', saved: true,  query: 'escape room' },
-  { bg: '#e8f0fe', badge: 'Kids fave',     cat: 'Food & Treat', title: 'Boba Tea',     meta: '1.1 mi · From £12pp', saved: false, query: 'boba tea' },
-  { bg: '#fff8e1', badge: 'Kids fave',     cat: 'Food & Treat', title: 'Ice Cream',    meta: '0.6 mi · From £12pp', saved: false, query: 'ice cream parlour' },
-  { bg: '#ede7f6', badge: 'Workshop',      cat: 'Creative',     title: 'Pottery',      meta: '1.2 mi · From £28pp', saved: false, query: 'pottery workshop' },
-  { bg: '#e8f5e9', badge: 'Adventure',     cat: 'Adventure',    title: 'Axe Throwing', meta: '0.7 mi · From £22pp', saved: false, query: 'axe throwing' },
-];
 
 export default function LandingPage({ onStart }) {
   const { updateChildInfo, updateLocation, searchVenuesByQuery, goToStep } = usePartyPlanner();
   const { user, loading: authLoading } = useAuth();
   const { savedEvents } = useSavedEvents();
 
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [showSaved,     setShowSaved]     = useState(false);
-  const [showAccount,   setShowAccount]   = useState(false);
-
   const [activeOccasion, setActiveOccasion] = useState('birthday');
   const [activePersona,  setActivePersona]  = useState('Kids');
   const [cityValue,      setCityValue]      = useState('');
+  const [showAuthModal,  setShowAuthModal]  = useState(false);
+  const [showSaved,      setShowSaved]      = useState(false);
+  const [showAccount,    setShowAccount]    = useState(false);
 
   const handleSearch = () => {
     if (cityValue) {
@@ -80,12 +80,6 @@ export default function LandingPage({ onStart }) {
   return (
     <div className="lp">
 
-      {/* ── 1. Early access bar ── */}
-      <div className="lp-early-bar">
-        Join the waitlist for early access
-        <span className="lp-early-cta">Get early access →</span>
-      </div>
-
       {/* ── 2. Navbar ── */}
       <nav className="lp-nav">
         <div className="lp-logo">
@@ -94,7 +88,6 @@ export default function LandingPage({ onStart }) {
             <span className="lp-logo-party">Party</span>Scout
           </span>
         </div>
-
         <div className="lp-nav-right">
           <button
             className={`lp-nav-saved${savedEvents.length > 0 ? ' lp-nav-saved--active' : ''}`}
@@ -103,18 +96,13 @@ export default function LandingPage({ onStart }) {
             <span className="lp-nav-saved-heart">♥</span>
             Saved{savedEvents.length > 0 ? ` (${savedEvents.length})` : ''}
           </button>
-
           {firebaseConfigured && !authLoading && (
             user ? (
               <UserMenu onAccountClick={() => setShowAccount(true)} />
             ) : (
               <>
-                <button className="lp-btn lp-btn-signin" onClick={() => setShowAuthModal(true)}>
-                  Sign in
-                </button>
-                <button className="lp-btn lp-btn-signup" onClick={() => setShowAuthModal(true)}>
-                  Sign up
-                </button>
+                <button className="lp-btn lp-btn-signin" onClick={() => setShowAuthModal(true)}>Sign in</button>
+                <button className="lp-btn lp-btn-signup" onClick={() => setShowAuthModal(true)}>Sign up</button>
               </>
             )
           )}
@@ -171,23 +159,25 @@ export default function LandingPage({ onStart }) {
 
       {/* ── 4. Celebrating someone specific? ── */}
       <section className="lp-for-who">
-        <div className="lp-for-who-header">
-          <span className="lp-section-title">Celebrating someone specific?</span>
-        </div>
-        <p className="lp-for-who-sub">
-          We personalise results by age so the ideas always fit.
-        </p>
-        <div className="lp-persona-row">
-          {PERSONAS.map(({ label, range }) => (
-            <button
-              key={label}
-              className={`lp-persona-chip${activePersona === label ? ' lp-persona-chip--active' : ''}`}
-              onClick={() => handlePersona(label)}
-            >
-              <span className="lp-persona-chip-label">{label}</span>
-              <span className="lp-persona-chip-range">{range}</span>
-            </button>
-          ))}
+        <div className="lp-for-who-inner">
+          <div className="lp-for-who-header">
+            <span className="lp-section-title">Celebrating someone specific?</span>
+          </div>
+          <p className="lp-for-who-sub">
+            We personalise results by age so the ideas always fit.
+          </p>
+          <div className="lp-persona-row">
+            {PERSONAS.map(({ label, range }) => (
+              <button
+                key={label}
+                className={`lp-persona-chip${activePersona === label ? ' lp-persona-chip--active' : ''}`}
+                onClick={() => handlePersona(label)}
+              >
+                <span className="lp-persona-chip-label">{label}</span>
+                <span className="lp-persona-chip-range">{range}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -200,20 +190,23 @@ export default function LandingPage({ onStart }) {
         <div className="lp-cards-row">
           {IDEA_CARDS.map((card) => (
             <div className="lp-card" key={card.title} onClick={() => handleCardClick(card)} style={{ cursor: 'pointer' }}>
-              <div className="lp-card-img" style={{ background: card.bg }}>
+              <div className="lp-card-img">
+                <img src={card.img} alt={card.title} className="lp-card-photo" />
                 <span className="lp-card-badge">{card.badge}</span>
                 <button
-                  className={`lp-card-heart${card.saved ? ' lp-card-heart--saved' : ''}`}
+                  className="lp-card-heart"
                   aria-label="Save"
                   onClick={(e) => { e.stopPropagation(); handleCardClick(card); }}
                 >
-                  ♥
+                  {card.saved
+                    ? <svg width="15" height="15" viewBox="0 0 16 16" fill="#1e2d6b" stroke="#1e2d6b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 1l1.8 3.6L14 5.6l-3 2.9.7 4.1L8 10.4l-3.7 2.2.7-4.1-3-2.9 4.2-.6z"/></svg>
+                    : <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#bbb" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 1l1.8 3.6L14 5.6l-3 2.9.7 4.1L8 10.4l-3.7 2.2.7-4.1-3-2.9 4.2-.6z"/></svg>
+                  }
                 </button>
               </div>
               <div className="lp-card-body">
                 <p className="lp-card-cat">{card.cat}</p>
                 <p className="lp-card-title">{card.title}</p>
-                <p className="lp-card-meta">{card.meta}</p>
               </div>
             </div>
           ))}

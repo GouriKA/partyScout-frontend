@@ -43,7 +43,7 @@
 .user-menu-name {
   font-size: 14px;
   font-weight: 600;
-  color: #F0397A;
+  color: #1e2d6b;
   max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -52,7 +52,7 @@
 
 .user-menu-caret {
   font-size: 10px;
-  color: #F0397A;
+  color: #1e2d6b;
 }
 
 .user-menu-dropdown {

@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext'
 import { SavedEventsProvider } from './context/SavedEventsContext'
 import LandingPage from './components/landing/LandingPage'
 import WizardContainer from './components/wizard/WizardContainer'
+import AppNav from './components/common/AppNav'
 import ErrorBoundary from './components/common/ErrorBoundary'
 import FeedbackModal from './components/common/FeedbackModal'
 import './App.css'
@@ -17,22 +18,23 @@ function App() {
       <AuthProvider>
         <SavedEventsProvider>
           <PartyPlannerProvider>
+            <div className="early-access-banner">
+              Still in development — we'd love your feedback{' '}
+              <button className="banner-feedback-btn" onClick={() => setShowFeedback(true)}>
+                Share thoughts →
+              </button>
+            </div>
             {showLanding ? (
               <LandingPage onStart={() => setShowLanding(false)} />
             ) : (
               <>
-                <div className="early-access-banner">
-                  🚧 Early Access — Some features may change.{' '}
-                  <button className="banner-feedback-btn" onClick={() => setShowFeedback(true)}>
-                    Share feedback →
-                  </button>
-                </div>
+                <AppNav onHome={() => setShowLanding(true)} />
                 <div className="app">
                   <WizardContainer onHome={() => setShowLanding(true)} />
                 </div>
-                {showFeedback && <FeedbackModal onClose={() => setShowFeedback(false)} />}
               </>
             )}
+            {showFeedback && <FeedbackModal onClose={() => setShowFeedback(false)} />}
           </PartyPlannerProvider>
         </SavedEventsProvider>
       </AuthProvider>

@@ -11,8 +11,7 @@
   align-items: center;
   justify-content: space-between;
   height: 56px;
-  padding: 0 0 0 4px;
-  margin-bottom: 1.25rem;
+  padding: 0 48px;
   border-bottom: 0.5px solid #ebebeb;
   background: #fff;
 }
@@ -37,7 +36,7 @@
 }
 
 .wizard-logo-text {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
   color: #0a0a0a;
   letter-spacing: -0.02em;
@@ -129,12 +128,9 @@
   background: #c0206a;
 }
 
-/* ---- Content card ---- */
+/* ---- Content area ---- */
 .wizard-content {
   background: #fff;
-  border-radius: 0;
-  border: 2px solid #050505;
-  padding: 2rem;
   animation: slideUp 0.25s ease;
 }
 
@@ -144,6 +140,5 @@
 }
 
 @media (max-width: 600px) {
-  .wizard-header { padding: 0 4px; }
-  .wizard-content { padding: 1.25rem 1rem; border-radius: 0; }
+  .wizard-header { padding: 0 20px; }
 }
