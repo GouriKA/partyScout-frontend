@@ -3,6 +3,8 @@ import { render, screen, fireEvent, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Step4_VenueResults from '../Step4_VenueResults';
 import { PartyPlannerProvider, usePartyPlanner } from '../../../context/PartyPlannerContext';
+import { AuthProvider } from '../../../context/AuthContext';
+import { SavedEventsProvider } from '../../../context/SavedEventsContext';
 import { useEffect } from 'react';
 
 const mockVenues = [
@@ -62,10 +64,14 @@ const mockVenues = [
 // Helper component to set up venues in context
 function TestWrapper({ children, venues = mockVenues, loading = false, error = null }) {
   return (
-    <PartyPlannerProvider>
-      <VenuesSetter venues={venues} loading={loading} error={error} />
-      {children}
-    </PartyPlannerProvider>
+    <AuthProvider>
+      <SavedEventsProvider>
+        <PartyPlannerProvider>
+          <VenuesSetter venues={venues} loading={loading} error={error} />
+          {children}
+        </PartyPlannerProvider>
+      </SavedEventsProvider>
+    </AuthProvider>
   );
 }
 
@@ -78,7 +84,7 @@ function VenuesSetter({ venues, loading, error }) {
     if (error) {
       setError(error);
     } else if (!loading) {
-      setVenues(venues);
+      setVenues({ venues, persona: null, llmFilterApplied: null });
     }
   }, [venues, loading, error]);
 
@@ -281,10 +287,14 @@ describe('weather fetching', () => {
 
   function WeatherTestWrapper({ children, venues, partyDate, zipCode }) {
     return (
-      <PartyPlannerProvider>
-        <WeatherContextSetter venues={venues} partyDate={partyDate} zipCode={zipCode} />
-        {children}
-      </PartyPlannerProvider>
+      <AuthProvider>
+        <SavedEventsProvider>
+          <PartyPlannerProvider>
+            <WeatherContextSetter venues={venues} partyDate={partyDate} zipCode={zipCode} />
+            {children}
+          </PartyPlannerProvider>
+        </SavedEventsProvider>
+      </AuthProvider>
     );
   }
 
@@ -295,7 +305,7 @@ describe('weather fetching', () => {
       updatePreferences({ guestCount: 15 });
       updateChildInfo({ partyDate: partyDate || null });
       updateLocation({ zipCode: zipCode || '' });
-      setVenues(venues);
+      setVenues({ venues, persona: null, llmFilterApplied: null });
     }, [venues, partyDate, zipCode]);
 
     return null;

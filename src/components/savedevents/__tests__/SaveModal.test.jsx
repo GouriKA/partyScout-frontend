@@ -75,7 +75,7 @@ describe('SaveModal', () => {
     fireEvent.click(screen.getByRole('button', { name: /save/i }));
 
     await waitFor(() => {
-      expect(saveEvent).toHaveBeenCalledWith(mockVenue, null);
+      expect(saveEvent).toHaveBeenCalledWith(mockVenue, null, expect.any(Object));
       expect(onClose).toHaveBeenCalled();
     });
   });

@@ -171,17 +171,14 @@ describe('Step5_PartyDetails', () => {
     expect(screen.getByText('Dedicated host')).toBeInTheDocument();
   });
 
-  it('renders not included items', () => {
+  it('does not render "What You\'ll Need to Bring" section', () => {
     render(
       <TestWrapper>
         <Step5_PartyDetails />
       </TestWrapper>
     );
 
-    expect(screen.getByText("What You'll Need to Bring")).toBeInTheDocument();
-    expect(screen.getByText('Food')).toBeInTheDocument();
-    expect(screen.getByText('Cake')).toBeInTheDocument();
-    expect(screen.getByText('Decorations')).toBeInTheDocument();
+    expect(screen.queryByText("What You'll Need to Bring")).not.toBeInTheDocument();
   });
 
   it('renders suggested add-ons', () => {

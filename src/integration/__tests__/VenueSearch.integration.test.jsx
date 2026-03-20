@@ -3,6 +3,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { PartyPlannerProvider, usePartyPlanner } from '../../context/PartyPlannerContext';
+import { AuthProvider } from '../../context/AuthContext';
+import { SavedEventsProvider } from '../../context/SavedEventsContext';
 import Step4_VenueResults from '../../components/wizard/Step4_VenueResults';
 
 // Mock fetch globally
@@ -70,7 +72,7 @@ function VenuesSetter({ venues, loading, error }) {
     if (error) {
       setError(error);
     } else if (!loading) {
-      setVenues(venues);
+      setVenues({ venues, persona: null, llmFilterApplied: null });
     }
   }, [venues, loading, error]);
 
@@ -79,10 +81,14 @@ function VenuesSetter({ venues, loading, error }) {
 
 function TestWrapper({ children, venues = mockVenues, loading = false, error = null }) {
   return (
-    <PartyPlannerProvider>
-      <VenuesSetter venues={venues} loading={loading} error={error} />
-      {children}
-    </PartyPlannerProvider>
+    <AuthProvider>
+      <SavedEventsProvider>
+        <PartyPlannerProvider>
+          <VenuesSetter venues={venues} loading={loading} error={error} />
+          {children}
+        </PartyPlannerProvider>
+      </SavedEventsProvider>
+    </AuthProvider>
   );
 }
 

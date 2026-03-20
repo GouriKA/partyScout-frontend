@@ -18,10 +18,10 @@ describe('Step1_ChildInfo', () => {
     vi.clearAllMocks();
   });
 
-  it('renders child name input', () => {
+  it('renders step title', () => {
     renderWithContext(<Step1_ChildInfo />);
 
-    expect(screen.getByLabelText(/child.*name/i)).toBeInTheDocument();
+    expect(screen.getByText(/tell us about/i)).toBeInTheDocument();
   });
 
   it('renders age input', () => {
@@ -34,18 +34,7 @@ describe('Step1_ChildInfo', () => {
   it('renders party date input', () => {
     renderWithContext(<Step1_ChildInfo />);
 
-    // Actual label is "When is the party?"
-    expect(screen.getByLabelText(/when is the party/i)).toBeInTheDocument();
-  });
-
-  it('allows entering child name', async () => {
-    const user = userEvent.setup();
-    renderWithContext(<Step1_ChildInfo />);
-
-    const nameInput = screen.getByLabelText(/child.*name/i);
-    await user.type(nameInput, 'Emma');
-
-    expect(nameInput).toHaveValue('Emma');
+    expect(screen.getByLabelText(/party date/i)).toBeInTheDocument();
   });
 
   it('allows selecting age', async () => {
@@ -76,15 +65,9 @@ describe('Step1_ChildInfo', () => {
     expect(ageInput).toHaveAttribute('max', '18');
   });
 
-  it('shows optional label for child name', () => {
+  it('renders start time input', () => {
     renderWithContext(<Step1_ChildInfo />);
 
-    expect(screen.getByText(/optional/i)).toBeInTheDocument();
-  });
-
-  it('displays step title', () => {
-    renderWithContext(<Step1_ChildInfo />);
-
-    expect(screen.getByText(/tell us about/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/start time/i)).toBeInTheDocument();
   });
 });

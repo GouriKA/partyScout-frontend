@@ -37,16 +37,15 @@ describe('App — early access banner', () => {
     expect(container.querySelector('.early-access-banner')).toBeInTheDocument();
   });
 
-  it('banner contains the text "Early Access"', () => {
+  it('banner contains the development message', () => {
     render(<App />);
 
-    expect(screen.getByText(/Early Access/)).toBeInTheDocument();
+    expect(screen.getByText(/we're still in development/i)).toBeInTheDocument();
   });
 
-  it('feedback link has the correct mailto href', () => {
+  it('banner has a share thoughts button', () => {
     render(<App />);
 
-    const link = screen.getByRole('link', { name: /Share feedback/i });
-    expect(link).toHaveAttribute('href', 'mailto:feedback@partyscout.live');
+    expect(screen.getByRole('button', { name: /share thoughts/i })).toBeInTheDocument();
   });
 });

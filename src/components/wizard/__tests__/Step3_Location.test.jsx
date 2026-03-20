@@ -24,12 +24,6 @@ describe('Step3_Location', () => {
     });
   });
 
-  it('renders zip code input', () => {
-    renderWithContext(<Step3_Location />);
-
-    expect(screen.getByLabelText(/zip code/i)).toBeInTheDocument();
-  });
-
   it('renders step title', () => {
     renderWithContext(<Step3_Location />);
 
@@ -61,35 +55,10 @@ describe('Step3_Location', () => {
     expect(screen.getByText(/how far are you willing to travel/i)).toBeInTheDocument();
   });
 
-  it('allows entering zip code', async () => {
-    const user = userEvent.setup();
+  it('renders step title', () => {
     renderWithContext(<Step3_Location />);
 
-    const zipInput = screen.getByLabelText(/zip code/i);
-    await user.type(zipInput, '94105');
-
-    expect(zipInput).toHaveValue('94105');
-  });
-
-  it('only allows numeric input for zip code', async () => {
-    const user = userEvent.setup();
-    renderWithContext(<Step3_Location />);
-
-    const zipInput = screen.getByLabelText(/zip code/i);
-    await user.type(zipInput, '94abc105xyz');
-
-    // Should only have numeric characters, limited to 5
-    expect(zipInput).toHaveValue('94105');
-  });
-
-  it('limits zip code to 5 digits', async () => {
-    const user = userEvent.setup();
-    renderWithContext(<Step3_Location />);
-
-    const zipInput = screen.getByLabelText(/zip code/i);
-    await user.type(zipInput, '9410512345');
-
-    expect(zipInput).toHaveValue('94105');
+    expect(screen.getByText(/where should we look/i)).toBeInTheDocument();
   });
 
   it('allows selecting indoor setting', async () => {
@@ -118,22 +87,10 @@ describe('Step3_Location', () => {
     expect(outdoorButton).toHaveClass('selected');
   });
 
-  it('disables Find Venues button when zip code is incomplete', () => {
+  it('has a continue button', () => {
     renderWithContext(<Step3_Location />);
 
-    const findButton = screen.getByRole('button', { name: /find venues/i });
-    expect(findButton).toBeDisabled();
-  });
-
-  it('enables Find Venues button when zip code is valid', async () => {
-    const user = userEvent.setup();
-    renderWithContext(<Step3_Location />);
-
-    const zipInput = screen.getByLabelText(/zip code/i);
-    await user.type(zipInput, '94105');
-
-    const findButton = screen.getByRole('button', { name: /find venues/i });
-    expect(findButton).not.toBeDisabled();
+    expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument();
   });
 
   it('has a back button', () => {
@@ -142,9 +99,9 @@ describe('Step3_Location', () => {
     expect(screen.getByRole('button', { name: /back/i })).toBeInTheDocument();
   });
 
-  it('shows hint text for zip code input', () => {
+  it('renders location preferences description', () => {
     renderWithContext(<Step3_Location />);
 
-    expect(screen.getByText(/search for venues near this location/i)).toBeInTheDocument();
+    expect(screen.getByText(/tell us your location preferences/i)).toBeInTheDocument();
   });
 });

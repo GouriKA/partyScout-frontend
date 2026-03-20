@@ -72,9 +72,9 @@ describe('LandingPage', () => {
   // ── Section rendering ──────────────────────────────────────────────────
 
   describe('renders all 7 sections', () => {
-    it('renders the early access bar', () => {
+    it('renders the nav bar with logo', () => {
       renderLandingPage();
-      expect(screen.getByText(/join the waitlist for early access/i)).toBeInTheDocument();
+      expect(screen.getByText('Party')).toBeInTheDocument();
     });
 
     it('renders the navbar with logo', () => {
@@ -86,7 +86,7 @@ describe('LandingPage', () => {
     it('renders the hero section', () => {
       renderLandingPage();
       expect(screen.getByText(/every celebration/i)).toBeInTheDocument();
-      expect(screen.getByText(/plan the perfect party/i)).toBeInTheDocument();
+      expect(screen.getByText(/plan unforgettable birthdays/i)).toBeInTheDocument();
     });
 
     it('renders the persona chips section', () => {
@@ -208,53 +208,67 @@ describe('LandingPage', () => {
   // ── Idea cards ─────────────────────────────────────────────────────────
 
   describe('idea cards', () => {
+    function renderWithCity(onStart = vi.fn(), city = 'London') {
+      const result = renderLandingPage(onStart);
+      const input = screen.getByTestId('city-input');
+      fireEvent.change(input, { target: { value: city } });
+      return result;
+    }
+
     it('clicking Boba Tea card calls searchVenuesByQuery with "boba tea"', () => {
       const onStart = vi.fn();
-      renderLandingPage(onStart);
+      renderWithCity(onStart);
       fireEvent.click(screen.getByText('Boba Tea').closest('.lp-card'));
-      expect(mockSearchVenuesByQuery).toHaveBeenCalledWith('boba tea', '');
+      expect(mockSearchVenuesByQuery).toHaveBeenCalledWith('boba tea', 'London');
     });
 
     it('clicking Escape Room card calls searchVenuesByQuery with "escape room"', () => {
       const onStart = vi.fn();
-      renderLandingPage(onStart);
+      renderWithCity(onStart);
       fireEvent.click(screen.getByText('Escape Room').closest('.lp-card'));
-      expect(mockSearchVenuesByQuery).toHaveBeenCalledWith('escape room', '');
+      expect(mockSearchVenuesByQuery).toHaveBeenCalledWith('escape room', 'London');
     });
 
     it('clicking Ice Cream card calls searchVenuesByQuery with "ice cream parlour"', () => {
       const onStart = vi.fn();
-      renderLandingPage(onStart);
+      renderWithCity(onStart);
       fireEvent.click(screen.getByText('Ice Cream').closest('.lp-card'));
-      expect(mockSearchVenuesByQuery).toHaveBeenCalledWith('ice cream parlour', '');
+      expect(mockSearchVenuesByQuery).toHaveBeenCalledWith('ice cream parlour', 'London');
     });
 
     it('clicking Pottery card calls searchVenuesByQuery with "pottery workshop"', () => {
       const onStart = vi.fn();
-      renderLandingPage(onStart);
+      renderWithCity(onStart);
       fireEvent.click(screen.getByText('Pottery').closest('.lp-card'));
-      expect(mockSearchVenuesByQuery).toHaveBeenCalledWith('pottery workshop', '');
+      expect(mockSearchVenuesByQuery).toHaveBeenCalledWith('pottery workshop', 'London');
     });
 
-    it('clicking Axe Throwing card calls searchVenuesByQuery with "axe throwing"', () => {
+    it('clicking Archery card calls searchVenuesByQuery with "archery experience"', () => {
       const onStart = vi.fn();
-      renderLandingPage(onStart);
-      fireEvent.click(screen.getByText('Axe Throwing').closest('.lp-card'));
-      expect(mockSearchVenuesByQuery).toHaveBeenCalledWith('axe throwing', '');
+      renderWithCity(onStart);
+      fireEvent.click(screen.getByText('Archery').closest('.lp-card'));
+      expect(mockSearchVenuesByQuery).toHaveBeenCalledWith('archery experience', 'London');
     });
 
     it('clicking a card calls goToStep(4)', () => {
       const onStart = vi.fn();
-      renderLandingPage(onStart);
+      renderWithCity(onStart);
       fireEvent.click(screen.getByText('Boba Tea').closest('.lp-card'));
       expect(mockGoToStep).toHaveBeenCalledWith(4);
     });
 
     it('clicking a card calls onStart', () => {
       const onStart = vi.fn();
-      renderLandingPage(onStart);
+      renderWithCity(onStart);
       fireEvent.click(screen.getByText('Boba Tea').closest('.lp-card'));
       expect(onStart).toHaveBeenCalledTimes(1);
+    });
+
+    it('clicking a card without city does not call searchVenuesByQuery', () => {
+      const onStart = vi.fn();
+      renderLandingPage(onStart);
+      fireEvent.click(screen.getByText('Boba Tea').closest('.lp-card'));
+      expect(mockSearchVenuesByQuery).not.toHaveBeenCalled();
     });
   });
 
@@ -289,13 +303,14 @@ describe('LandingPage', () => {
       expect(mockUpdateLocation).not.toHaveBeenCalled();
     });
 
-    it('when city is set and a card is clicked, updateLocation is called with the city', () => {
+    it('when city is set and a card is clicked, updateLocation and searchVenuesByQuery are called', () => {
       const onStart = vi.fn();
       renderLandingPage(onStart);
       const input = screen.getByTestId('city-input');
       fireEvent.change(input, { target: { value: 'Bristol' } });
       fireEvent.click(screen.getByText('Boba Tea').closest('.lp-card'));
       expect(mockUpdateLocation).toHaveBeenCalledWith({ city: 'Bristol' });
+      expect(mockSearchVenuesByQuery).toHaveBeenCalledWith('boba tea', 'Bristol');
     });
   });
 
@@ -306,7 +321,7 @@ describe('LandingPage', () => {
       mockSavedEvents.savedEvents = [];
       renderLandingPage();
       const savedBtn = screen.getByRole('button', { name: /saved/i });
-      expect(savedBtn).toHaveTextContent(/^♥\s*Saved$/);
+      expect(savedBtn).toHaveTextContent(/^★\s*Saved$/);
     });
 
     it('shows count in button text when events exist', () => {
@@ -347,9 +362,9 @@ describe('LandingPage', () => {
       expect(screen.getByRole('button', { name: /just because/i })).toBeInTheDocument();
     });
 
-    it('section title shows "Top birthday ideas" by default', () => {
+    it('section title shows "Top party ideas" by default', () => {
       renderLandingPage();
-      expect(screen.getByText(/top birthday ideas near you/i)).toBeInTheDocument();
+      expect(screen.getByText(/top party ideas near you/i)).toBeInTheDocument();
     });
 
     it('section title changes to "Top ideas near you" when Just because is selected', () => {
@@ -362,19 +377,17 @@ describe('LandingPage', () => {
   // ── See all link ───────────────────────────────────────────────────────
 
   describe('"See all" link', () => {
-    it('clicking See all triggers venue search with birthday query', () => {
-      const onStart = vi.fn();
-      renderLandingPage(onStart);
+    it('clicking See all calls onSeeAll if provided', () => {
+      const onSeeAll = vi.fn();
+      render(<LandingPage onStart={vi.fn()} onSeeAll={onSeeAll} />);
       fireEvent.click(screen.getByText(/see all/i));
-      expect(mockSearchVenuesByQuery).toHaveBeenCalledWith('birthday party venues', '');
+      expect(onSeeAll).toHaveBeenCalledTimes(1);
     });
 
-    it('clicking See all after switching to Just Because searches for party venues', () => {
-      const onStart = vi.fn();
-      renderLandingPage(onStart);
-      fireEvent.click(screen.getByRole('button', { name: /just because/i }));
+    it('clicking See all does not call searchVenuesByQuery', () => {
+      renderLandingPage();
       fireEvent.click(screen.getByText(/see all/i));
-      expect(mockSearchVenuesByQuery).toHaveBeenCalledWith('party venues', '');
+      expect(mockSearchVenuesByQuery).not.toHaveBeenCalled();
     });
   });
 });

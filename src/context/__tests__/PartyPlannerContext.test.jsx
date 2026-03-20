@@ -199,7 +199,7 @@ describe('PartyPlannerContext', () => {
       const venues = [{ id: '1', name: 'Venue 1' }];
 
       act(() => {
-        result.current.setVenues(venues);
+        result.current.setVenues({ venues, persona: null, llmFilterApplied: null });
       });
 
       expect(result.current.venues).toEqual(venues);
@@ -226,7 +226,7 @@ describe('PartyPlannerContext', () => {
       ];
 
       act(() => {
-        result.current.setVenues(venues);
+        result.current.setVenues({ venues, persona: null, llmFilterApplied: null });
         result.current.toggleCompareVenue('1');
       });
 
@@ -239,7 +239,7 @@ describe('PartyPlannerContext', () => {
       const venues = [{ id: '1', name: 'Venue 1' }];
 
       act(() => {
-        result.current.setVenues(venues);
+        result.current.setVenues({ venues, persona: null, llmFilterApplied: null });
         result.current.toggleCompareVenue('1');
         result.current.toggleCompareVenue('1');
       });
@@ -257,7 +257,7 @@ describe('PartyPlannerContext', () => {
       ];
 
       act(() => {
-        result.current.setVenues(venues);
+        result.current.setVenues({ venues, persona: null, llmFilterApplied: null });
         result.current.toggleCompareVenue('1');
         result.current.toggleCompareVenue('2');
         result.current.toggleCompareVenue('3');
@@ -272,7 +272,7 @@ describe('PartyPlannerContext', () => {
       const venues = [{ id: '1', name: 'Venue 1' }];
 
       act(() => {
-        result.current.setVenues(venues);
+        result.current.setVenues({ venues, persona: null, llmFilterApplied: null });
         result.current.toggleCompareVenue('1');
         result.current.clearCompare();
       });

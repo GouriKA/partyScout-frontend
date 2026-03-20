@@ -68,19 +68,6 @@ describe('VenueCard', () => {
     expect(screen.getByText(/2.3/)).toBeInTheDocument();
   });
 
-  it('renders estimated cost', () => {
-    render(<VenueCard {...defaultProps} />);
-
-    expect(screen.getByText('$350')).toBeInTheDocument();
-  });
-
-  it('renders per-person cost', () => {
-    render(<VenueCard {...defaultProps} />);
-
-    expect(screen.getByText('$23')).toBeInTheDocument();
-    expect(screen.getByText('Per Person')).toBeInTheDocument();
-  });
-
   it('renders venue address', () => {
     render(<VenueCard {...defaultProps} />);
 
@@ -216,18 +203,20 @@ describe('heart icon (save feature)', () => {
     isComparing: false,
   };
 
-  it('renders ♡ when isSaved is false', () => {
+  it('renders ☆ when isSaved is false', () => {
     render(<VenueCard {...defaultProps} isSaved={false} />);
 
     expect(screen.getByRole('button', { name: /save venue/i })).toBeInTheDocument();
-    expect(screen.getByText('♡')).toBeInTheDocument();
+    expect(screen.getByText('☆')).toBeInTheDocument();
   });
 
-  it('renders ♥ when isSaved is true', () => {
+  it('renders ★ when isSaved is true', () => {
     render(<VenueCard {...defaultProps} isSaved={true} />);
 
     expect(screen.getByRole('button', { name: /unsave venue/i })).toBeInTheDocument();
-    expect(screen.getByText('♥')).toBeInTheDocument();
+    // The save button should contain ★
+    const saveBtn = screen.getByRole('button', { name: /unsave venue/i });
+    expect(saveBtn).toHaveTextContent('★');
   });
 
   it('clicking heart calls onSave with the venue', () => {

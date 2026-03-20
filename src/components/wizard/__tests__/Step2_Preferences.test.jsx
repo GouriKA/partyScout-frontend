@@ -95,12 +95,11 @@ describe('Step2_Preferences', () => {
     expect(guestInput).toHaveValue(20);
   });
 
-  it('has continue and back buttons', async () => {
+  it('has find venues and back buttons', async () => {
     renderWithContext(<Step2_Preferences />);
 
     await waitFor(() => {
-      // Button says "Continue to Location"
-      expect(screen.getByRole('button', { name: /continue to location/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /find venues/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /back/i })).toBeInTheDocument();
     });
   });

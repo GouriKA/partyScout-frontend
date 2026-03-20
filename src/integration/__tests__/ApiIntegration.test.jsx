@@ -146,7 +146,7 @@ describe('API Integration Tests', () => {
         React.useEffect(() => {
           updateChildInfo({ age: 7, name: 'Test' });
           updatePreferences({ partyTypes: ['active_play'], guestCount: 15, budget: { min: 100, max: 500 } });
-          updateLocation({ zipCode: '94105', setting: 'indoor', maxDistance: 10 });
+          updateLocation({ city: 'San Francisco', setting: 'indoor', maxDistance: 10 });
         }, []);
 
         return <button onClick={searchVenues}>Search</button>;
@@ -164,7 +164,7 @@ describe('API Integration Tests', () => {
           expect(body.age).toBe(7);
           expect(body.partyTypes).toContain('active_play');
           expect(body.guestCount).toBe(15);
-          expect(body.zipCode).toBe('94105');
+          expect(body.city).toBe('San Francisco');
         }
       });
     });
