@@ -8,6 +8,32 @@ import WizardContainer from '../../components/wizard/WizardContainer';
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
 
+// WizardContainer → AppNav → useSavedEvents() and useAuth(); mock both so we don't
+// need the real Firebase-backed providers in integration tests.
+vi.mock('../../context/SavedEventsContext', () => ({
+  useSavedEvents: vi.fn(() => ({
+    savedEvents: [],
+    isSaved: vi.fn(() => false),
+    saveEvent: vi.fn(),
+    unsaveEvent: vi.fn(),
+  })),
+}));
+
+vi.mock('../../context/AuthContext', () => ({
+  useAuth: vi.fn(() => ({ user: null, loading: false })),
+}));
+
+vi.mock('../../firebase', () => ({
+  firebaseConfigured: false,
+  auth: null,
+}));
+
+// Stub panels opened from AppNav — they bring in their own heavy dependencies
+vi.mock('../../components/savedevents/SavedEventsPanel', () => ({ default: () => null }));
+vi.mock('../../components/account/AccountPanel',         () => ({ default: () => null }));
+vi.mock('../../components/auth/AuthModal',               () => ({ default: () => null }));
+vi.mock('../../components/auth/UserMenu',                () => ({ default: () => null }));
+
 const renderWizard = () => {
   return render(
     <PartyPlannerProvider>

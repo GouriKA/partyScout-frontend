@@ -17,6 +17,12 @@ vi.mock('../../common/CityAutocomplete', () => ({
   ),
 }));
 
+// Mock ChatPanel — it mounts even when closed and reads localStorage;
+// stubbing it keeps tests focused on LandingPage logic.
+vi.mock('../../chat/ChatPanel', () => ({
+  default: () => <div data-testid="chat-panel" />,
+}));
+
 // Mock Firebase — firebaseConfigured = false so auth buttons are hidden
 vi.mock('../../../firebase', () => ({ firebaseConfigured: false }));
 
@@ -79,14 +85,17 @@ describe('LandingPage', () => {
 
     it('renders the navbar with logo', () => {
       renderLandingPage();
-      expect(screen.getByText(/Party/)).toBeInTheDocument();
-      expect(screen.getByText(/Scout/)).toBeInTheDocument();
+      // Use exact string match — the logo renders "Party" and "Scout" in separate spans;
+      // a regex like /Party/ would also match parent containers causing a "multiple elements" error.
+      expect(screen.getByText('Party')).toBeInTheDocument();
+      expect(screen.getByText('Scout')).toBeInTheDocument();
     });
 
     it('renders the hero section', () => {
       renderLandingPage();
       expect(screen.getByText(/every celebration/i)).toBeInTheDocument();
-      expect(screen.getByText(/plan unforgettable birthdays/i)).toBeInTheDocument();
+      // Eyebrow text inside the hero
+      expect(screen.getByText(/plan the perfect party/i)).toBeInTheDocument();
     });
 
     it('renders the persona chips section', () => {
@@ -113,14 +122,14 @@ describe('LandingPage', () => {
     });
   });
 
-  // ── Find ideas button ──────────────────────────────────────────────────
+  // ── Hero CTA buttons ───────────────────────────────────────────────────
+  // Note: the hero "Find venues →" button opens the AI chat panel, not the wizard.
+  // onStart is triggered by footer CTAs, persona chips, and idea card clicks.
 
-  describe('"Find ideas" button', () => {
-    it('calls onStart when clicked', () => {
-      const onStart = vi.fn();
-      renderLandingPage(onStart);
-      fireEvent.click(screen.getByRole('button', { name: /find ideas/i }));
-      expect(onStart).toHaveBeenCalledTimes(1);
+  describe('hero and footer CTAs', () => {
+    it('renders the "Find venues" chat bar button', () => {
+      renderLandingPage();
+      expect(screen.getByRole('button', { name: /find venues/i })).toBeInTheDocument();
     });
 
     it('calls onStart when footer "Find birthday ideas" CTA is clicked', () => {
@@ -287,19 +296,23 @@ describe('LandingPage', () => {
       expect(input).toHaveValue('London');
     });
 
-    it('when city is set and Find ideas is clicked, updateLocation is called', () => {
+    it('when city is set and a footer CTA is clicked, updateLocation is called', () => {
+      // The hero "Find venues →" button opens the chat; onStart (→ wizard) is reached
+      // via the footer CTA. handleSearch calls updateLocation when cityValue is set.
       const onStart = vi.fn();
       renderLandingPage(onStart);
       const input = screen.getByTestId('city-input');
       fireEvent.change(input, { target: { value: 'Manchester' } });
-      fireEvent.click(screen.getByRole('button', { name: /find ideas/i }));
+      // A card click with city set triggers updateLocation + searchVenuesByQuery
+      fireEvent.click(screen.getByText('Boba Tea').closest('.lp-card'));
       expect(mockUpdateLocation).toHaveBeenCalledWith({ city: 'Manchester' });
     });
 
-    it('when city is empty and Find ideas is clicked, updateLocation is NOT called', () => {
+    it('when city is empty and a card is clicked, updateLocation is NOT called', () => {
       const onStart = vi.fn();
       renderLandingPage(onStart);
-      fireEvent.click(screen.getByRole('button', { name: /find ideas/i }));
+      // No city set — card click opens chat instead of searching venues
+      fireEvent.click(screen.getByText('Boba Tea').closest('.lp-card'));
       expect(mockUpdateLocation).not.toHaveBeenCalled();
     });
 

@@ -21,6 +21,17 @@ vi.mock('../../../firebase', () => ({
   auth: null
 }));
 
+// Mock SavedEventsContext — WizardContainer → AppNav → useSavedEvents() needs a provider.
+// Mocking the module is simpler than wrapping every render in SavedEventsProvider.
+vi.mock('../../../context/SavedEventsContext', () => ({
+  useSavedEvents: vi.fn(() => ({
+    savedEvents: [],
+    isSaved: vi.fn(() => false),
+    saveEvent: vi.fn(),
+    unsaveEvent: vi.fn(),
+  })),
+}));
+
 // Mock auth child components to keep rendering simple
 vi.mock('../../auth/AuthModal', () => ({
   default: ({ onClose }) => <div data-testid="auth-modal"><button onClick={onClose}>Close</button></div>
@@ -28,6 +39,14 @@ vi.mock('../../auth/AuthModal', () => ({
 
 vi.mock('../../auth/UserMenu', () => ({
   default: () => <div data-testid="user-menu">UserMenu</div>
+}));
+
+// Mock panels that open from AppNav — they bring in additional context dependencies
+vi.mock('../../savedevents/SavedEventsPanel', () => ({
+  default: () => null,
+}));
+vi.mock('../../account/AccountPanel', () => ({
+  default: () => null,
 }));
 
 import { useAuth } from '../../../context/AuthContext';
