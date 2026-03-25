@@ -5,7 +5,6 @@ import { SavedEventsProvider } from './context/SavedEventsContext'
 import LandingPage from './components/landing/LandingPage'
 import AllIdeasPage from './components/landing/AllIdeasPage'
 import WizardContainer from './components/wizard/WizardContainer'
-import AppNav from './components/common/AppNav'
 import ErrorBoundary from './components/common/ErrorBoundary'
 import FeedbackModal from './components/common/FeedbackModal'
 import './App.css'
@@ -42,12 +41,7 @@ function App() {
               />
             )}
             {screen === SCREEN.WIZARD && (
-              <>
-                <AppNav onHome={() => setScreen(SCREEN.LANDING)} />
-                <div className="app">
-                  <WizardContainer onHome={() => setScreen(SCREEN.LANDING)} />
-                </div>
-              </>
+              <WizardContainer onHome={() => setScreen(SCREEN.LANDING)} />
             )}
             {showFeedback && <FeedbackModal onClose={() => setShowFeedback(false)} />}
           </PartyPlannerProvider>

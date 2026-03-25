@@ -1,144 +1,133 @@
 .wizard-container {
   width: 100%;
-  max-width: 920px;
-  margin: 0 auto;
   box-sizing: border-box;
 }
 
-/* ---- Slim nav header ---- */
-.wizard-header {
+/* Sticky nav */
+.wizard-container .app-nav {
+  position: sticky;
+  top: 0;
+  z-index: 300;
+}
+
+/* ── Body: content + chat side-by-side ────────────────────── */
+.wizard-body {
+  display: flex;
+  align-items: flex-start;
+  min-height: calc(100vh - 56px);
+}
+
+/* ── Main content ──────────────────────────────────────────── */
+.wizard-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+/* ── Chat column (fixed, always in viewport) ────────────────── */
+.wizard-chat-col {
+  position: fixed;
+  right: 0;
+  top: 56px;
+  height: calc(100vh - 56px);
+  width: 400px;
+  z-index: 500;
+  border-left: 0.5px solid #ebebeb;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+}
+
+.wizard-chat-col--open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.wizard-chat-col .chat-panel {
+  width: 100%;
+  height: 100%;
+}
+
+/* Content shifts left when chat opens */
+.wizard-content {
+  transition: margin-right 0.25s ease;
+}
+
+.wizard-body--chat-open .wizard-content {
+  margin-right: 400px;
+}
+
+/* ── Back row ─────────────────────────────────────────────── */
+.wizard-back-row {
+  padding: 10px 80px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 56px;
-  padding: 0 48px;
-  border-bottom: 0.5px solid #ebebeb;
-  background: #fff;
-}
-
-.wizard-logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.wizard-logo-icon {
-  width: 28px;
-  height: 28px;
-  background: linear-gradient(135deg, #F0287A, #F5923E);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 900;
-  font-size: 14px;
-  color: #fff;
   flex-shrink: 0;
 }
 
-.wizard-logo-text {
-  font-size: 18px;
-  font-weight: 700;
-  color: #0a0a0a;
-  letter-spacing: -0.02em;
+.wizard-step-count {
+  font-size: 11px;
+  color: #aaa;
   font-family: 'Poppins', sans-serif;
 }
 
-.wizard-logo-party {
-  color: #F0287A;
-}
-
-/* ---- Right side auth area ---- */
-.wizard-header-auth {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* ---- Saved venues button ---- */
-.header-saved-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 6px 14px;
-  border-radius: 0;
-  border: 1px solid #e0e0e0;
-  background: white;
-  color: var(--neutral-500, #6b7280);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  font-family: 'Poppins', sans-serif;
-  cursor: pointer;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
-  white-space: nowrap;
+/* ── Progress bar ──────────────────────────────────────────── */
+.wizard-progress-track {
+  height: 2px;
+  background: #f0f0f0;
   flex-shrink: 0;
 }
 
-.header-saved-btn:hover {
-  border-color: #F0287A;
-  color: #F0287A;
-  background: rgba(240, 40, 122, 0.04);
-}
-
-.header-saved-btn--active {
-  border-color: #F0287A;
-  color: #F0287A;
-  background: rgba(240, 40, 122, 0.06);
-}
-
-.header-saved-heart {
-  font-size: 0.875rem;
-}
-
-.header-saved-label {
-  line-height: 1;
-}
-
-/* ---- Sign In / Sign Up buttons ---- */
-.wizard-btn-signin {
-  padding: 7px 16px;
-  background: #fff;
-  color: #0a0a0a;
-  border: 1px solid #0a0a0a;
-  border-radius: 0;
-  font-size: 13px;
-  font-weight: 500;
-  font-family: 'Poppins', sans-serif;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.wizard-btn-signin:hover {
-  background: #f5f5f5;
-}
-
-.wizard-btn-signup {
-  padding: 7px 16px;
+.wizard-progress-fill {
+  height: 100%;
   background: #F0287A;
-  color: #fff;
-  border: 1px solid #F0287A;
-  border-radius: 0;
-  font-size: 13px;
-  font-weight: 500;
-  font-family: 'Poppins', sans-serif;
+  transition: width 0.3s ease;
+}
+
+.wizard-back-btn {
+  background: none;
+  border: none;
+  font-size: 15px;
+  color: #888;
   cursor: pointer;
-  transition: background 0.15s;
+  font-family: 'Poppins', sans-serif;
+  padding: 4px 0;
 }
 
-.wizard-btn-signup:hover {
-  background: #c0206a;
+.wizard-back-btn:hover {
+  color: #1e2d6b;
 }
 
-/* ---- Content area ---- */
-.wizard-content {
-  background: #fff;
-  animation: slideUp 0.25s ease;
+/* ── Step content wrapper (Step4 + Step5) ─────────────────── */
+.wizard-step-wrapper {
+  padding: 2rem 5rem 3rem 80px;
+  flex: 1;
+  animation: wc-slideUp 0.2s ease;
 }
 
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(8px); }
+.wizard-step-wrapper .step-top-nav {
+  display: none;
+}
+
+.wizard-content .plan-page {
+  flex: 1;
+  animation: wc-slideUp 0.2s ease;
+}
+
+@keyframes wc-slideUp {
+  from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-@media (max-width: 600px) {
-  .wizard-header { padding: 0 20px; }
+@media (max-width: 768px) {
+  .wizard-step-wrapper {
+    padding: 1.25rem 1rem 2rem;
+  }
+
+  .wizard-back-row {
+    padding: 10px 16px;
+  }
 }

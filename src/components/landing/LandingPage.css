@@ -4,9 +4,86 @@
 
 .lp {
   width: 100%;
-  max-width: 920px;
-  margin: 0 auto;
   font-family: 'Poppins', sans-serif;
+}
+
+/* ── Body: scrollable content + sticky chat column ────────── */
+.lp-body {
+  display: flex;
+  align-items: flex-start;
+}
+
+.lp-main {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Right: chat column (fixed, always in viewport) */
+/* top + height are set dynamically by JS to anchor below the nav */
+.lp-chat-col {
+  position: fixed;
+  right: 0;
+  top: 56px;           /* overridden by JS; fallback before first paint */
+  height: calc(100vh - 56px); /* overridden by JS */
+  width: 400px;
+  z-index: 200;        /* below nav (400) — nav always wins */
+  border-left: 0.5px solid #ebebeb;
+  background: #f8f9fc;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+}
+
+.lp-chat-col--open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lp-chat-col .chat-panel {
+  width: 100%;
+  height: 100%;
+}
+
+/* Content shifts left when chat opens */
+.lp-main {
+  transition: margin-right 0.25s ease;
+}
+
+.lp-body--chat-open .lp-main {
+  margin-right: 400px;
+}
+
+/* Make nav sticky */
+.lp-nav--sticky {
+  position: sticky;
+  top: 0;
+  z-index: 300;
+  background: #fff;
+}
+
+/* Top row in right column: compact title + clear */
+.lp-split-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 80px;
+  border-bottom: 0.5px solid #ebebeb;
+  gap: 16px;
+}
+
+.lp-split-clear {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  font-size: 11px;
+  color: #888;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  white-space: nowrap;
+}
+
+.lp-split-clear:hover {
+  color: #F0287A;
 }
 
 /* ── Color helpers ────────────────────────────────────────── */
@@ -18,10 +95,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 40px;
+  padding: 0 80px;
   height: 56px;
   border-bottom: 0.5px solid #ebebeb;
   background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 400;
 }
 
 .lp-logo {
@@ -60,7 +140,6 @@
   gap: 8px;
 }
 
-/* Saved bookmark */
 .lp-nav-saved {
   display: flex;
   align-items: center;
@@ -85,7 +164,6 @@
   color: #F0287A;
 }
 
-/* Sign in / Sign up */
 .lp-btn {
   font-size: 13px;
   font-weight: 500;
@@ -103,9 +181,7 @@
   border: 1px solid #1e2d6b;
 }
 
-.lp-btn-signin:hover {
-  background: #dde1f0;
-}
+.lp-btn-signin:hover { background: #dde1f0; }
 
 .lp-btn-signup {
   background: #1e2d6b;
@@ -113,64 +189,74 @@
   border: 1px solid #1e2d6b;
 }
 
-.lp-btn-signup:hover {
-  background: #16235a;
-}
+.lp-btn-signup:hover { background: #16235a; }
 
-/* ── 3. Hero ──────────────────────────────────────────────── */
-.lp-hero-body {
-  max-width: 640px;
-  margin: 0 auto 0 8%;
-}
-
+/* ── 3. Hero — centered single column ────────────────────── */
 .lp-hero {
-  padding: 48px 40px 44px;
   background: #fff;
+  border-bottom: 0.5px solid #ebebeb;
+  padding: 48px 80px 40px;
 }
 
+.lp-hero-inner {
+  max-width: 580px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Eyebrow */
 .lp-eyebrow {
   display: inline-flex;
   align-items: center;
-  font-size: 13px;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #fff;
   background: #1e2d6b;
-  padding: 5px 10px;
+  padding: 4px 8px;
   border-radius: 0;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 }
 
+/* Headline */
 .lp-hero-title {
-  font-size: 40px;
+  font-size: 32px;
   font-weight: 800;
   line-height: 1.1;
   color: #0a0a0a;
   letter-spacing: -0.04em;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  transition: font-size 0.2s;
 }
 
+.lp-hero-title--compact {
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+
+/* Subtext */
 .lp-hero-sub {
-  font-size: 16px;
+  font-size: 13px;
   color: #666;
-  line-height: 1.65;
-  max-width: 440px;
-  margin-bottom: 24px;
+  line-height: 1.6;
+  max-width: 480px;
+  margin: 0 auto 24px;
 }
 
 /* Occasion pills */
 .lp-occasion-pills {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
-  margin-bottom: 20px;
+  justify-content: center;
+  margin-bottom: 24px;
 }
 
 .lp-pill {
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 500;
-  padding: 6px 14px;
+  padding: 5px 12px;
   border: 1px solid #e0e0e0;
   border-radius: 0;
   color: #444;
@@ -194,11 +280,111 @@
   border-color: #1e2d6b;
 }
 
-/* City dropdown search bar */
+/* ── Primary chat bar (idle) ─────────────────────────────── */
+.lp-chat-bar {
+  display: flex;
+  align-items: stretch;
+  border: 2px solid #1e2d6b;
+  max-width: 580px;
+  margin: 0 auto 12px;
+}
+
+.lp-chat-bar-icon {
+  background: #1e2d6b;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.lp-chat-bar-input {
+  flex: 1;
+  padding: 13px 12px;
+  font-size: 13px;
+  border: none;
+  outline: none;
+  font-family: 'Poppins', sans-serif;
+  color: #0a0a0a;
+  min-width: 0;
+}
+
+.lp-chat-bar-input::placeholder {
+  color: #bbb;
+}
+
+.lp-chat-bar-btn {
+  background: #1e2d6b;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0 20px;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.lp-chat-bar-btn:hover {
+  background: #16235a;
+}
+
+/* ── Quick-start chips (idle) ────────────────────────────── */
+.lp-quickstart-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.lp-qs-chip {
+  background: #eef0f8;
+  border: 0.5px solid #c8d0e8;
+  color: #1e2d6b;
+  font-size: 11px;
+  padding: 5px 12px;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  transition: background 0.15s;
+}
+
+.lp-qs-chip:hover {
+  background: #dde1f0;
+}
+
+/* ── "or search manually" divider ───────────────────────── */
+.lp-or-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 400px;
+  margin: 0 auto 16px;
+}
+
+.lp-or-line {
+  flex: 1;
+  height: 0.5px;
+  background: #e8e8e8;
+}
+
+.lp-or-text {
+  font-size: 10px;
+  color: #bbb;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* ── Secondary search bar (manual, idle) ─────────────────── */
 .lp-search-wrap {
   display: flex;
   align-items: stretch;
-  max-width: 420px;
+  max-width: 400px;
+  margin: 0 auto;
   transition: box-shadow 0.2s;
 }
 
@@ -219,23 +405,23 @@
   flex: 1;
   display: flex;
   align-items: center;
-  border: 1.5px solid #0a0a0a;
+  border: 1px solid #ccc;
   border-right: none;
   padding: 0 12px;
   gap: 8px;
 }
 
 .lp-search-icon {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   color: #F0287A;
   flex-shrink: 0;
 }
 
 .lp-city-input {
   flex: 1;
-  padding: 12px 0;
-  font-size: 15px;
+  padding: 10px 0;
+  font-size: 13px;
   border: none;
   outline: none;
   color: #0a0a0a;
@@ -250,37 +436,210 @@
 }
 
 .lp-search-btn {
-  padding: 0 22px;
+  padding: 0 16px;
   background: #0a0a0a;
   color: #fff;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 600;
-  border: 1.5px solid #0a0a0a;
+  border: 1px solid #0a0a0a;
   cursor: pointer;
   font-family: 'Poppins', sans-serif;
   white-space: nowrap;
+  border-radius: 0;
   transition: opacity 0.15s;
 }
 
-.lp-search-btn:hover {
-  opacity: 0.9;
+.lp-search-btn:hover { opacity: 0.85; }
+
+/* ── Chat window (active + results) ─────────────────────── */
+.lp-chat-window {
+  border: 1px solid #1e2d6b;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
 }
+
+.lp-cw-header {
+  background: #1e2d6b;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@keyframes lp-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.lp-cw-dot {
+  width: 6px;
+  height: 6px;
+  background: #F0287A;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: lp-pulse 1.5s ease-in-out infinite;
+}
+
+.lp-cw-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+}
+
+.lp-cw-clear {
+  font-size: 10px;
+  color: #8899cc;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  padding: 0;
+}
+
+.lp-cw-clear:hover { color: #fff; }
+
+.lp-cw-messages {
+  background: #fafafa;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-height: 120px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.lp-msg-bot {
+  align-self: flex-start;
+  max-width: 80%;
+  background: #fff;
+  border: 0.5px solid #e8e8e8;
+  padding: 7px 10px;
+  font-size: 11px;
+  color: #0a0a0a;
+  line-height: 1.5;
+}
+
+.lp-msg-user {
+  align-self: flex-end;
+  max-width: 80%;
+  background: #1e2d6b;
+  padding: 7px 10px;
+  font-size: 11px;
+  color: #fff;
+  line-height: 1.5;
+}
+
+/* Typing indicator */
+@keyframes lp-chat-blink {
+  50% { opacity: 0.3; }
+}
+
+.lp-chat-typing {
+  letter-spacing: 3px;
+  color: #1e2d6b;
+  animation: lp-chat-blink 1s step-start infinite;
+}
+
+.lp-cw-chips {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  padding: 0 12px 10px;
+  background: #fafafa;
+}
+
+.lp-cw-chip {
+  font-size: 10px;
+  padding: 4px 9px;
+  border: 0.5px solid #1e2d6b;
+  color: #1e2d6b;
+  background: #fff;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 0;
+}
+
+.lp-cw-chip:hover:not(:disabled) { background: #eef0f8; }
+.lp-cw-chip:disabled { opacity: 0.5; pointer-events: none; }
+
+.lp-cw-input-row {
+  display: flex;
+  border-top: 0.5px solid #e0e0e0;
+}
+
+.lp-cw-input {
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 11px;
+  border: none;
+  outline: none;
+  font-family: 'Poppins', sans-serif;
+}
+
+.lp-cw-input::placeholder { color: #ccc; }
+
+.lp-cw-send {
+  padding: 0 14px;
+  background: #F0287A;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 0;
+  transition: background 0.15s;
+}
+
+.lp-cw-send:hover:not(:disabled) { background: #c0206a; }
+.lp-cw-send:disabled { opacity: 0.5; pointer-events: none; }
+
+/* ── Results strip (between hero and cards) ──────────────── */
+.lp-results-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #eef0f8;
+  border-top: 0.5px solid #c8d0e8;
+  border-bottom: 0.5px solid #c8d0e8;
+  padding: 8px 80px;
+}
+
+.lp-results-strip-label {
+  font-size: 11px;
+  color: #1e2d6b;
+  font-weight: 500;
+}
+
+.lp-results-strip-clear {
+  font-size: 10px;
+  color: #1e2d6b;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  padding: 0;
+}
+
+.lp-results-strip-clear:hover { text-decoration: underline; }
 
 /* ── 4. Celebrating someone specific? ────────────────────── */
 .lp-for-who {
-  padding: 0 40px;
+  padding: 0 80px;
 }
 
 .lp-for-who-inner {
   background: #fafafa;
-  padding: 28px 24px;
+  padding: 28px 0;
   border-top: 0.5px solid #ebebeb;
   border-bottom: 0.5px solid #ebebeb;
 }
 
-.lp-for-who-header {
-  margin-bottom: 0;
-}
+.lp-for-who-header { margin-bottom: 0; }
 
 .lp-for-who-sub {
   font-size: 13px;
@@ -382,19 +741,72 @@
   background: #eef0f8;
 }
 
-.lp-persona-chip--active .lp-persona-chip-label {
-  color: #1e2d6b;
-}
+.lp-persona-chip--active .lp-persona-chip-label { color: #1e2d6b; }
+.lp-persona-chip--active .lp-persona-chip-range  { color: #1e2d6b; opacity: 0.7; }
 
-.lp-persona-chip--active .lp-persona-chip-range {
-  color: #1e2d6b;
-  opacity: 0.7;
-}
-
-/* ── 5. Top ideas card row ────────────────────────────────── */
+/* ── 5. Top ideas / chat venues ───────────────────────────── */
 .lp-cards-section {
-  padding: 28px 40px 0;
+  padding: 28px 80px 0;
   background: #fff;
+}
+
+.lp-city-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 20px;
+  border: 0.5px solid #d0d5e8;
+  background: #fff;
+  transition: border-color 0.15s;
+}
+
+.lp-city-row:focus-within {
+  border-color: #1e2d6b;
+}
+
+.lp-city-row-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #1e2d6b;
+  padding: 0 10px;
+  white-space: nowrap;
+  border-right: 0.5px solid #d0d5e8;
+  line-height: 36px;
+}
+
+.lp-city-row .city-ac-wrapper {
+  position: relative;
+}
+
+.lp-city-input {
+  width: 200px;
+  font-size: 13px;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
+  color: #0a0a0a;
+  font-family: inherit;
+  outline: none;
+}
+
+.lp-city-input::placeholder {
+  color: #bbb;
+}
+
+.lp-city-clear {
+  background: none;
+  border: none;
+  border-left: 0.5px solid #e8e8e8;
+  color: #aaa;
+  font-size: 11px;
+  padding: 0 10px;
+  cursor: pointer;
+  line-height: 36px;
+  font-family: inherit;
+}
+
+.lp-city-clear:hover {
+  color: #F0287A;
 }
 
 .lp-cards-row {
@@ -415,9 +827,7 @@
   transition: border-color 0.15s;
 }
 
-.lp-card:hover {
-  border-color: #F0287A;
-}
+.lp-card:hover { border-color: #F0287A; }
 
 .lp-card-img {
   height: 140px;
@@ -449,29 +859,6 @@
   color: #0a0a0a;
 }
 
-.lp-card-heart {
-  position: absolute;
-  z-index: 1;
-  top: 8px;
-  right: 8px;
-  width: 26px;
-  height: 26px;
-  background: #fff;
-  border: 0.5px solid #e8e8e8;
-  border-radius: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 0;
-  font-size: 14px;
-  color: #bbb;
-}
-
-.lp-card-heart--saved {
-  color: #F0287A;
-}
-
 .lp-card-body {
   padding: 10px 12px 12px;
   cursor: pointer;
@@ -494,14 +881,17 @@
   margin-bottom: 4px;
 }
 
-.lp-card-meta {
-  font-size: 13px;
-  color: #999;
+/* Chat-surfaced venue cards */
+.lp-chat-venues {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+  padding-bottom: 28px;
 }
 
 /* ── 6. How it works ──────────────────────────────────────── */
 .lp-how {
-  padding: 32px 40px;
+  padding: 32px 80px;
   background: #fff;
   border-bottom: 0.5px solid #ebebeb;
 }
@@ -514,10 +904,7 @@
   margin-top: 16px;
 }
 
-.lp-step {
-  background: #fff;
-  padding: 18px 16px;
-}
+.lp-step { background: #fff; padding: 18px 16px; }
 
 .lp-step-num {
   font-size: 13px;
@@ -543,12 +930,9 @@
 
 /* ── 7. Footer CTA ────────────────────────────────────────── */
 .lp-footer-cta {
-  padding: 36px 40px;
+  padding: 36px 80px;
   background: #0a0a0a;
   text-align: center;
-  /* full-bleed: break out of the centered max-width container */
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
 }
 
 .lp-footer-cta h2 {
@@ -596,59 +980,68 @@
   font-family: 'Poppins', sans-serif;
 }
 
+/* ── Override section side padding inside split layout ───── */
+/* .lp-split-right has its own padding-left/right; sections must not double up */
+.lp-split-right .lp-split-top-row,
+.lp-split-right .lp-results-strip,
+.lp-split-right .lp-cards-section,
+.lp-split-right .lp-how,
+.lp-split-right .lp-footer-cta {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* ── Nav chat button ──────────────────────────────────────── */
+.lp-nav-chat-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #1e2d6b;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  margin-right: 8px;
+  border-radius: 0;
+  transition: background 0.15s;
+}
+.lp-nav-chat-btn:hover { background: #16235a; }
+.lp-nav-chat-btn--active { background: #F0287A; }
+.lp-nav-chat-btn--active:hover { background: #c0206a; }
+
 /* ── Mobile (< 640px) ─────────────────────────────────────── */
 @media (max-width: 640px) {
-  .lp-nav        { padding-left: 20px; padding-right: 20px; }
-  .lp-hero       { padding: 36px 20px 32px; }
-  .lp-for-who   { padding-left: 20px; padding-right: 20px; }
+  .lp-nav          { padding-left: 16px; padding-right: 16px; }
+  .lp-hero         { padding: 32px 16px 28px; }
+  .lp-for-who      { padding-left: 16px; padding-right: 16px; }
   .lp-cards-section,
   .lp-how,
-  .lp-footer-cta { padding-left: 20px; padding-right: 20px; }
+  .lp-footer-cta   { padding-left: 16px; padding-right: 16px; }
+  .lp-results-strip { padding-left: 16px; padding-right: 16px; }
 
-  .lp-hero-title { font-size: 30px; }
+  .lp-hero-title        { font-size: 26px; }
+  .lp-hero-title--compact { font-size: 18px; }
 
-  /* Stacked search bar */
-  .lp-search-wrap {
-    flex-direction: column;
-    max-width: 100%;
-  }
+  .lp-chat-bar { flex-direction: column; }
+  .lp-chat-bar-icon { padding: 10px 14px; justify-content: flex-start; }
+  .lp-chat-bar-btn { padding: 12px 20px; text-align: center; }
 
-  .lp-search-left {
-    border-right: 1.5px solid #0a0a0a;
-  }
+  .lp-search-wrap  { flex-direction: column; }
+  .lp-search-btn   { padding: 12px 16px; text-align: center; }
 
-  .lp-search-btn {
-    padding: 13px 22px;
-    width: 100%;
-    text-align: center;
-  }
+  .lp-cards-row { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .lp-card      { flex: 0 0 160px; }
 
-  /* Cards: horizontal scroll on mobile */
-  .lp-cards-row {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .lp-card { flex: 0 0 160px; }
+  .lp-persona-row { grid-template-columns: repeat(2, 1fr); }
 
-  /* Persona chips: 1 column on mobile */
-  .lp-persona-row {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .lp-how-steps { grid-template-columns: 1fr; }
 
-  /* How it works: 1 column */
-  .lp-how-steps {
-    grid-template-columns: 1fr;
-  }
-
-  /* Footer buttons: stack */
-  .lp-cta-row {
-    flex-direction: column;
-    align-items: center;
-  }
-
+  .lp-cta-row { flex-direction: column; align-items: center; }
   .lp-cta-primary,
-  .lp-cta-secondary {
-    width: 100%;
-    max-width: 320px;
-  }
+  .lp-cta-secondary { width: 100%; max-width: 320px; }
+
+  .lp-chat-venues { grid-template-columns: 1fr; }
 }

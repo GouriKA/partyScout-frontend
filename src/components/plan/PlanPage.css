@@ -2,7 +2,7 @@
 .plan-ctx-bar {
   background: #fafafa;
   border-bottom: 0.5px solid #ebebeb;
-  padding: 10px 40px;
+  padding: 12px 80px;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -49,9 +49,10 @@
 
 /* ── Page content ── */
 .plan-content {
-  padding: 40px;
+  padding: 32px 80px 48px;
   background: #fff;
   font-family: 'Poppins', sans-serif;
+  max-width: 960px;
 }
 
 .plan-title {
@@ -281,7 +282,7 @@
 }
 
 .plan-find-btn {
-  padding: 12px 32px;
+  padding: 12px 80px;
   background: #F0287A;
   color: #fff;
   font-size: 16px;
@@ -301,13 +302,14 @@
 /* ── Mobile ── */
 @media (max-width: 600px) {
   .plan-ctx-bar {
-    padding: 10px 20px;
+    padding: 10px 16px;
     gap: 10px;
     flex-wrap: wrap;
   }
 
   .plan-content {
-    padding: 28px 20px;
+    padding: 20px 16px 36px;
+    max-width: 100%;
   }
 
   .plan-two-col,

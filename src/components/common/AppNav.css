@@ -7,13 +7,11 @@
 
 /* Inner content constrained to match page max-width */
 .app-nav-inner {
-  max-width: 920px;
-  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 56px;
-  padding: 0 40px;
+  padding: 0 80px;
   box-sizing: border-box;
 }
 
@@ -112,6 +110,27 @@
 .app-nav-btn-signup:hover {
   background: #16235a;
 }
+
+/* Chat toggle button */
+.app-nav-chat-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #1e2d6b;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  margin-right: 12px;
+  border-radius: 0;
+  transition: background 0.15s;
+}
+.app-nav-chat-btn:hover { background: #16235a; }
+.app-nav-chat-btn--active { background: #F0287A; }
+.app-nav-chat-btn--active:hover { background: #c0206a; }
 
 @media (max-width: 600px) {
   .app-nav-inner {

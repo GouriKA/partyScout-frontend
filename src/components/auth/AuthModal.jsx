@@ -1,11 +1,18 @@
 import { useState, useEffect, useRef } from 'react'
 import GoogleSignInButton from './GoogleSignInButton'
 import EmailAuthForm from './EmailAuthForm'
+import { useAuth } from '../../context/AuthContext'
 import './AuthModal.css'
 
 export default function AuthModal({ onClose }) {
   const [mode, setMode] = useState('signin') // 'signin' | 'signup'
   const modalRef = useRef(null)
+  const { user } = useAuth()
+
+  // Close automatically when sign-in succeeds
+  useEffect(() => {
+    if (user) onClose()
+  }, [user, onClose])
 
   // Close on Escape key
   useEffect(() => {

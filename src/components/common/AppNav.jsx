@@ -8,7 +8,7 @@ import AccountPanel from '../account/AccountPanel';
 import { firebaseConfigured } from '../../firebase';
 import './AppNav.css';
 
-export default function AppNav({ onHome }) {
+export default function AppNav({ onHome, onChatToggle, chatOpen }) {
   const { user, loading: authLoading } = useAuth();
   const { savedEvents } = useSavedEvents();
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -31,6 +31,14 @@ export default function AppNav({ onHome }) {
           </div>
 
           <div className="app-nav-right">
+            {onChatToggle && (
+              <button
+                className={`app-nav-chat-btn${chatOpen ? ' app-nav-chat-btn--active' : ''}`}
+                onClick={onChatToggle}
+              >
+                Ask AI
+              </button>
+            )}
             <button
               className={`app-nav-saved${savedEvents.length > 0 ? ' app-nav-saved--active' : ''}`}
               onClick={() => setShowSaved(true)}

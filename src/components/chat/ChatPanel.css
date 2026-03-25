@@ -1,0 +1,400 @@
+/* ── Chat panel shell ────────────────────────────────────────── */
+.chat-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #f8f9fc;
+}
+
+/* ── Header ──────────────────────────────────────────────────── */
+.cp-header {
+  background: #1e2d6b;
+  padding: 13px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.cp-dot {
+  width: 6px;
+  height: 6px;
+  background: #F0287A;
+  border-radius: 50%;
+  animation: cp-pulse 1.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes cp-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.cp-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  flex: 1;
+  letter-spacing: 0.01em;
+}
+
+.cp-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.45);
+  font-weight: 400;
+}
+
+/* ── Context bar ─────────────────────────────────────────────── */
+.cp-ctx {
+  background: #eef0f8;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: #1e2d6b;
+  border-bottom: 0.5px solid #d8dff0;
+  flex-shrink: 0;
+}
+
+/* ── Messages ────────────────────────────────────────────────── */
+.cp-messages {
+  flex: 1;
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  background: #fafafa;
+  min-height: 0;
+}
+
+.cp-empty {
+  font-size: 13px;
+  color: #aaa;
+  text-align: center;
+  margin: auto 0;
+}
+
+.msg-bot {
+  align-self: flex-start;
+  max-width: 90%;
+  background: #fff;
+  border: 0.5px solid #e8e8e8;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #0a0a0a;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.msg-user {
+  align-self: flex-end;
+  max-width: 90%;
+  background: #1e2d6b;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #fff;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ── Markdown inside messages ────────────────────────────────── */
+.msg-bot p,
+.msg-bot ul,
+.msg-bot ol,
+.msg-bot li {
+  margin: 0;
+  padding: 0;
+}
+
+.chat-md-p {
+  margin: 0 0 6px;
+  line-height: 1.6;
+}
+.chat-md-p:last-child { margin-bottom: 0; }
+
+.chat-md-list {
+  margin: 4px 0 6px;
+  padding-left: 16px;
+  line-height: 1.6;
+}
+.chat-md-list:last-child { margin-bottom: 0; }
+.chat-md-list li { margin-bottom: 4px; }
+.chat-md-list li:last-child { margin-bottom: 0; }
+
+.chat-md-tag {
+  display: inline-block;
+  background: #eef0f8;
+  color: #1e2d6b;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border: 0.5px solid #c8d0e8;
+  vertical-align: middle;
+}
+
+/* ── Venue list message ───────────────────────────────────────── */
+.msg-venues {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.msg-venues-heading {
+  font-size: 11px;
+  font-weight: 600;
+  color: #1e2d6b;
+  margin: 0;
+}
+
+.msg-venue-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.msg-venue-list li {
+  padding: 6px 0;
+  background: none;
+  border: none;
+  border-bottom: 0.5px solid #efefef;
+}
+
+.msg-venue-list li:last-child {
+  border-bottom: none;
+}
+
+.msg-venue-name {
+  font-size: 11px;
+  font-weight: 500;
+  color: #0a0a0a;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.msg-venue-name--link {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  color: #1e2d6b;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.msg-venue-name--link:hover { color: #F0287A; }
+
+/* Venue name linked inline inside a text message */
+.msg-venue-inline-link {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 600;
+  color: #1e2d6b;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  display: inline;
+}
+.msg-venue-inline-link:hover { color: #F0287A; }
+
+.msg-venue-link {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 600;
+  color: #F0287A;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.msg-venue-link:hover {
+  text-decoration: underline;
+}
+
+/* ── Bouncing typing indicator ───────────────────────────────── */
+.cp-typing {
+  display: flex;
+  gap: 3px;
+  padding: 4px 2px;
+}
+
+.cp-typing span {
+  width: 5px;
+  height: 5px;
+  background: #1e2d6b;
+  border-radius: 50%;
+  animation: cp-bounce 1.2s ease-in-out infinite;
+}
+
+.cp-typing span:nth-child(2) { animation-delay: 0.2s; }
+.cp-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes cp-bounce {
+  0%, 80%, 100% { opacity: 0.3; }
+  40%           { opacity: 1; }
+}
+
+/* ── Chips ───────────────────────────────────────────────────── */
+.cp-chips {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  padding: 8px 12px;
+  background: #fafafa;
+  border-top: 0.5px solid #ebebeb;
+  flex-shrink: 0;
+  transition: opacity 0.2s;
+}
+
+.cp-chips--dim {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.cp-chip {
+  font-size: 11px;
+  padding: 3px 8px;
+  border: 0.5px solid #1e2d6b;
+  color: #1e2d6b;
+  background: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.cp-chip:hover {
+  background: #eef0f8;
+}
+
+/* ── Input row ───────────────────────────────────────────────── */
+.cp-input-row {
+  display: flex;
+  border-top: 0.5px solid #e0e0e0;
+  flex-shrink: 0;
+}
+
+.cp-input {
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 13px;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  background: #fff;
+  color: #0a0a0a;
+}
+
+.cp-input::placeholder {
+  color: #ccc;
+}
+
+.cp-input:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.cp-send {
+  padding: 0 13px;
+  background: #F0287A;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.cp-send:hover:not(:disabled) {
+  background: #c0206a;
+}
+
+.cp-send:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* ── New chat button in header ───────────────────────────────── */
+.cp-new-chat {
+  background: none;
+  border: 0.5px solid rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.55);
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 9px;
+  cursor: pointer;
+  font-family: inherit;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+  transition: color 0.15s, border-color 0.15s;
+}
+.cp-new-chat:hover { color: #fff; border-color: rgba(255,255,255,0.6); }
+
+/* ── Back button in header ───────────────────────────────────── */
+.cp-back {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.45);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px 0 0;
+  flex-shrink: 0;
+  font-family: inherit;
+  transition: color 0.15s;
+}
+.cp-back:hover { color: #fff; }
+
+/* ── Chat overlay (shared by wizard + landing) ───────────────── */
+.chat-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 399;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.chat-overlay {
+  position: fixed;
+  right: 0;
+  top: 56px;
+  width: 400px;
+  height: calc(100vh - 56px);
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -4px 0 32px rgba(0, 0, 0, 0.12);
+  /* Hidden by default — CSS transition preserves ChatPanel state */
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(16px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.chat-overlay--visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+.chat-overlay .chat-panel {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+}
+
+@media (max-width: 640px) {
+  .chat-overlay { right: 0; width: 100%; }
+}

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useSavedEvents } from '../../context/SavedEventsContext'
 import './SaveModal.css'
 
@@ -10,6 +10,7 @@ export default function SaveModal({ venue, eventDate, partyTypes, guestCount, ve
   const [childAge, setChildAge] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
+  const openedAt = useRef(Date.now())
 
   async function handleSave() {
     setSaving(true)
@@ -36,7 +37,7 @@ export default function SaveModal({ venue, eventDate, partyTypes, guestCount, ve
   }
 
   return (
-    <div className="save-modal-overlay" onClick={onClose}>
+    <div className="save-modal-overlay" onClick={() => { if (Date.now() - openedAt.current > 200) onClose() }}>
       <div className="save-modal" onClick={(e) => e.stopPropagation()}>
         <button className="save-modal-close" onClick={onClose} aria-label="Close">
           ×
