@@ -110,8 +110,9 @@ export default function VenueCard({
               return new Date(y, m - 1, d).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
             } catch { return partyDate; }
           })() : null;
+          // Use 'loading' modifier while forecast hasn't arrived so badge doesn't flash green
           return (
-            <div className={`weather-badge weather-badge--${risk?.dot === '🔴' ? 'bad' : risk?.dot === '🟡' ? 'caution' : 'good'} ${weather?.forecastType === 'CLIMATE_AVERAGE' ? 'weather-badge--historical' : ''}`}>
+            <div className={`weather-badge weather-badge--${weatherLoading ? 'loading' : risk?.dot === '🔴' ? 'bad' : risk?.dot === '🟡' ? 'caution' : 'good'} ${weather?.forecastType === 'CLIMATE_AVERAGE' ? 'weather-badge--historical' : ''}`}>
               {weatherLoading ? (
                 <span className="weather-badge-loading">Loading forecast…</span>
               ) : (

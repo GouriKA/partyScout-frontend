@@ -126,13 +126,22 @@ export default function ChatPanel({
   const messagesEndRef    = useRef(null);
   const readerRef         = useRef(null);
   const lastTriggerKeyRef = useRef(null);
+  // Monotonically increasing counter used to assign stable React keys to messages.
+  // Index-based keys cause reconciliation bugs when new messages append; this avoids that.
+  const nextKeyRef        = useRef(initial.messages.length);
+  // AbortController for the active fetch — aborted on unmount or new send to prevent leaks.
+  const abortRef          = useRef(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   useEffect(() => {
-    return () => { readerRef.current?.cancel(); };
+    // On unmount: cancel the stream reader AND abort the underlying fetch
+    return () => {
+      readerRef.current?.cancel();
+      abortRef.current?.abort();
+    };
   }, []);
 
   const sendMessage = useCallback(async (text) => {
@@ -141,17 +150,27 @@ export default function ChatPanel({
 
     setInput('');
     setIsStreaming(true);
+
+    // Assign stable keys so React doesn't confuse bubbles during re-renders
+    const userKey      = nextKeyRef.current++;
+    const assistantKey = nextKeyRef.current++;
     setMessages(prev => [
       ...prev,
-      { role: 'user', content: msg },
-      { role: 'assistant', content: '' },
+      { role: 'user',      content: msg,  _key: userKey },
+      { role: 'assistant', content: '',   _key: assistantKey },
     ]);
     let assistantContent = '';
+
+    // Abort any in-flight request before starting a new one
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
 
     try {
       const res = await fetch(`${API_BASE}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
         body: JSON.stringify({
           message: msg,
           conversationHistory: historyRef.current,
@@ -200,9 +219,10 @@ export default function ChatPanel({
             try {
               const venues = JSON.parse(data.slice(8));
               onVenuesFound?.(venues);
+              const venueKey = nextKeyRef.current++;
               setMessages(prev => [
                 ...prev,
-                { role: 'assistant', content: '', venueList: venues },
+                { role: 'assistant', content: '', venueList: venues, _key: venueKey },
               ]);
             } catch { /* ignore malformed */ }
           } else {
@@ -263,9 +283,11 @@ export default function ChatPanel({
 
   const handleNewChat = () => {
     readerRef.current?.cancel();
+    abortRef.current?.abort();
     setMessages([]);
     setIsStreaming(false);
     historyRef.current = [];
+    nextKeyRef.current = 0;
     clearChat();
   };
 
@@ -280,19 +302,24 @@ export default function ChatPanel({
   const knownVenues = messages.filter(m => m.venueList).flatMap(m => m.venueList);
 
   const renderBubble = (msg, i) => {
-    const isLast    = i === messages.length - 1;
+    // Use the stable _key assigned at message-creation time.
+    // Fall back to index only for messages restored from localStorage (which predate the _key field).
+    const key = msg._key ?? i;
+
+    const isLast     = i === messages.length - 1;
     const showTyping = isLast && msg.role === 'assistant' && isStreaming && !msg.content && !msg.venueList;
 
     if (msg.role === 'user') {
-      return <div key={i} className="msg-user">{msg.content}</div>;
+      return <div key={key} className="msg-user">{msg.content}</div>;
     }
 
     if (msg.venueList) {
       return (
-        <div key={i} className="msg-bot">
+        <div key={key} className="msg-bot">
           <ul className="msg-venue-list">
             {msg.venueList.map((v, vi) => (
-              <li key={vi}>
+              // Prefer a unique venue identifier; fall back to name, then index
+              <li key={v.googlePlaceId || v.id || v.name || vi}>
                 {onVenueSelect ? (
                   <button className="msg-venue-name msg-venue-name--link" onClick={() => onVenueSelect(v)}>
                     {v.name}
@@ -309,14 +336,14 @@ export default function ChatPanel({
 
     if (showTyping) {
       return (
-        <div key={i} className="msg-bot">
+        <div key={key} className="msg-bot">
           <div className="cp-typing"><span /><span /><span /></div>
         </div>
       );
     }
 
     return (
-      <div key={i} className="msg-bot">
+      <div key={key} className="msg-bot">
         {renderMarkdown(msg.content, knownVenues, onVenueSelect)}
       </div>
     );

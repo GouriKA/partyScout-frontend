@@ -183,6 +183,12 @@
   border-left: 4px solid;
 }
 
+/* Neutral state shown while forecast is still loading — prevents green flash */
+.weather-badge--loading {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: #d1d5db;
+}
+
 .weather-badge--good {
   background: rgba(16, 185, 129, 0.08);
   border-color: #10b981;

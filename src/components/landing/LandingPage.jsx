@@ -48,7 +48,8 @@ export default function LandingPage({ onStart, onSeeAll }) {
   const { savedEvents, isSaved, unsaveEvent } = useSavedEvents();
 
   const [activeOccasion, setActiveOccasion] = useState('birthday');
-  const [activePersona,  setActivePersona]  = useState('Kids');
+  // Initial value must match one of the PERSONAS labels exactly so the chip highlights on load
+  const [activePersona,  setActivePersona]  = useState('Little Kids');
   const [cityValue,      setCityValue]      = useState('');
   const [showAuthModal,  setShowAuthModal]  = useState(false);
   const [showSaved,      setShowSaved]      = useState(false);
