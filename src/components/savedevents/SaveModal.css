@@ -74,7 +74,7 @@
 }
 
 .save-option input[type="radio"] {
-  accent-color: #F0397A;
+  accent-color: #F0287A;
   width: 1rem;
   height: 1rem;
   flex-shrink: 0;
@@ -86,7 +86,7 @@
 }
 
 .save-option--add .save-option-label {
-  color: #F0397A;
+  color: #F0287A;
   font-weight: 500;
 }
 
@@ -110,7 +110,7 @@
 }
 
 .save-input:focus {
-  border-color: #F0397A;
+  border-color: #F0287A;
   box-shadow: 0 0 0 3px rgba(240, 57, 122, 0.1);
 }
 
@@ -147,7 +147,7 @@
   padding: 0.625rem 1.25rem;
   border: none;
   border-radius: 0.5rem;
-  background: #F0397A;
+  background: #F0287A;
   color: white;
   font-size: 0.875rem;
   font-weight: 600;

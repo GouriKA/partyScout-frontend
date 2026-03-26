@@ -87,7 +87,7 @@
 }
 
 .saved-event-name:hover {
-  color: #F0397A;
+  color: #F0287A;
 }
 
 .saved-event-link-icon {
@@ -97,7 +97,7 @@
 }
 
 .saved-event-name:hover .saved-event-link-icon {
-  color: #F0397A;
+  color: #F0287A;
 }
 
 .saved-event-unsave {

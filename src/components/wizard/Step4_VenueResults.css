@@ -31,8 +31,8 @@
   font-family: 'Poppins', sans-serif;
 }
 
-.filter-chip:hover { border-color: #F0397A; color: #F0397A; }
-.filter-chip.active { background: #F0397A; border-color: #F0397A; color: white; }
+.filter-chip:hover { border-color: #F0287A; color: #F0287A; }
+.filter-chip.active { background: #F0287A; border-color: #F0287A; color: white; }
 
 .sort-control { display: flex; align-items: center; gap: 0.5rem; }
 .sort-control label { font-size: 0.875rem; color: var(--neutral-600, #4b5563); }
@@ -87,7 +87,7 @@
   width: 44px;
   height: 44px;
   border: 3px solid var(--neutral-200, #e5e7eb);
-  border-top-color: #F0397A;
+  border-top-color: #F0287A;
   border-radius: 50%;
   animation: spin 0.9s linear infinite;
   margin-bottom: 1.5rem;

@@ -26,7 +26,7 @@
 }
 
 .form-field input:focus {
-  border-color: #F0397A;
+  border-color: #F0287A;
   box-shadow: 0 0 0 3px rgba(240, 57, 122, 0.12);
 }
 
@@ -37,7 +37,7 @@
 
 .auth-submit-btn {
   padding: 10px;
-  background: #F0397A;
+  background: #F0287A;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -59,7 +59,7 @@
 .auth-link-btn {
   background: none;
   border: none;
-  color: #F0397A;
+  color: #F0287A;
   font-size: 13px;
   cursor: pointer;
   padding: 0;

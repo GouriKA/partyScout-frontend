@@ -19,7 +19,7 @@ html, body, #root {
 
 a {
   font-weight: 500;
-  color: #F0397A;
+  color: #F0287A;
   text-decoration: inherit;
 }
-a:hover { color: #c82a63; }
+a:hover { color: #c0206a; }

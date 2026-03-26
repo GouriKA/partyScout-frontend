@@ -22,9 +22,9 @@
 
 /* Primary — pink */
 .btn-primary {
-  background: #F0397A;
+  background: #F0287A;
   color: white;
-  border-color: #F0397A;
+  border-color: #F0287A;
 }
 .btn-primary:hover:not(:disabled) {
   background: #c82a63;
@@ -49,11 +49,11 @@
 /* Outline */
 .btn-outline {
   background: transparent;
-  color: #F0397A;
-  border-color: #F0397A;
+  color: #F0287A;
+  border-color: #F0287A;
 }
 .btn-outline:hover:not(:disabled) {
-  background: #F0397A;
+  background: #F0287A;
   color: white;
 }
 

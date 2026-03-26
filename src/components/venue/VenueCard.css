@@ -8,13 +8,13 @@
 }
 
 .venue-card:hover {
-  border-color: #F0397A;
+  border-color: #F0287A;
   box-shadow: 0 8px 28px rgba(240, 57, 122, 0.12);
   transform: translateY(-2px);
 }
 
 .venue-card.selected {
-  border-color: #F0397A;
+  border-color: #F0287A;
   box-shadow: 0 0 0 3px rgba(240, 57, 122, 0.15);
 }
 
@@ -68,7 +68,7 @@
 }
 
 .venue-heart-btn:hover {
-  color: #F0397A;
+  color: #F0287A;
   transform: scale(1.15);
 }
 
@@ -96,7 +96,7 @@
 .venue-compare-checkbox input {
   width: 1rem;
   height: 1rem;
-  accent-color: #F0397A;
+  accent-color: #F0287A;
 }
 
 .venue-header {
@@ -122,7 +122,7 @@
   color: white;
 }
 
-.match-score.excellent .match-score-value { background: #F0397A; }
+.match-score.excellent .match-score-value { background: #F0287A; }
 .match-score.good      .match-score-value { background: #FF8C42; }
 .match-score.fair      .match-score-value { background: var(--warning, #f59e0b); }
 .match-score.low       .match-score-value { background: var(--neutral-400, #9ca3af); }
@@ -168,7 +168,7 @@
 
 .venue-age-range {
   font-size: 0.75rem;
-  color: #F0397A;
+  color: #F0287A;
   font-weight: 500;
 }
 
@@ -304,7 +304,7 @@
   gap: 0.25rem;
   padding: 0.25rem 0.625rem;
   background: rgba(240, 57, 122, 0.08);
-  color: #F0397A;
+  color: #F0287A;
   border-radius: 0;
   font-size: 0.75rem;
   font-weight: 500;
@@ -352,7 +352,7 @@
 .price-check-link {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #F0397A;
+  color: #F0287A;
   text-decoration: none;
   white-space: nowrap;
   transition: opacity 0.15s;
@@ -381,7 +381,7 @@
 .btn-view-details {
   flex: 1;
   padding: 0.75rem 1rem;
-  background: #F0397A;
+  background: #F0287A;
   color: white;
   border: none;
   border-radius: 0;

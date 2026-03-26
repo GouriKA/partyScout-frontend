@@ -48,12 +48,12 @@
 
 .step-item.active .step-circle {
   background: #fff0f5;
-  border-color: #F0397A;
+  border-color: #F0287A;
   box-shadow: 0 0 0 4px rgba(240,57,122,0.12);
 }
 
 .step-item.completed .step-circle {
-  background: linear-gradient(135deg, #F0397A, #FF8C42);
+  background: linear-gradient(135deg, #F0287A, #FF8C42);
   border-color: transparent;
   box-shadow: 0 2px 8px rgba(240,57,122,0.3);
 }
@@ -70,7 +70,7 @@
   white-space: nowrap;
 }
 
-.step-item.active .step-label    { color: #F0397A; font-weight: 600; }
+.step-item.active .step-label    { color: #F0287A; font-weight: 600; }
 .step-item.completed .step-label { color: #4b5563; font-weight: 600; }
 
 .step-connector {
@@ -83,7 +83,7 @@
 }
 
 .step-connector.completed {
-  background: linear-gradient(90deg, #F0397A, #FF8C42);
+  background: linear-gradient(90deg, #F0287A, #FF8C42);
 }
 
 @media (max-width: 600px) {

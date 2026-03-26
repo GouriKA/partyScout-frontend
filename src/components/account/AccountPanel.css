@@ -78,7 +78,7 @@
   font-weight: 600;
   padding: 0.125rem 0.5rem;
   background: rgba(240, 57, 122, 0.1);
-  color: #F0397A;
+  color: #F0287A;
   border-radius: 1rem;
   margin-top: 0.125rem;
 }
@@ -113,7 +113,7 @@
   height: 36px;
   border-radius: 50%;
   background: rgba(240, 57, 122, 0.12);
-  color: #F0397A;
+  color: #F0287A;
   font-size: 1rem;
   font-weight: 700;
   display: flex;
@@ -179,7 +179,7 @@
 }
 
 .account-input:focus {
-  border-color: #F0397A;
+  border-color: #F0287A;
   box-shadow: 0 0 0 3px rgba(240, 57, 122, 0.1);
 }
 
@@ -202,7 +202,7 @@
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #F0397A;
+  color: #F0287A;
   cursor: pointer;
   width: 100%;
   font-family: 'Poppins', sans-serif;
@@ -211,12 +211,12 @@
 
 .account-btn-add:hover {
   background: rgba(240, 57, 122, 0.05);
-  border-color: #F0397A;
+  border-color: #F0287A;
 }
 
 .account-btn-primary {
   padding: 0.5rem 1rem;
-  background: #F0397A;
+  background: #F0287A;
   color: white;
   border: none;
   border-radius: 0.5rem;

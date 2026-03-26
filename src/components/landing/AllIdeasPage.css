@@ -1,3 +1,11 @@
+/* ── Page wrapper ── */
+.ai-page {
+  width: 100%;
+  min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  background: #fff;
+}
+
 /* ── Nav ── */
 .ai-nav-bar {
   width: 100%;
@@ -176,7 +184,7 @@
 
 /* ── Mobile ── */
 @media (max-width: 640px) {
-  .ai-nav { padding: 0 20px; }
+  .ai-nav-bar .ai-nav-inner { padding: 0 20px; }
   .ai-header { padding: 24px 20px 20px; }
   .ai-grid { grid-template-columns: repeat(2, 1fr); padding: 0 20px 40px; }
   .ai-title { font-size: 22px; }

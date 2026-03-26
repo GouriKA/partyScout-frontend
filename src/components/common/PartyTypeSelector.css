@@ -23,11 +23,11 @@
 }
 
 .party-type-trigger:hover:not(:disabled) {
-  border-color: #F0397A;
+  border-color: #F0287A;
 }
 
 .party-type-trigger.open {
-  border-color: #F0397A;
+  border-color: #F0287A;
   box-shadow: 0 0 0 3px rgba(240, 57, 122, 0.12);
 }
 
@@ -62,7 +62,7 @@
   left: 0;
   right: 0;
   background: white;
-  border: 2px solid #F0397A;
+  border: 2px solid #F0287A;
   border-top: none;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
@@ -137,7 +137,7 @@
 .party-type-check {
   width: 1.25rem;
   height: 1.25rem;
-  background: #F0397A;
+  background: #F0287A;
   color: white;
   border-radius: 50%;
   display: flex;

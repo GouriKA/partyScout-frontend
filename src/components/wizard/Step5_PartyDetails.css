@@ -38,7 +38,7 @@
   width: 70px;
   height: 70px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #F0397A, #FF8C42);
+  background: linear-gradient(135deg, #F0287A, #FF8C42);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -48,13 +48,13 @@
 
 .score-value { font-size: 1.5rem; font-weight: 700; line-height: 1; }
 .score-label { font-size: 0.6875rem; text-transform: uppercase; opacity: 0.9; }
-.venue-hero-ages { color: #F0397A; font-weight: 500; }
+.venue-hero-ages { color: #F0287A; font-weight: 500; }
 
 .venue-place-types { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
 .place-type-tag {
   padding: 0.125rem 0.5rem;
   background: rgba(240, 57, 122, 0.08);
-  color: #F0397A;
+  color: #F0287A;
   border-radius: 0;
   font-size: 0.75rem;
   text-transform: capitalize;
@@ -165,7 +165,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #F0397A;
+  background: #F0287A;
   color: white;
   border-radius: 50%;
   font-size: 0.75rem;
@@ -190,7 +190,7 @@
   color: var(--neutral-700, #374151);
 }
 
-.included-list li::before { content: '✓'; position: absolute; left: 0; color: #F0397A; font-weight: bold; }
+.included-list li::before { content: '✓'; position: absolute; left: 0; color: #F0287A; font-weight: bold; }
 .not-included-list li::before { content: '•'; position: absolute; left: 0; color: #FF8C42; }
 
 .addons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
@@ -204,7 +204,7 @@
   transition: all 0.2s ease;
 }
 
-.addon-card:hover { border-color: #F0397A; }
+.addon-card:hover { border-color: #F0287A; }
 .addon-card.recommended { border-color: #FF8C42; background: rgba(255, 140, 66, 0.04); }
 
 .addon-badge {
@@ -222,7 +222,7 @@
 
 .addon-name { font-size: 0.9375rem; font-weight: 600; color: var(--neutral-800, #1f2937); margin: 0 0 0.25rem; }
 .addon-description { font-size: 0.8125rem; color: var(--neutral-600, #4b5563); margin: 0 0 0.5rem; }
-.addon-price { font-size: 1rem; font-weight: 700; color: #F0397A; }
+.addon-price { font-size: 1rem; font-weight: 700; color: #F0287A; }
 
 .contact-section {
   padding: 1.5rem;
@@ -232,7 +232,7 @@
 }
 
 .contact-section .section-title { color: white; }
-.contact-section .section-icon { background: #F0397A; }
+.contact-section .section-icon { background: #F0287A; }
 
 .contact-actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
 
@@ -248,7 +248,7 @@
   transition: all 0.2s ease;
 }
 
-.contact-phone { background: #F0397A; color: white; }
+.contact-phone { background: #F0287A; color: white; }
 .contact-phone:hover { background: #c82a63; }
 .contact-website { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
 .contact-website:hover { background: rgba(255,255,255,0.18); }

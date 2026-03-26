@@ -78,7 +78,7 @@
 .feedback-field input:focus,
 .feedback-field select:focus,
 .feedback-field textarea:focus {
-  border-color: #F0397A;
+  border-color: #F0287A;
 }
 
 .feedback-field textarea { resize: vertical; }

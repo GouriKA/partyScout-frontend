@@ -11,7 +11,7 @@
 }
 
 .input-required {
-  color: #F0397A;
+  color: #F0287A;
   margin-left: 0.25rem;
 }
 
@@ -28,7 +28,7 @@
 
 .input-field:focus {
   outline: none;
-  border-color: #F0397A;
+  border-color: #F0287A;
   box-shadow: 0 0 0 3px rgba(240, 57, 122, 0.12);
 }
 
