@@ -120,4 +120,53 @@ describe('SavedEventsContext — guest mode', () => {
       expect(stored.profiles[0].age).toBe(7);
     });
   });
+
+  // ── localStorage resilience ───────────────────────────────────────────────
+
+  describe('saveEvent — localStorage unavailable', () => {
+    it('still updates in-memory state even when localStorage.setItem throws', async () => {
+      // Simulate a browser/environment where localStorage writes are blocked
+      vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+        throw new DOMException('QuotaExceededError');
+      });
+
+      const { result } = renderHook(() => useSavedEvents(), { wrapper });
+      const venue = { googlePlaceId: 'gp-resilience', name: 'Resilient Venue' };
+
+      await act(async () => {
+        await result.current.saveEvent(venue);
+      });
+
+      // In-memory state must reflect the save even though localStorage failed
+      expect(result.current.isSaved('gp-resilience')).toBe(true);
+      expect(result.current.savedEvents).toHaveLength(1);
+    });
+  });
+
+  describe('unsaveEvent — localStorage unavailable', () => {
+    it('still removes from in-memory state even when localStorage.setItem throws', async () => {
+      const { result } = renderHook(() => useSavedEvents(), { wrapper });
+      const venue = { googlePlaceId: 'gp-unsave', name: 'Venue To Remove' };
+
+      // Save normally first (localStorage available)
+      await act(async () => {
+        await result.current.saveEvent(venue);
+      });
+      expect(result.current.isSaved('gp-unsave')).toBe(true);
+
+      // Now make localStorage writes fail
+      vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+        throw new DOMException('QuotaExceededError');
+      });
+
+      const localId = result.current.savedEvents[0].localId;
+      await act(async () => {
+        await result.current.unsaveEvent(localId);
+      });
+
+      // In-memory state should reflect the removal
+      expect(result.current.isSaved('gp-unsave')).toBe(false);
+      expect(result.current.savedEvents).toHaveLength(0);
+    });
+  });
 });

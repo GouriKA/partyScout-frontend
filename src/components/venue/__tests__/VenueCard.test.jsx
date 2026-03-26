@@ -195,6 +195,49 @@ describe('VenueCard', () => {
   });
 });
 
+describe('VenueCard — null/optional fields (chat venue shape)', () => {
+  // Venues surfaced via AI chat have matchScore=null and distanceInMiles=null.
+  // VenueCard must not render literal "null" text for these fields.
+  const chatVenue = {
+    id: 'gp-chat-1',
+    name: 'Chat Venue',
+    address: '1 Main St',
+    rating: 4.2,
+    userRatingsTotal: 50,
+    setting: 'indoor',
+    matchScore: null,
+    matchReasons: [],
+    distanceInMiles: null,
+    photos: [],
+  };
+
+  const props = {
+    venue: chatVenue,
+    showCompareCheckbox: false,
+  };
+
+  it('does not render "null" as match score text', () => {
+    const { container } = render(<VenueCard {...props} />);
+    expect(container).not.toHaveTextContent('null');
+  });
+
+  it('does not render the match score badge when matchScore is null', () => {
+    const { container } = render(<VenueCard {...props} />);
+    expect(container.querySelector('.match-score')).not.toBeInTheDocument();
+  });
+
+  it('does not render distance when distanceInMiles is null', () => {
+    render(<VenueCard {...props} />);
+    expect(screen.queryByText(/mi$/)).not.toBeInTheDocument();
+  });
+
+  it('renders venue name and address correctly', () => {
+    render(<VenueCard {...props} />);
+    expect(screen.getByText('Chat Venue')).toBeInTheDocument();
+    expect(screen.getByText('1 Main St')).toBeInTheDocument();
+  });
+});
+
 describe('heart icon (save feature)', () => {
   const defaultProps = {
     venue: mockVenue,
