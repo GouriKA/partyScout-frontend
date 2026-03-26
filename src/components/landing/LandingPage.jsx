@@ -182,15 +182,15 @@ export default function LandingPage({ onStart, onSeeAll }) {
     <section className="lp-cards-section">
       {chatVenues ? (
         <div className="lp-chat-venues">
-          {chatVenues.map(v => {
+          {chatVenues.map((v, i) => {
             const venue = {
               ...v,
               googlePlaceId: v.googlePlaceId || v.id,
               matchScore: null,
               matchReasons: [],
-              photos: [],
+              photos: v.photos ?? [],
               distanceInMiles: null,
-              setting: 'indoor',
+              setting: v.setting ?? 'indoor',
             };
             const gpid = venue.googlePlaceId;
             const saved = isSaved(gpid);
@@ -204,7 +204,7 @@ export default function LandingPage({ onStart, onSeeAll }) {
             };
             return (
               <VenueCard
-                key={venue.id}
+                key={gpid || venue.id || i}
                 venue={venue}
                 isSaved={saved}
                 onSave={handleSave}

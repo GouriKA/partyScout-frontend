@@ -92,12 +92,14 @@ export default function VenueCard({
         </label>
       )}
 
-      <div className="venue-header">
-        <div className={`match-score ${getMatchScoreColor(venue.matchScore)}`}>
-          <span className="match-score-value">{venue.matchScore}</span>
-          <span className="match-score-label">{getMatchScoreLabel(venue.matchScore)}</span>
+      {venue.matchScore != null && (
+        <div className="venue-header">
+          <div className={`match-score ${getMatchScoreColor(venue.matchScore)}`}>
+            <span className="match-score-value">{venue.matchScore}</span>
+            <span className="match-score-label">{getMatchScoreLabel(venue.matchScore)}</span>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="venue-content" onClick={() => onSelect?.(venue)}>
         <h3 className="venue-name">{venue.name}</h3>
@@ -150,7 +152,9 @@ export default function VenueCard({
               )}
             </span>
           )}
-          <span className="venue-distance">{venue.distanceInMiles} mi</span>
+          {venue.distanceInMiles != null && (
+            <span className="venue-distance">{venue.distanceInMiles} mi</span>
+          )}
           <span className="venue-setting">{venue.setting}</span>
           {venue.popularForAges && (
             <span className="venue-age-range">{venue.popularForAges}</span>

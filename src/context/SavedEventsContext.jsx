@@ -163,7 +163,7 @@ export function SavedEventsProvider({ children }) {
     const { eventDate = null, partyTypes = null, guestCount = null, venueWebsite = null } = extra
 
     if (user) {
-      // Optimistic update
+      // Optimistic update — add immediately so the UI responds without delay
       const optimistic = {
         id: `optimistic-${uuid()}`,
         googlePlaceId,
@@ -181,11 +181,13 @@ export function SavedEventsProvider({ children }) {
           method: 'POST',
           body: JSON.stringify({ googlePlaceId, venueName: venue.name, profileId, eventDate, partyTypes, guestCount, venueWebsite }),
         })
+        // Replace optimistic entry with the real server-assigned record
         setSavedEvents((prev) =>
           prev.map((ev) => (ev.id === optimistic.id ? saved : ev))
         )
       } catch (err) {
-        // Rollback
+        // API failed — roll back optimistic entry and surface the error so the
+        // caller (SaveModal) can inform the user
         setSavedEvents((prev) => prev.filter((ev) => ev.id !== optimistic.id))
         throw err
       }
@@ -208,7 +210,12 @@ export function SavedEventsProvider({ children }) {
         savedAt: new Date().toISOString(),
       }
       guest.savedEvents.push(newEvent)
-      writeGuest(guest)
+      try {
+        // Persist to localStorage — may fail in private browsing or when quota is exceeded
+        writeGuest(guest)
+      } catch {
+        // Silently ignore storage errors; the in-memory state still updates for this session
+      }
       setSavedEvents([...guest.savedEvents])
     }
   }
@@ -228,7 +235,11 @@ export function SavedEventsProvider({ children }) {
     } else {
       const guest = readGuest()
       guest.savedEvents = guest.savedEvents.filter((ev) => ev.localId !== savedEventId)
-      writeGuest(guest)
+      try {
+        writeGuest(guest)
+      } catch {
+        // Silently ignore storage errors; in-memory state still updates
+      }
       setSavedEvents([...guest.savedEvents])
     }
   }
@@ -244,7 +255,11 @@ export function SavedEventsProvider({ children }) {
       const guest = readGuest()
       guest.profiles = guest.profiles.filter((p) => p.localId !== profileId)
       guest.savedEvents = guest.savedEvents.filter((ev) => ev.profileLocalId !== profileId)
-      writeGuest(guest)
+      try {
+        writeGuest(guest)
+      } catch {
+        // Silently ignore storage errors; in-memory state still updates
+      }
       setProfiles([...guest.profiles])
       setSavedEvents([...guest.savedEvents])
     }
@@ -264,7 +279,11 @@ export function SavedEventsProvider({ children }) {
       const profile = { localId: uuid(), name, age }
       const guest = readGuest()
       guest.profiles.push(profile)
-      writeGuest(guest)
+      try {
+        writeGuest(guest)
+      } catch {
+        // Silently ignore storage errors; in-memory state still updates
+      }
       setProfiles([...guest.profiles])
       return profile
     }
