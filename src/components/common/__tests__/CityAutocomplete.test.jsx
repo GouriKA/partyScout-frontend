@@ -392,6 +392,55 @@ describe('CityAutocomplete', () => {
     });
   });
 
+  // ── Blur behaviour ─────────────────────────────────────────────────────
+
+  describe('blur behaviour', () => {
+    it('blur closes the dropdown after 150 ms', async () => {
+      fetchMock.mockResolvedValue({
+        json: () => Promise.resolve(['London']),
+      });
+
+      renderCityAutocomplete();
+      const input = screen.getByRole('combobox');
+      await typeAndFlush(input, 'Lo');
+      expect(screen.getByRole('listbox')).toBeInTheDocument();
+
+      fireEvent.blur(input);
+
+      // Dropdown still open before the timeout fires
+      expect(screen.getByRole('listbox')).toBeInTheDocument();
+
+      await act(async () => { vi.advanceTimersByTime(150); });
+
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
+    it('blur does NOT call onChange — only suggestion selection does', async () => {
+      // Regression test: blur used to call onChange with the partial input,
+      // overriding a subsequent suggestion click.
+      const onChange = vi.fn();
+      fetchMock.mockResolvedValue({
+        json: () => Promise.resolve(['London', 'Los Angeles']),
+      });
+
+      renderCityAutocomplete({ onChange });
+      const input = screen.getByRole('combobox');
+      await typeAndFlush(input, 'Lo');
+
+      // Simulate browser ordering: blur fires before mousedown handlers
+      fireEvent.blur(input);
+      fireEvent.mouseDown(screen.getByText('London'));
+
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith('London');
+
+      // Advance past the blur timeout — onChange must NOT be called again
+      await act(async () => { vi.advanceTimersByTime(200); });
+
+      expect(onChange).toHaveBeenCalledTimes(1);
+    });
+  });
+
   // ── Outside click ──────────────────────────────────────────────────────
 
   describe('closes dropdown on outside click', () => {
