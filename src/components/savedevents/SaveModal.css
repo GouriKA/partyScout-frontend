@@ -1,7 +1,7 @@
 .save-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,7 +12,7 @@
 .save-modal {
   position: relative;
   background: white;
-  border-radius: 1rem;
+  border-radius: 0;
   padding: 1.75rem;
   width: 100%;
   max-width: 380px;
@@ -64,7 +64,7 @@
   align-items: center;
   gap: 0.625rem;
   padding: 0.625rem 0.75rem;
-  border-radius: 0.5rem;
+  border-radius: 0;
   cursor: pointer;
   transition: background 0.15s;
 }
@@ -102,7 +102,7 @@
   width: 100%;
   padding: 0.5rem 0.75rem;
   border: 1.5px solid var(--neutral-200, #e5e7eb);
-  border-radius: 0.5rem;
+  border-radius: 0;
   font-size: 0.875rem;
   font-family: 'Poppins', sans-serif;
   outline: none;
@@ -111,7 +111,7 @@
 
 .save-input:focus {
   border-color: #F0287A;
-  box-shadow: 0 0 0 3px rgba(240, 57, 122, 0.1);
+  box-shadow: 0 0 0 3px rgba(240, 40, 122, 0.1);
 }
 
 .save-modal-error {
@@ -129,7 +129,7 @@
 .save-btn-cancel {
   padding: 0.625rem 1.25rem;
   border: 1.5px solid var(--neutral-200, #e5e7eb);
-  border-radius: 0.5rem;
+  border-radius: 0;
   background: white;
   color: var(--neutral-700, #374151);
   font-size: 0.875rem;
@@ -146,7 +146,7 @@
 .save-btn-confirm {
   padding: 0.625rem 1.25rem;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 0;
   background: #F0287A;
   color: white;
   font-size: 0.875rem;
@@ -157,7 +157,7 @@
 }
 
 .save-btn-confirm:hover:not(:disabled) {
-  background: #c82a63;
+  background: #c0206a;
 }
 
 .save-btn-confirm:disabled,

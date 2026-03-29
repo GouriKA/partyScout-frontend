@@ -9,13 +9,13 @@
 
 .venue-card:hover {
   border-color: #F0287A;
-  box-shadow: 0 8px 28px rgba(240, 57, 122, 0.12);
+  box-shadow: 0 8px 28px rgba(240, 40, 122, 0.12);
   transform: translateY(-2px);
 }
 
 .venue-card.selected {
   border-color: #F0287A;
-  box-shadow: 0 0 0 3px rgba(240, 57, 122, 0.15);
+  box-shadow: 0 0 0 3px rgba(240, 40, 122, 0.15);
 }
 
 .venue-photo {
@@ -101,7 +101,7 @@
 
 .venue-header {
   padding: 1rem;
-  background: linear-gradient(135deg, rgba(240, 57, 122, 0.05), rgba(255, 140, 66, 0.05));
+  background: linear-gradient(135deg, rgba(240, 40, 122, 0.05), rgba(245, 146, 62, 0.05));
 }
 
 .match-score {
@@ -123,7 +123,7 @@
 }
 
 .match-score.excellent .match-score-value { background: #F0287A; }
-.match-score.good      .match-score-value { background: #FF8C42; }
+.match-score.good      .match-score-value { background: #F5923E; }
 .match-score.fair      .match-score-value { background: var(--warning, #f59e0b); }
 .match-score.low       .match-score-value { background: var(--neutral-400, #9ca3af); }
 
@@ -153,7 +153,7 @@
 }
 
 .venue-rating { display: flex; align-items: center; gap: 0.25rem; color: var(--neutral-700, #374151); }
-.rating-star { color: #FF8C42; }
+.rating-star { color: #F5923E; }
 .rating-count { color: var(--neutral-500, #6b7280); }
 .venue-distance { color: var(--neutral-600, #4b5563); }
 
@@ -303,7 +303,7 @@
   align-items: center;
   gap: 0.25rem;
   padding: 0.25rem 0.625rem;
-  background: rgba(240, 57, 122, 0.08);
+  background: rgba(240, 40, 122, 0.08);
   color: #F0287A;
   border-radius: 0;
   font-size: 0.75rem;
@@ -392,7 +392,7 @@
   font-family: 'Poppins', sans-serif;
 }
 
-.btn-view-details:hover { background: #c82a63; }
+.btn-view-details:hover { background: #c0206a; }
 
 .btn-call {
   padding: 0.75rem 1rem;

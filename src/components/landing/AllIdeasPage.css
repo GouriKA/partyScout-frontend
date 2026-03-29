@@ -36,7 +36,7 @@
 .ai-back-btn {
   background: none;
   border: none;
-  font-size: 13px;
+  font-size: 14px;
   color: #666;
   cursor: pointer;
   padding: 0;
@@ -47,7 +47,7 @@
 .ai-back-btn:hover { color: #0a0a0a; }
 
 .ai-title {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 800;
   color: #0a0a0a;
   letter-spacing: -0.03em;
@@ -55,7 +55,7 @@
 }
 
 .ai-subtitle {
-  font-size: 14px;
+  font-size: 15px;
   color: #666;
   margin: 0 0 20px;
 }
@@ -96,7 +96,7 @@
   flex: 1;
   border: none;
   outline: none;
-  font-size: 14px;
+  font-size: 15px;
   font-family: 'Poppins', sans-serif;
   color: #0a0a0a;
   background: transparent;
@@ -153,7 +153,7 @@
   bottom: 8px;
   left: 8px;
   z-index: 1;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -167,7 +167,7 @@
 }
 
 .ai-card-cat {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -176,7 +176,7 @@
 }
 
 .ai-card-title {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   color: #0a0a0a;
   margin: 0;
@@ -187,5 +187,5 @@
   .ai-nav-bar .ai-nav-inner { padding: 0 20px; }
   .ai-header { padding: 24px 20px 20px; }
   .ai-grid { grid-template-columns: repeat(2, 1fr); padding: 0 20px 40px; }
-  .ai-title { font-size: 22px; }
+  .ai-title { font-size: 24px; }
 }

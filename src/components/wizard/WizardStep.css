@@ -101,6 +101,27 @@
   font-size: 0.9375rem;
 }
 
+.wizard-city-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #d0d5dd;
+  border-radius: 0;
+  font-size: 15px;
+  font-family: 'Poppins', sans-serif;
+  color: #0a0a0a;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.wizard-city-input:focus {
+  outline: none;
+  border-color: #F0287A;
+}
+
+.wizard-city-input::placeholder {
+  color: #aaa;
+}
+
 .form-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

@@ -1,7 +1,7 @@
 .venue-compare-modal {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: 1000;
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -10,7 +10,7 @@
 .compare-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(5, 5, 5, 0.7);
+  background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
 }
 
@@ -57,7 +57,7 @@
   transition: all 0.2s ease;
 }
 
-.compare-close:hover { background: rgba(240, 57, 122, 0.1); color: #F0287A; }
+.compare-close:hover { background: rgba(240, 40, 122, 0.1); color: #F0287A; }
 
 .compare-table-wrapper { flex: 1; overflow-x: auto; padding: 1rem 1.5rem; }
 
@@ -94,7 +94,7 @@
 }
 
 .compare-value.best {
-  background: rgba(240, 57, 122, 0.07);
+  background: rgba(240, 40, 122, 0.07);
   color: #F0287A;
   font-weight: 600;
 }
@@ -109,7 +109,7 @@
 .compare-reason {
   display: inline-block;
   padding: 0.125rem 0.5rem;
-  background: rgba(240, 57, 122, 0.08);
+  background: rgba(240, 40, 122, 0.08);
   color: #F0287A;
   border-radius: 0;
   font-size: 0.6875rem;
@@ -139,7 +139,7 @@
   font-family: 'Poppins', sans-serif;
 }
 
-.compare-select-btn:hover { background: #c82a63; transform: translateY(-1px); }
+.compare-select-btn:hover { background: #c0206a; transform: translateY(-1px); }
 
 @media (max-width: 768px) {
   .compare-panel { max-height: 95vh; border-radius: 0; }

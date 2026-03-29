@@ -54,7 +54,7 @@
 .saved-event-card {
   background: var(--neutral-50, #f9fafb);
   border: 1px solid var(--neutral-100, #f3f4f6);
-  border-radius: 0.75rem;
+  border-radius: 0;
   padding: 0.875rem 1rem;
   display: flex;
   flex-direction: column;
@@ -63,7 +63,7 @@
 }
 
 .saved-event-card:hover {
-  border-color: rgba(240, 57, 122, 0.3);
+  border-color: rgba(240, 40, 122, 0.3);
 }
 
 .saved-event-card-top {
@@ -110,7 +110,7 @@
   flex-shrink: 0;
   transition: color 0.15s, background 0.15s;
   line-height: 1;
-  border-radius: 0.25rem;
+  border-radius: 0;
 }
 
 .saved-event-unsave:hover {

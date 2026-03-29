@@ -23,9 +23,9 @@ steps:
       - 'gcr.io/$PROJECT_ID/partyscout-frontend:latest'
       - '.'
 
-  # Push the image
+  # Push both tags so prod can promote :latest without rebuilding
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/partyscout-frontend:$COMMIT_SHA']
+    args: ['push', '--all-tags', 'gcr.io/$PROJECT_ID/partyscout-frontend']
 
   # Deploy to canary (us-east1)
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -48,7 +48,7 @@ options:
   logging: CLOUD_LOGGING_ONLY
 
 substitutions:
-  _VITE_API_URL: 'https://partyscout-backend-canary-3f6x32ha2a-ue.a.run.app'
+  _VITE_API_URL: 'https://partyscout.live'
   _VITE_FIREBASE_API_KEY: 'AIzaSyDiWsJLElP6j6bxJXdd6zWr3JsnpzAJHv0'
   _VITE_FIREBASE_AUTH_DOMAIN: 'bionic-upgrade-485121-h5.firebaseapp.com'
   _VITE_FIREBASE_PROJECT_ID: 'bionic-upgrade-485121-h5'

@@ -65,6 +65,16 @@ export default function CityAutocomplete({ value, onChange, className, placehold
   };
 
   const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      if (open && highlighted >= 0) {
+        e.preventDefault();
+        handleSelect(suggestions[highlighted]);
+      } else if (!open && inputValue.trim()) {
+        e.preventDefault();
+        onChange(inputValue.trim());
+      }
+      return;
+    }
     if (!open) return;
     if (e.key === 'ArrowDown') {
       e.preventDefault();
@@ -72,12 +82,14 @@ export default function CityAutocomplete({ value, onChange, className, placehold
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       setHighlighted((h) => Math.max(h - 1, 0));
-    } else if (e.key === 'Enter' && highlighted >= 0) {
-      e.preventDefault();
-      handleSelect(suggestions[highlighted]);
     } else if (e.key === 'Escape') {
       setOpen(false);
     }
+  };
+
+  const handleBlur = () => {
+    // Delay to let onMouseDown on suggestions fire first before closing
+    setTimeout(() => setOpen(false), 150);
   };
 
   return (
@@ -89,6 +101,7 @@ export default function CityAutocomplete({ value, onChange, className, placehold
         value={inputValue}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
+        onBlur={handleBlur}
         autoComplete="off"
         role="combobox"
         aria-expanded={open}

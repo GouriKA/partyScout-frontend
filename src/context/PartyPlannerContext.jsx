@@ -238,7 +238,7 @@ export function PartyPlannerProvider({ children }) {
     const requestBody = {
       age: state.childInfo.age ?? 7,
       guestCount: state.preferences.guestCount,
-      city: city || state.location.city || 'London',
+      city: city || state.location.city || '',
       setting: 'any',
       maxDistanceMiles: state.location.maxDistance,
       textQuery,

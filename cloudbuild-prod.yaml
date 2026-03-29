@@ -1,5 +1,5 @@
 steps:
-  # Deploy to prod (us-central1) — manually triggered only
+  # Promote the canary :latest image to prod — no rebuild
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
@@ -7,7 +7,7 @@ steps:
       - 'deploy'
       - 'partyscout-frontend'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/partyscout-frontend:${_IMAGE_TAG}'
+      - 'gcr.io/$PROJECT_ID/partyscout-frontend:latest'
       - '--region'
       - 'us-central1'
       - '--platform'
@@ -18,6 +18,3 @@ steps:
 
 options:
   logging: CLOUD_LOGGING_ONLY
-
-substitutions:
-  _IMAGE_TAG: 'latest'

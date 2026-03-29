@@ -1,6 +1,7 @@
 import { usePartyPlanner } from '../../context/PartyPlannerContext';
 import Slider from '../common/Slider';
 import Button from '../common/Button';
+import CityAutocomplete from '../common/CityAutocomplete';
 import './WizardStep.css';
 
 const settingOptions = [
@@ -27,7 +28,7 @@ export default function Step3_Location() {
 
   const formatDistance = (value) => `${value} miles`;
 
-  const canProceed = true;
+  const canProceed = !!location.city;
 
   return (
     <div className="wizard-step">
@@ -45,6 +46,16 @@ export default function Step3_Location() {
       </div>
 
       <div className="step-form">
+        <div className="form-section">
+          <label className="section-label">Your city</label>
+          <CityAutocomplete
+            value={location.city}
+            onChange={(city) => updateLocation({ city })}
+            placeholder="Enter your city..."
+            className="wizard-city-input"
+          />
+        </div>
+
         <div className="form-section">
           <label className="section-label">Indoor or Outdoor?</label>
           <div className="setting-options">

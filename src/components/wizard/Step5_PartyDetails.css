@@ -11,10 +11,10 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: 1.5rem;
-  background: linear-gradient(135deg, rgba(240, 57, 122, 0.07), rgba(255, 140, 66, 0.07));
+  background: linear-gradient(135deg, rgba(240, 40, 122, 0.07), rgba(245, 146, 62, 0.07));
   border-radius: 0;
   gap: 1rem;
-  border: 1px solid rgba(240, 57, 122, 0.12);
+  border: 1px solid rgba(240, 40, 122, 0.12);
 }
 
 .venue-hero-content { flex: 1; }
@@ -28,7 +28,7 @@
   font-size: 0.875rem;
 }
 
-.venue-hero-rating { color: #FF8C42; font-weight: 600; }
+.venue-hero-rating { color: #F5923E; font-weight: 600; }
 .venue-hero-distance, .venue-hero-setting { color: var(--neutral-600, #4b5563); }
 .venue-hero-setting { padding: 0.125rem 0.5rem; background: rgba(255,255,255,0.8); border-radius: 0; text-transform: capitalize; }
 
@@ -38,7 +38,7 @@
   width: 70px;
   height: 70px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #F0287A, #FF8C42);
+  background: linear-gradient(135deg, #F0287A, #F5923E);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,13 +47,13 @@
 }
 
 .score-value { font-size: 1.5rem; font-weight: 700; line-height: 1; }
-.score-label { font-size: 0.6875rem; text-transform: uppercase; opacity: 0.9; }
+.score-label { font-size: 0.75rem; text-transform: uppercase; opacity: 0.9; }
 .venue-hero-ages { color: #F0287A; font-weight: 500; }
 
 .venue-place-types { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
 .place-type-tag {
   padding: 0.125rem 0.5rem;
-  background: rgba(240, 57, 122, 0.08);
+  background: rgba(240, 40, 122, 0.08);
   color: #F0287A;
   border-radius: 0;
   font-size: 0.75rem;
@@ -141,7 +141,7 @@
 }
 
 .info-card.highlight {
-  background: linear-gradient(135deg, rgba(240, 57, 122, 0.08), rgba(255, 140, 66, 0.08));
+  background: linear-gradient(135deg, rgba(240, 40, 122, 0.08), rgba(245, 146, 62, 0.08));
 }
 
 .info-icon { font-size: 1.5rem; flex-shrink: 0; }
@@ -172,7 +172,7 @@
   font-weight: bold;
 }
 
-.not-included .section-icon { background: #FF8C42; }
+.not-included .section-icon { background: #F5923E; }
 
 .included-list, .not-included-list {
   display: grid;
@@ -191,7 +191,7 @@
 }
 
 .included-list li::before { content: '✓'; position: absolute; left: 0; color: #F0287A; font-weight: bold; }
-.not-included-list li::before { content: '•'; position: absolute; left: 0; color: #FF8C42; }
+.not-included-list li::before { content: '•'; position: absolute; left: 0; color: #F5923E; }
 
 .addons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
 
@@ -205,16 +205,16 @@
 }
 
 .addon-card:hover { border-color: #F0287A; }
-.addon-card.recommended { border-color: #FF8C42; background: rgba(255, 140, 66, 0.04); }
+.addon-card.recommended { border-color: #F5923E; background: rgba(245, 146, 62, 0.04); }
 
 .addon-badge {
   position: absolute;
   top: -0.5rem;
   right: 0.75rem;
   padding: 0.125rem 0.5rem;
-  background: #FF8C42;
+  background: #F5923E;
   color: white;
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   font-weight: 700;
   border-radius: 0;
   text-transform: uppercase;
@@ -226,7 +226,7 @@
 
 .contact-section {
   padding: 1.5rem;
-  background: #050505;
+  background: #0a0a0a;
   border-radius: 0;
   color: white;
 }
@@ -249,7 +249,7 @@
 }
 
 .contact-phone { background: #F0287A; color: white; }
-.contact-phone:hover { background: #c82a63; }
+.contact-phone:hover { background: #c0206a; }
 .contact-website { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
 .contact-website:hover { background: rgba(255,255,255,0.18); }
 .contact-icon { font-size: 1rem; }

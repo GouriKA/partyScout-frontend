@@ -4,7 +4,7 @@
   margin-bottom: 1.5rem;
   background: #fff;
   border-radius: 0;
-  border: 2px solid #050505;
+  border: 2px solid #0a0a0a;
 }
 
 .step-track {
@@ -53,7 +53,7 @@
 }
 
 .step-item.completed .step-circle {
-  background: linear-gradient(135deg, #F0287A, #FF8C42);
+  background: linear-gradient(135deg, #F0287A, #F5923E);
   border-color: transparent;
   box-shadow: 0 2px 8px rgba(240,57,122,0.3);
 }
@@ -63,7 +63,7 @@
 .step-check { color: white; font-size: 0.95rem; font-weight: 700; }
 
 .step-label {
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   font-weight: 500;
   color: #9ca3af;
   text-align: center;
@@ -83,7 +83,7 @@
 }
 
 .step-connector.completed {
-  background: linear-gradient(90deg, #F0287A, #FF8C42);
+  background: linear-gradient(90deg, #F0287A, #F5923E);
 }
 
 @media (max-width: 600px) {

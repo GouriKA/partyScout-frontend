@@ -28,7 +28,7 @@
 
 .party-type-trigger.open {
   border-color: #F0287A;
-  box-shadow: 0 0 0 3px rgba(240, 57, 122, 0.12);
+  box-shadow: 0 0 0 3px rgba(240, 40, 122, 0.12);
 }
 
 .party-type-trigger.has-selection .party-type-trigger-label {
@@ -66,7 +66,7 @@
   border-top: none;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  box-shadow: 0 8px 24px rgba(240, 57, 122, 0.15);
+  box-shadow: 0 8px 24px rgba(240, 40, 122, 0.15);
   z-index: 100;
   max-height: 320px;
   overflow-y: auto;
@@ -91,11 +91,11 @@
 .party-type-option:last-child { border-bottom: none; }
 
 .party-type-option:hover:not(:disabled) {
-  background: rgba(240, 57, 122, 0.04);
+  background: rgba(240, 40, 122, 0.04);
 }
 
 .party-type-option.selected {
-  background: linear-gradient(135deg, rgba(240, 57, 122, 0.07), rgba(255, 140, 66, 0.05));
+  background: linear-gradient(135deg, rgba(240, 40, 122, 0.07), rgba(245, 146, 62, 0.05));
 }
 
 .party-type-option.disabled {
@@ -124,7 +124,7 @@
 }
 
 .party-type-popular {
-  background: #FF8C42;
+  background: #F5923E;
   color: white;
   font-size: 0.625rem;
   font-weight: 700;

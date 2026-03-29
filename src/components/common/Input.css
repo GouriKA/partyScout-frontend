@@ -29,7 +29,7 @@
 .input-field:focus {
   outline: none;
   border-color: #F0287A;
-  box-shadow: 0 0 0 3px rgba(240, 57, 122, 0.12);
+  box-shadow: 0 0 0 3px rgba(240, 40, 122, 0.12);
 }
 
 .input-field:disabled {

@@ -69,7 +69,7 @@
 }
 
 .wizard-step-count {
-  font-size: 11px;
+  font-size: 13px;
   color: #aaa;
   font-family: 'Poppins', sans-serif;
 }
@@ -90,7 +90,7 @@
 .wizard-back-btn {
   background: none;
   border: none;
-  font-size: 15px;
+  font-size: 16px;
   color: #888;
   cursor: pointer;
   font-family: 'Poppins', sans-serif;

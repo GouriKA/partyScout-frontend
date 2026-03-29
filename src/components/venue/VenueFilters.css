@@ -40,7 +40,7 @@
 .filter-group select:focus {
   outline: none;
   border-color: #F0287A;
-  box-shadow: 0 0 0 2px rgba(240, 57, 122, 0.12);
+  box-shadow: 0 0 0 2px rgba(240, 40, 122, 0.12);
 }
 
 .filters-summary { font-size: 0.875rem; color: var(--neutral-500, #6b7280); }
