@@ -57,24 +57,33 @@ export default function LandingPage({ onStart, onSeeAll }) {
   const [cityHighlight,  setCityHighlight]  = useState(false);
   const [pendingCard,    setPendingCard]    = useState(null);
 
-  const [chatInput,    setChatInput]    = useState('');
-  const [chatVenues,   setChatVenues]   = useState(null);
-  const [saveTarget,   setSaveTarget]   = useState(null);
+  const [chatInput,      setChatInput]      = useState('');
+  const [chatVenues,     setChatVenues]     = useState(null);
+  const [saveTarget,     setSaveTarget]     = useState(null);
+  const [scoutExpanded,  setScoutExpanded]  = useState(false);
 
   // Chat overlay state
   const [chatOpen,     setChatOpen]     = useState(false);
   const [chatInitial,  setChatInitial]  = useState('');
   const [chatTrigger,  setChatTrigger]  = useState(null);
 
-  const carouselRef   = useRef(null);
-  const searchWrapRef = useRef(null);
-  const navRef        = useRef(null);
-  const chatColRef    = useRef(null);
+  const carouselRef      = useRef(null);
+  const searchWrapRef    = useRef(null);
+  const navRef           = useRef(null);
+  const chatColRef       = useRef(null);
+  const scoutExpandedRef = useRef(false);
+  scoutExpandedRef.current = scoutExpanded;
 
-  // Keep chat column anchored directly below the nav (which shifts due to the banner above it)
+  // Keep chat column anchored directly below the nav.
+  // In expanded (full-screen) mode, clear inline styles so CSS takes over.
   useEffect(() => {
     const update = () => {
       if (!navRef.current || !chatColRef.current) return;
+      if (scoutExpandedRef.current) {
+        chatColRef.current.style.top    = '';
+        chatColRef.current.style.height = '';
+        return;
+      }
       const navBottom = navRef.current.getBoundingClientRect().bottom;
       const top = Math.max(navBottom, 0);
       chatColRef.current.style.top    = `${top}px`;
@@ -87,7 +96,7 @@ export default function LandingPage({ onStart, onSeeAll }) {
       window.removeEventListener('scroll', update);
       window.removeEventListener('resize', update);
     };
-  }, []);
+  }, [scoutExpanded]);
 
   // Carousel auto-scroll
   useEffect(() => {
@@ -126,9 +135,19 @@ export default function LandingPage({ onStart, onSeeAll }) {
 
   const handleVenuesFound = (venues) => {
     setChatVenues(venues);
-    // TODO: when ChatPanel exposes the city resolved by AI, call handleCityChange(city)
-    // to sync the filter row. Requires backend to return city in VENUES payload
-    // and ChatPanel to accept an onCityResolved prop.
+    setScoutExpanded(true);
+    setChatOpen(true);
+  };
+
+  const collapseScout = () => {
+    setScoutExpanded(false);
+    // Keep chat open so the side panel remains visible with conversation history
+  };
+
+  const closeScout = () => {
+    setScoutExpanded(false);
+    setChatVenues(null);
+    setChatOpen(false);
   };
 
   // ── Manual search / nav ───────────────────────────────────────────────────
@@ -180,44 +199,43 @@ export default function LandingPage({ onStart, onSeeAll }) {
     ? 'Top party ideas near you'
     : 'Top ideas near you';
 
+  // Helper: render a venue card in the Scout full-screen grid
+  const renderScoutVenueCard = (v, i) => {
+    const venue = {
+      ...v,
+      googlePlaceId: v.googlePlaceId || v.id,
+      matchScore: null,
+      matchReasons: [],
+      photos: v.photos ?? [],
+      distanceInMiles: null,
+      setting: v.setting ?? 'indoor',
+    };
+    const gpid = venue.googlePlaceId;
+    const saved = isSaved(gpid);
+    const handleSave = () => {
+      const allSaves = savedEvents.filter(ev => ev.googlePlaceId === gpid);
+      if (allSaves.length > 0) {
+        allSaves.forEach(ev => unsaveEvent(ev.id ?? ev.localId));
+      } else {
+        setSaveTarget({ venue, eventDate: null, partyTypes: null, guestCount: null, venueWebsite: venue.website ?? null });
+      }
+    };
+    return (
+      <VenueCard
+        key={gpid || venue.id || i}
+        venue={venue}
+        isSaved={saved}
+        onSave={handleSave}
+        onSelect={() => { selectVenue(venue); goToStep(5); closeScout(); onStart(); }}
+        showCompareCheckbox={false}
+      />
+    );
+  };
+
   // ── Shared: cards + how + footer ──────────────────────────────────────────
   const renderCards = () => (
     <section className="lp-cards-section">
-      {chatVenues ? (
-        <div className="lp-chat-venues">
-          {chatVenues.map((v, i) => {
-            const venue = {
-              ...v,
-              googlePlaceId: v.googlePlaceId || v.id,
-              matchScore: null,
-              matchReasons: [],
-              photos: v.photos ?? [],
-              distanceInMiles: null,
-              setting: v.setting ?? 'indoor',
-            };
-            const gpid = venue.googlePlaceId;
-            const saved = isSaved(gpid);
-            const handleSave = () => {
-              const allSaves = savedEvents.filter(ev => ev.googlePlaceId === gpid);
-              if (allSaves.length > 0) {
-                allSaves.forEach(ev => unsaveEvent(ev.id ?? ev.localId));
-              } else {
-                setSaveTarget({ venue, eventDate: null, partyTypes: null, guestCount: null, venueWebsite: venue.website ?? null });
-              }
-            };
-            return (
-              <VenueCard
-                key={gpid || venue.id || i}
-                venue={venue}
-                isSaved={saved}
-                onSave={handleSave}
-                showCompareCheckbox={false}
-              />
-            );
-          })}
-        </div>
-      ) : (
-        <>
+      <>
           <div className="lp-city-row">
             <svg className="lp-city-row-icon" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">
               <path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/>
@@ -257,8 +275,7 @@ export default function LandingPage({ onStart, onSeeAll }) {
               </div>
             ))}
           </div>
-        </>
-      )}
+      </>
     </section>
   );
 
@@ -347,7 +364,7 @@ export default function LandingPage({ onStart, onSeeAll }) {
       </nav>
 
       {/* ── Body: scrollable content + sticky chat column ── */}
-      <div className={`lp-body${chatOpen ? ' lp-body--chat-open' : ''}`}>
+      <div className={`lp-body${chatOpen && !scoutExpanded ? ' lp-body--chat-open' : ''}${scoutExpanded ? ' lp-body--scout-expanded' : ''}`}>
       <div className="lp-main">
         <section className="lp-hero">
           <div className="lp-hero-inner">
@@ -415,33 +432,37 @@ export default function LandingPage({ onStart, onSeeAll }) {
           </div>
         </section>
 
-        {chatVenues && (
-          <div className="lp-results-strip">
-            <span className="lp-results-strip-label">
-              {chatVenues.length} venues found
-            </span>
-            <button
-              className="lp-results-strip-clear"
-              onClick={() => setChatVenues(null)}
-            >
-              Clear ✕
-            </button>
-          </div>
-        )}
-
         {renderCards()}
         {renderHow()}
         {renderFooter()}
       </div>{/* lp-main */}
 
-      {/* ── Chat column (always mounted — preserves history) ── */}
-      <div ref={chatColRef} className={`lp-chat-col${chatOpen ? ' lp-chat-col--open' : ''}`}>
+      {/* ── Chat column (always mounted — preserves conversation history) ── */}
+      <div
+        ref={chatColRef}
+        className={`lp-chat-col${chatOpen || scoutExpanded ? ' lp-chat-col--open' : ''}${scoutExpanded ? ' lp-chat-col--expanded' : ''}`}
+      >
+        {/* Full-screen venue results — rendered above chat when Scout has found venues */}
+        {scoutExpanded && (
+          <div className="lp-scout-results">
+            <div className="lp-scout-header">
+              <button className="lp-scout-back" onClick={collapseScout}>← Back to search</button>
+              <span className="lp-scout-count">
+                {chatVenues ? `${chatVenues.length} venue${chatVenues.length !== 1 ? 's' : ''} found` : 'Ask Scout'}
+              </span>
+              <button className="lp-scout-close" onClick={closeScout} aria-label="Close Scout">✕</button>
+            </div>
+            <div className="lp-scout-grid">
+              {chatVenues?.map(renderScoutVenueCard)}
+            </div>
+          </div>
+        )}
         <ChatPanel
           existingContext={chatContext}
           suggestions={QUICK_CHIPS}
           onVenuesFound={handleVenuesFound}
-          onVenueSelect={(venue) => { selectVenue(venue); goToStep(5); closeChat(); onStart(); }}
-          onClose={closeChat}
+          onVenueSelect={(venue) => { selectVenue(venue); goToStep(5); closeScout(); onStart(); }}
+          onClose={scoutExpanded ? null : closeChat}
           initialText={chatInitial}
           triggerSend={chatTrigger}
         />
