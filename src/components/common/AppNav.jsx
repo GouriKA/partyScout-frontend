@@ -36,7 +36,7 @@ export default function AppNav({ onHome, onChatToggle, chatOpen }) {
                 className={`app-nav-chat-btn${chatOpen ? ' app-nav-chat-btn--active' : ''}`}
                 onClick={onChatToggle}
               >
-                Ask AI
+                Ask Scout
               </button>
             )}
             <button

@@ -57,7 +57,7 @@ export default function AllIdeasPage({ initialCity = '', onBack, onStart }) {
               className={`lp-nav-chat-btn${chatOpen ? ' lp-nav-chat-btn--active' : ''}`}
               onClick={() => setChatOpen(o => !o)}
             >
-              Ask AI
+              Ask Scout
             </button>
             <button
               className={`lp-nav-saved${savedEvents.length > 0 ? ' lp-nav-saved--active' : ''}`}
