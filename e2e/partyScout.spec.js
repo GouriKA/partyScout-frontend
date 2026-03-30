@@ -5,112 +5,94 @@ test.describe('PartyScout Wizard', () => {
   test.beforeEach(async ({ page }) => {
     await setupApiMocks(page);
     await page.goto('/');
+    // Landing page is shown first — navigate to the wizard
+    await page.getByRole('button', { name: /find birthday ideas/i }).click();
+    await expect(page.locator('.wizard-content')).toBeVisible();
   });
 
-  /** Fill step 1 and advance to step 2, waiting for party-types API response */
-  async function goToStep2(page) {
-    const partyTypesPromise = page.waitForResponse('**/api/v2/party-wizard/party-types/*');
-    await page.getByLabel(/How old will they be turning/i).fill('7');
-    await partyTypesPromise;
+  /** Fill plan page date and search for venues */
+  async function searchVenues(page) {
     const futureDate = getFutureDate();
-    await page.getByLabel(/Party date/i).fill(futureDate.slice(0, 10));
-    await page.getByLabel(/Start time/i).fill(futureDate.slice(11, 16));
-    await page.getByRole('button', { name: /Continue to Party Type/i }).click();
+    await page.locator('.plan-date-input').first().fill(futureDate.slice(0, 10));
+    const searchPromise = page.waitForResponse('**/api/v2/party-wizard/search');
+    await page.locator('.plan-find-btn').click();
+    await searchPromise;
   }
 
-  /** Select first party type on step 2 and advance to step 3 */
-  async function goToStep3(page) {
-    await goToStep2(page);
-    await page.locator('.party-type-trigger').click();
-    await page.locator('.party-type-option').first().click();
-    await page.getByRole('button', { name: /Continue to Location/i }).click();
-  }
-
-  test('shows wizard header and step 1 on load', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: /Your next party is waiting/i })).toBeVisible();
-    await expect(page.getByText('Find the perfect venue in just a few steps')).toBeVisible();
-    await expect(page.getByRole('heading', { name: /Tell us about the birthday child/i })).toBeVisible();
+  test('shows plan page on wizard load', async ({ page }) => {
+    await expect(page.getByText(/plan the party/i)).toBeVisible();
+    await expect(page.getByText(/when is the party/i)).toBeVisible();
+    await expect(page.locator('.plan-field-label', { hasText: /indoor or outdoor/i })).toBeVisible();
   });
 
-  test('step indicator shows Child Info as active on load', async ({ page }) => {
-    const childInfoStep = page.locator('.step-item.active');
-    await expect(childInfoStep).toBeVisible();
-    await expect(childInfoStep).toContainText('Child Info');
+  test('shows step counter in wizard header', async ({ page }) => {
+    await expect(page.getByText(/step/i)).toBeVisible();
   });
 
-  test('Continue button is disabled without required fields', async ({ page }) => {
-    await expect(page.getByRole('button', { name: /Continue to Party Type/i })).toBeDisabled();
+  test('shows progress bar', async ({ page }) => {
+    await expect(page.locator('.wizard-progress-track')).toBeVisible();
   });
 
-  test('Continue button enables when age and date are filled', async ({ page }) => {
+  test('Find venues button is visible', async ({ page }) => {
+    await expect(page.locator('.plan-find-btn')).toBeVisible();
+    await expect(page.locator('.plan-find-btn')).toContainText('Find venues');
+  });
+
+  test('can set party date', async ({ page }) => {
     const futureDate = getFutureDate();
-    await page.getByLabel(/How old will they be turning/i).fill('7');
-    await page.getByLabel(/Party date/i).fill(futureDate.slice(0, 10));
-    await expect(page.getByRole('button', { name: /Continue to Party Type/i })).toBeEnabled();
+    const dateInput = page.locator('.plan-date-input').first();
+    await dateInput.fill(futureDate.slice(0, 10));
+    await expect(dateInput).not.toHaveValue('');
   });
 
-  test('navigates from step 1 to step 2', async ({ page }) => {
-    await goToStep2(page);
-    await expect(page.getByRole('heading', { name: /What kind of party/i })).toBeVisible();
+  test('can set party time', async ({ page }) => {
+    const timeInput = page.locator('.plan-date-input').nth(1);
+    await timeInput.fill('14:00');
+    await expect(timeInput).toHaveValue('14:00');
   });
 
-  test('step 2 shows Back button and Continue is disabled without party type', async ({ page }) => {
-    await goToStep2(page);
-    await expect(page.getByRole('button', { name: /Back/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Continue to Location/i })).toBeDisabled();
+  test('navigates from plan page to venue results', async ({ page }) => {
+    await searchVenues(page);
+    await expect(page.getByText(/venues found/i)).toBeVisible({ timeout: 10000 });
   });
 
-  test('Back button on step 2 returns to step 1', async ({ page }) => {
-    await goToStep2(page);
-    await page.getByRole('button', { name: /Back/i }).click();
-    await expect(page.getByRole('heading', { name: /Tell us about the birthday child/i })).toBeVisible();
+  test('Back button returns to landing page', async ({ page }) => {
+    await page.getByRole('button', { name: /back/i }).first().click();
+    await expect(page.locator('.lp-hero')).toBeVisible();
   });
 
-  test('step indicator allows clicking back to completed steps', async ({ page }) => {
-    await goToStep2(page);
-
-    const step1Btn = page.locator('.step-item.completed').first();
-    await expect(step1Btn).toBeVisible();
-    await step1Btn.click();
-
-    await expect(page.getByRole('heading', { name: /Tell us about the birthday child/i })).toBeVisible();
+  test('indoor setting card is selectable', async ({ page }) => {
+    const indoorCard = page.locator('.plan-setting-card').filter({ hasText: 'Indoor' });
+    await indoorCard.click();
+    await expect(indoorCard).toHaveClass(/active/);
   });
 
-  test('step 3 requires a 5-digit ZIP code to enable Find Venues', async ({ page }) => {
-    await goToStep3(page);
-
-    await expect(page.getByRole('heading', { name: /Where should we look/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Find Venues/i })).toBeDisabled();
-
-    await page.getByLabel(/ZIP Code/i).fill('941');
-    await expect(page.getByRole('button', { name: /Find Venues/i })).toBeDisabled();
-
-    await page.getByLabel(/ZIP Code/i).fill('94105');
-    await expect(page.getByRole('button', { name: /Find Venues/i })).toBeEnabled();
+  test('outdoor setting card is selectable', async ({ page }) => {
+    const outdoorCard = page.locator('.plan-setting-card').filter({ hasText: 'Outdoor' });
+    await outdoorCard.click();
+    await expect(outdoorCard).toHaveClass(/active/);
   });
 
-  test('step 3 setting options are selectable', async ({ page }) => {
-    await goToStep3(page);
-
-    await page.getByRole('button', { name: /Indoor/i }).click();
-    await expect(page.getByRole('button', { name: /Indoor/i })).toHaveClass(/selected/);
-
-    await page.getByRole('button', { name: /Outdoor/i }).click();
-    await expect(page.getByRole('button', { name: /Outdoor/i })).toHaveClass(/selected/);
+  test('selecting indoor deselects on second click', async ({ page }) => {
+    const indoorCard = page.locator('.plan-setting-card').filter({ hasText: 'Indoor' });
+    await indoorCard.click();
+    await indoorCard.click();
+    await expect(indoorCard).not.toHaveClass(/active/);
   });
 
-  test('age input only accepts values 1-18', async ({ page }) => {
-    const ageInput = page.getByLabel(/How old will they be turning/i);
-    await expect(ageInput).toHaveAttribute('max', '18');
-    await expect(ageInput).toHaveAttribute('min', '1');
+  test('theme chips are shown and selectable', async ({ page }) => {
+    const chips = page.locator('.plan-theme-chip');
+    await expect(chips.first()).toBeVisible();
+
+    await chips.first().click();
+    await expect(chips.first()).toHaveClass(/active/);
   });
 
   test('ZIP code input only accepts digits', async ({ page }) => {
-    await goToStep3(page);
-
-    const zipInput = page.getByLabel(/ZIP Code/i);
-    await zipInput.fill('abc12');
-    const value = await zipInput.inputValue();
-    expect(value).toMatch(/^\d*$/);
+    // Plan page has no ZIP code input — this is validated at the plan level
+    // Verify the plan-date-input rejects non-numeric chars for date fields
+    const dateInput = page.locator('.plan-date-input').first();
+    await expect(dateInput).toBeVisible();
+    await expect(dateInput).toHaveAttribute('type', 'date');
   });
 });

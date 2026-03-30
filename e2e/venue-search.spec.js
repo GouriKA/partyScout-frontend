@@ -220,9 +220,9 @@ test.describe('Venue Search E2E Tests', () => {
 
       // Trigger new search
       await page.getByRole('button', { name: /back/i }).click();
-      await page.getByRole('button', { name: /find venues/i }).click();
-
-      await page.waitForResponse('**/api/v2/party-wizard/search');
+      const emptySearchPromise = page.waitForResponse('**/api/v2/party-wizard/search');
+      await page.locator('.plan-find-btn').click();
+      await emptySearchPromise;
       await page.waitForTimeout(500);
 
       // Should show no results message or empty state

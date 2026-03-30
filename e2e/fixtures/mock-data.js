@@ -261,30 +261,15 @@ export function getFutureDate() {
 }
 
 /**
- * Navigate through Steps 1-3 to reach venue results (Step 4)
+ * Navigate from the landing page through the plan page to reach venue results (Step 4)
  * @param {import('@playwright/test').Page} page
  */
 export async function navigateToVenueResults(page) {
-  // Step 1: Fill child info
-  // Start waiting for party-types response before filling age (which triggers the fetch)
-  const partyTypesPromise = page.waitForResponse('**/api/v2/party-wizard/party-types/*');
-  await page.getByLabel(/how old/i).fill('7');
-  await partyTypesPromise;
+  // Navigate past the landing page to the wizard
+  await page.getByRole('button', { name: /find birthday ideas/i }).click();
+  await page.locator('.wizard-content').waitFor({ state: 'visible' });
 
-  const futureDate = getFutureDate();
-  await page.getByLabel(/Party date/i).fill(futureDate.slice(0, 10));
-  await page.getByLabel(/Start time/i).fill(futureDate.slice(11, 16));
-
-  await page.getByRole('button', { name: /continue to party type/i }).click();
-
-  // Step 2: Open dropdown and select first party type
-  await page.locator('.party-type-trigger').click();
-  await page.locator('.party-type-option').first().click();
-  await page.getByRole('button', { name: /continue to location/i }).click();
-
-  // Step 3: Fill ZIP code and search
-  await page.getByLabel(/zip code/i).fill('94105');
-
+  // Click "Find venues" from the plan page to trigger search
   const searchPromise = page.waitForResponse('**/api/v2/party-wizard/search');
   await page.getByRole('button', { name: /find venues/i }).click();
   await searchPromise;

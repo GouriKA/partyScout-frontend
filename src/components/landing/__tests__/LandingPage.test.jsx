@@ -100,7 +100,7 @@ describe('LandingPage', () => {
 
     it('renders the persona chips section', () => {
       renderLandingPage();
-      expect(screen.getByText(/celebrating someone specific/i)).toBeInTheDocument();
+      expect(screen.getByText(/who's celebrating/i)).toBeInTheDocument();
     });
 
     it('renders the idea cards section', () => {
@@ -286,7 +286,7 @@ describe('LandingPage', () => {
   describe('city input', () => {
     it('renders city input with placeholder', () => {
       renderLandingPage();
-      expect(screen.getByPlaceholderText(/your city/i)).toBeInTheDocument();
+      expect(screen.getByPlaceholderText(/any city/i)).toBeInTheDocument();
     });
 
     it('typing in city input updates the value', () => {

@@ -80,7 +80,7 @@ test.describe('Venue Compare E2E Tests', () => {
         await checkboxes.nth(1).click();
 
         // Look for compare button
-        const compareButton = page.getByRole('button', { name: /compare/i });
+        const compareButton = page.locator('button.btn-primary').filter({ hasText: /compare/i });
         if (await compareButton.isVisible()) {
           await expect(compareButton).toBeEnabled();
         }
@@ -95,7 +95,7 @@ test.describe('Venue Compare E2E Tests', () => {
         await checkboxes.nth(0).click();
         await checkboxes.nth(1).click();
 
-        const compareButton = page.getByRole('button', { name: /compare/i });
+        const compareButton = page.locator('button.btn-primary').filter({ hasText: /compare/i });
         if (await compareButton.isVisible()) {
           await compareButton.click();
 
@@ -116,7 +116,7 @@ test.describe('Venue Compare E2E Tests', () => {
         await checkboxes.nth(0).click();
         await checkboxes.nth(1).click();
 
-        const compareButton = page.getByRole('button', { name: /compare/i });
+        const compareButton = page.locator('button.btn-primary').filter({ hasText: /compare/i });
         if (await compareButton.isVisible()) {
           await compareButton.click();
 
@@ -143,7 +143,7 @@ test.describe('Venue Compare E2E Tests', () => {
         await checkboxes.nth(0).click();
         await checkboxes.nth(1).click();
 
-        const compareButton = page.getByRole('button', { name: /compare/i });
+        const compareButton = page.locator('button.btn-primary').filter({ hasText: /compare/i });
         if (await compareButton.isVisible()) {
           await compareButton.click();
           await page.waitForTimeout(300);
@@ -163,7 +163,7 @@ test.describe('Venue Compare E2E Tests', () => {
         await checkboxes.nth(0).click();
         await checkboxes.nth(1).click();
 
-        const compareButton = page.getByRole('button', { name: /compare/i });
+        const compareButton = page.locator('button.btn-primary').filter({ hasText: /compare/i });
         if (await compareButton.isVisible()) {
           await compareButton.click();
           await page.waitForTimeout(300);
@@ -183,7 +183,7 @@ test.describe('Venue Compare E2E Tests', () => {
         await checkboxes.nth(0).click();
         await checkboxes.nth(1).click();
 
-        const compareButton = page.getByRole('button', { name: /compare/i });
+        const compareButton = page.locator('button.btn-primary').filter({ hasText: /compare/i });
         if (await compareButton.isVisible()) {
           await compareButton.click();
           await page.waitForTimeout(300);
@@ -209,7 +209,7 @@ test.describe('Venue Compare E2E Tests', () => {
         await checkboxes.nth(0).click();
         await checkboxes.nth(1).click();
 
-        const compareButton = page.getByRole('button', { name: /compare/i });
+        const compareButton = page.locator('button.btn-primary').filter({ hasText: /compare/i });
         if (await compareButton.isVisible()) {
           await compareButton.click();
           await page.waitForTimeout(300);
@@ -231,7 +231,7 @@ test.describe('Venue Compare E2E Tests', () => {
         await checkboxes.nth(0).click();
         await checkboxes.nth(1).click();
 
-        const compareButton = page.getByRole('button', { name: /compare/i });
+        const compareButton = page.locator('button.btn-primary').filter({ hasText: /compare/i });
         if (await compareButton.isVisible()) {
           await compareButton.click();
           await page.waitForTimeout(300);
@@ -258,7 +258,7 @@ test.describe('Venue Compare E2E Tests', () => {
         await checkboxes.nth(0).click();
         await checkboxes.nth(1).click();
 
-        const compareButton = page.getByRole('button', { name: /compare/i });
+        const compareButton = page.locator('button.btn-primary').filter({ hasText: /compare/i });
         if (await compareButton.isVisible()) {
           await compareButton.click();
           await page.waitForTimeout(300);
@@ -288,8 +288,9 @@ test.describe('Venue Compare E2E Tests', () => {
         await page.getByRole('button', { name: /back/i }).click();
 
         // Navigate forward
-        await page.getByRole('button', { name: /find venues/i }).click();
-        await page.waitForResponse('**/api/v2/party-wizard/search');
+        const searchPromise2 = page.waitForResponse('**/api/v2/party-wizard/search');
+        await page.locator('.plan-find-btn').click();
+        await searchPromise2;
         await page.waitForTimeout(500);
 
         // Checkboxes may or may not preserve state depending on implementation
@@ -307,7 +308,7 @@ test.describe('Venue Compare E2E Tests', () => {
         await checkboxes.nth(0).click();
 
         // Compare button should be disabled or hidden
-        const compareButton = page.getByRole('button', { name: /compare/i });
+        const compareButton = page.locator('button.btn-primary').filter({ hasText: /compare/i });
         if (await compareButton.isVisible()) {
           await expect(compareButton).toBeDisabled();
         }
@@ -322,7 +323,7 @@ test.describe('Venue Compare E2E Tests', () => {
         await checkboxes.nth(0).click();
         await checkboxes.nth(1).click();
 
-        const compareButton = page.getByRole('button', { name: /compare/i });
+        const compareButton = page.locator('button.btn-primary').filter({ hasText: /compare/i });
         if (await compareButton.isVisible()) {
           await expect(compareButton).toBeEnabled();
         }
@@ -349,7 +350,7 @@ test.describe('Venue Compare E2E Tests', () => {
         await checkboxes.nth(0).click();
         await checkboxes.nth(1).click();
 
-        const compareButton = page.getByRole('button', { name: /compare/i });
+        const compareButton = page.locator('button.btn-primary').filter({ hasText: /compare/i });
         if (await compareButton.isVisible()) {
           await compareButton.click();
           await page.waitForTimeout(300);

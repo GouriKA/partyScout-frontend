@@ -33,10 +33,10 @@ test.describe('Landing Page', () => {
   // ── Basic rendering ────────────────────────────────────────────────────
 
   test('landing page renders on app load', async ({ page }) => {
-    await expect(page.getByText(/join the waitlist for early access/i)).toBeVisible();
+    await expect(page.getByText(/we're still in development/i)).toBeVisible();
     await expect(page.getByText(/plan the perfect party/i)).toBeVisible();
     await expect(page.getByText(/every celebration/i)).toBeVisible();
-    await expect(page.getByText(/celebrating someone specific/i)).toBeVisible();
+    await expect(page.getByText(/who's celebrating/i)).toBeVisible();
     await expect(page.getByText(/how it works/i)).toBeVisible();
   });
 
@@ -45,19 +45,21 @@ test.describe('Landing Page', () => {
     await expect(page.locator('.lp-logo-party')).toHaveText('Party');
   });
 
-  test('landing page shows all 5 idea cards', async ({ page }) => {
-    await expect(page.getByText('Escape Room')).toBeVisible();
-    await expect(page.getByText('Boba Tea')).toBeVisible();
-    await expect(page.getByText('Ice Cream')).toBeVisible();
-    await expect(page.getByText('Pottery')).toBeVisible();
-    await expect(page.getByText('Axe Throwing')).toBeVisible();
+  test('landing page shows idea cards in carousel', async ({ page }) => {
+    // Cards live in a horizontal carousel — check they exist in the DOM
+    // (some may be scrolled out of view)
+    await expect(page.locator('.lp-card', { hasText: 'Escape Room' })).toBeAttached();
+    await expect(page.locator('.lp-card', { hasText: 'Boba Tea' })).toBeAttached();
+    await expect(page.locator('.lp-card', { hasText: 'Ice Cream' })).toBeAttached();
+    await expect(page.locator('.lp-card', { hasText: 'Pottery' })).toBeAttached();
+    await expect(page.locator('.lp-card', { hasText: 'Archery' })).toBeAttached();
   });
 
   test('landing page shows all 4 persona chips', async ({ page }) => {
-    await expect(page.getByText('Little Kids')).toBeVisible();
-    await expect(page.getByText('Tweens')).toBeVisible();
-    await expect(page.getByText('Teens')).toBeVisible();
-    await expect(page.getByText('Adults')).toBeVisible();
+    await expect(page.getByRole('button', { name: /little kids/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /tweens/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /teens ages 14/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /adults/i })).toBeVisible();
   });
 
   test('persona chip shows correct age range labels', async ({ page }) => {
@@ -69,41 +71,51 @@ test.describe('Landing Page', () => {
 
   // ── Navigation via "Find ideas" ────────────────────────────────────────
 
-  test('clicking "Find ideas" navigates to wizard step 1', async ({ page }) => {
-    await page.getByRole('button', { name: /find ideas/i }).click();
-    // Landing page should no longer be visible; wizard step 1 should appear
-    await expect(page.getByText(/join the waitlist for early access/i)).not.toBeVisible();
-    // Early-access banner of wizard appears instead
-    await expect(page.getByText(/early access/i)).toBeVisible();
+  test('clicking "Find birthday ideas" navigates to wizard step 1', async ({ page }) => {
+    await page.getByRole('button', { name: /find birthday ideas/i }).click();
+    // Wizard should appear (has wizard-content, landing hero is gone)
+    await expect(page.locator('.wizard-content')).toBeVisible();
+    await expect(page.locator('.lp-hero')).not.toBeVisible();
   });
 
   // ── Navigation via persona chips ───────────────────────────────────────
 
   test('clicking Teens persona chip navigates to wizard', async ({ page }) => {
-    await page.getByText('Teens').locator('..').click();
-    // Landing page hidden, wizard visible
-    await expect(page.getByText(/join the waitlist for early access/i)).not.toBeVisible();
+    await page.getByRole('button', { name: /teens ages 14/i }).click();
+    await expect(page.locator('.wizard-content')).toBeVisible();
+    await expect(page.locator('.lp-hero')).not.toBeVisible();
   });
 
   test('clicking Little Kids persona chip navigates to wizard', async ({ page }) => {
-    await page.getByText('Little Kids').locator('..').click();
-    await expect(page.getByText(/join the waitlist for early access/i)).not.toBeVisible();
+    await page.getByRole('button', { name: /little kids/i }).click();
+    await expect(page.locator('.wizard-content')).toBeVisible();
+    await expect(page.locator('.lp-hero')).not.toBeVisible();
   });
 
   // ── Navigation via idea card ───────────────────────────────────────────
 
-  test('clicking Boba Tea card goes directly to step 4 venue results', async ({ page }) => {
+  test('clicking Boba Tea card with city set goes directly to step 4 venue results', async ({ page }) => {
+    // Set city first — card click without city opens chat instead of searching
+    const cityInput = page.locator('.lp-city-input');
+    await cityInput.fill('Lo');
+    await page.waitForResponse('**/api/v2/places/autocomplete**');
+    await page.locator('.city-ac-option').first().click();
+
     const searchPromise = page.waitForResponse('**/api/v2/party-wizard/search');
-    await page.getByText('Boba Tea').click();
+    await page.locator('.lp-card', { hasText: 'Boba Tea' }).click();
     await searchPromise;
 
-    // Should be on venue results (step 4)
     await expect(page.getByText(/venues found/i)).toBeVisible({ timeout: 10000 });
   });
 
-  test('clicking Escape Room card triggers venue search', async ({ page }) => {
+  test('clicking Escape Room card with city set triggers venue search', async ({ page }) => {
+    const cityInput = page.locator('.lp-city-input');
+    await cityInput.fill('Lo');
+    await page.waitForResponse('**/api/v2/places/autocomplete**');
+    await page.locator('.city-ac-option').first().click();
+
     const searchPromise = page.waitForResponse('**/api/v2/party-wizard/search');
-    await page.getByText('Escape Room').click();
+    await page.locator('.lp-card', { hasText: 'Escape Room' }).click();
     await searchPromise;
 
     await expect(page.getByText(/venues found/i)).toBeVisible({ timeout: 10000 });
@@ -112,26 +124,24 @@ test.describe('Landing Page', () => {
   // ── Logo click in wizard returns to landing page ───────────────────────
 
   test('clicking PartyScout logo in wizard returns to landing page', async ({ page }) => {
-    // Navigate to wizard
-    await page.getByRole('button', { name: /find ideas/i }).click();
-    await expect(page.locator('.wizard-logo')).toBeVisible();
+    // Navigate to wizard via footer button
+    await page.getByRole('button', { name: /find birthday ideas/i }).click();
+    await expect(page.locator('.app-nav-logo')).toBeVisible();
 
     // Click logo to go back to landing
-    await page.locator('.wizard-logo').click();
+    await page.locator('.app-nav-logo').click();
 
     // Landing page should be visible again
-    await expect(page.getByText(/join the waitlist for early access/i)).toBeVisible();
+    await expect(page.locator('.lp-hero')).toBeVisible();
     await expect(page.getByText(/every celebration/i)).toBeVisible();
   });
 
   // ── "See all →" link ───────────────────────────────────────────────────
 
-  test('"See all →" link triggers venue search for birthday party venues', async ({ page }) => {
-    const searchPromise = page.waitForResponse('**/api/v2/party-wizard/search');
-    await page.getByText(/see all/i).click();
-    await searchPromise;
-
-    await expect(page.getByText(/venues found/i)).toBeVisible({ timeout: 10000 });
+  test('"See all →" link navigates to all ideas page', async ({ page }) => {
+    await page.locator('.lp-section-link').click();
+    // AllIdeasPage should appear (landing hero is gone)
+    await expect(page.locator('.lp-hero')).not.toBeVisible({ timeout: 5000 });
   });
 
   // ── City input autocomplete ────────────────────────────────────────────
