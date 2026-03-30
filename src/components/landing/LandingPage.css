@@ -75,7 +75,7 @@
   flex-shrink: 0;
   background: none;
   border: none;
-  font-size: 12px;
+  font-size: 13px;
   color: #888;
   cursor: pointer;
   font-family: 'Poppins', sans-serif;
@@ -208,7 +208,7 @@
 .lp-eyebrow {
   display: inline-flex;
   align-items: center;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -221,7 +221,7 @@
 
 /* Headline */
 .lp-hero-title {
-  font-size: 36px;
+  font-size: 40px;
   font-weight: 800;
   line-height: 1.1;
   color: #0a0a0a;
@@ -254,7 +254,7 @@
 }
 
 .lp-pill {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   padding: 5px 12px;
   border: 1px solid #e0e0e0;
@@ -317,7 +317,7 @@
 .lp-chat-bar-btn {
   background: #1e2d6b;
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   padding: 0 20px;
   border: none;
@@ -353,7 +353,8 @@
   background: #eef0f8;
   border: 0.5px solid #c8d0e8;
   color: #1e2d6b;
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 600;
   padding: 5px 12px;
   border-radius: 0;
   cursor: pointer;
@@ -383,7 +384,7 @@
 }
 
 .lp-or-text {
-  font-size: 11px;
+  font-size: 12px;
   color: #bbb;
   font-weight: 500;
   white-space: nowrap;
@@ -493,14 +494,14 @@
 }
 
 .lp-cw-title {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: #fff;
   flex: 1;
 }
 
 .lp-cw-clear {
-  font-size: 11px;
+  font-size: 12px;
   color: #8899cc;
   background: none;
   border: none;
@@ -528,7 +529,7 @@
   background: #fff;
   border: 0.5px solid #e8e8e8;
   padding: 7px 10px;
-  font-size: 13px;
+  font-size: 14px;
   color: #0a0a0a;
   line-height: 1.5;
 }
@@ -538,7 +539,7 @@
   max-width: 80%;
   background: #1e2d6b;
   padding: 7px 10px;
-  font-size: 13px;
+  font-size: 14px;
   color: #fff;
   line-height: 1.5;
 }
@@ -563,7 +564,7 @@
 }
 
 .lp-cw-chip {
-  font-size: 11px;
+  font-size: 12px;
   padding: 4px 9px;
   border: 0.5px solid #1e2d6b;
   color: #1e2d6b;
@@ -584,7 +585,7 @@
 .lp-cw-input {
   flex: 1;
   padding: 10px 12px;
-  font-size: 13px;
+  font-size: 14px;
   border: none;
   outline: none;
   font-family: 'Poppins', sans-serif;
@@ -596,7 +597,7 @@
   padding: 0 14px;
   background: #F0287A;
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   border: none;
   cursor: pointer;
@@ -620,13 +621,13 @@
 }
 
 .lp-results-strip-label {
-  font-size: 13px;
+  font-size: 14px;
   color: #1e2d6b;
   font-weight: 500;
 }
 
 .lp-results-strip-clear {
-  font-size: 12px;
+  font-size: 13px;
   color: #1e2d6b;
   background: none;
   border: none;
@@ -638,27 +639,25 @@
 .lp-results-strip-clear:hover { text-decoration: underline; }
 
 /* ── 4. Celebrating someone specific? ────────────────────── */
-.lp-for-who {
-  padding: 0 80px;
+/* ── Persona chips inside hero ──────────────────────────────── */
+.lp-hero-persona {
+  margin-top: 20px;
+  margin-bottom: 4px;
 }
 
-.lp-for-who-inner {
-  background: #fafafa;
-  padding: 28px 0;
-  border-top: 0.5px solid #ebebeb;
-  border-bottom: 0.5px solid #ebebeb;
-}
-
-.lp-for-who-header { margin-bottom: 0; }
-
-.lp-for-who-sub {
-  font-size: 14px;
-  color: #888;
-  margin-top: 4px;
+.lp-hero-persona-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #bbb;
+  margin-bottom: 10px;
+  text-align: center;
 }
 
 .lp-section-title {
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 700;
   color: #0a0a0a;
   letter-spacing: -0.01em;
@@ -672,7 +671,7 @@
 }
 
 .lp-section-link {
-  font-size: 15px;
+  font-size: 16px;
   color: #1e2d6b;
   font-weight: 500;
   cursor: pointer;
@@ -716,8 +715,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
-  padding: 14px 0;
+  gap: 1px;
+  padding: 5px 0;
   text-align: center;
   border: 1px solid #ddd;
   border-radius: 0;
@@ -728,13 +727,13 @@
 }
 
 .lp-persona-chip-label {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   color: #0a0a0a;
 }
 
 .lp-persona-chip-range {
-  font-size: 13px;
+  font-size: 14px;
   color: #999;
 }
 
@@ -760,28 +759,42 @@
   background: #fff;
 }
 
+/* ── City filter row (filter chip, not a search bar) ────────── */
 .lp-city-row {
   display: inline-flex;
   align-items: center;
   gap: 0;
   margin-bottom: 20px;
-  border: 0.5px solid #d0d5e8;
-  background: #fff;
-  transition: border-color 0.15s;
+  border: 0.5px solid #e0e5f0;
+  background: #f7f8fc;
+  border-radius: 2px;
+  transition: border-color 0.15s, background 0.15s;
 }
 
 .lp-city-row:focus-within {
   border-color: #1e2d6b;
+  background: #fff;
+}
+
+.lp-city-row-icon {
+  width: 14px;
+  height: 14px;
+  color: #1e2d6b;
+  margin: 0 4px 0 8px;
+  flex-shrink: 0;
+  display: block;
 }
 
 .lp-city-row-label {
-  font-size: 13px;
-  font-weight: 500;
-  color: #1e2d6b;
-  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #F0287A;
+  padding: 0 6px 0 2px;
   white-space: nowrap;
-  border-right: 0.5px solid #d0d5e8;
-  line-height: 36px;
+  border-right: 0.5px solid #e0e5f0;
+  line-height: 30px;
 }
 
 .lp-city-row .city-ac-wrapper {
@@ -789,29 +802,30 @@
 }
 
 .lp-city-input {
-  width: 200px;
-  font-size: 14px;
-  padding: 8px 10px;
+  width: 150px;
+  font-size: 13px;
+  padding: 6px 8px;
   border: none;
   background: transparent;
-  color: #0a0a0a;
+  color: #333;
   font-family: inherit;
   outline: none;
 }
 
 .lp-city-input::placeholder {
-  color: #bbb;
+  color: #ccc;
+  font-style: italic;
 }
 
 .lp-city-clear {
   background: none;
   border: none;
-  border-left: 0.5px solid #e8e8e8;
-  color: #aaa;
+  border-left: 0.5px solid #e0e5f0;
+  color: #ccc;
   font-size: 12px;
-  padding: 0 10px;
+  padding: 0 8px;
   cursor: pointer;
-  line-height: 36px;
+  line-height: 30px;
   font-family: inherit;
 }
 
@@ -860,7 +874,7 @@
 .lp-card-badge {
   position: relative;
   z-index: 1;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -875,7 +889,7 @@
 }
 
 .lp-card-cat {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: #1e2d6b;
   letter-spacing: 0.06em;
@@ -1007,7 +1021,7 @@
   align-items: center;
   gap: 5px;
   padding: 6px 14px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   background: #1e2d6b;
   color: #fff;
@@ -1029,14 +1043,13 @@
 
   .lp-nav          { padding-left: 16px; padding-right: 16px; }
   .lp-hero         { padding: 32px 16px 28px; }
-  .lp-for-who      { padding-left: 16px; padding-right: 16px; }
   .lp-cards-section,
   .lp-how,
   .lp-footer-cta   { padding-left: 16px; padding-right: 16px; }
   .lp-results-strip { padding-left: 16px; padding-right: 16px; }
 
-  .lp-hero-title        { font-size: 30px; }
-  .lp-hero-title--compact { font-size: 20px; }
+  .lp-hero-title        { font-size: 32px; }
+  .lp-hero-title--compact { font-size: 22px; }
 
   .lp-quickstart-chips {
     margin-left: -16px;

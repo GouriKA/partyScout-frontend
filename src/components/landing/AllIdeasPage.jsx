@@ -3,6 +3,7 @@ import { usePartyPlanner } from '../../context/PartyPlannerContext';
 import { useAuth } from '../../context/AuthContext';
 import { useSavedEvents } from '../../context/SavedEventsContext';
 import CityAutocomplete from '../common/CityAutocomplete';
+import ChatPanel from '../chat/ChatPanel';
 import AuthModal from '../auth/AuthModal';
 import UserMenu from '../auth/UserMenu';
 import SavedEventsPanel from '../savedevents/SavedEventsPanel';
@@ -22,6 +23,7 @@ export default function AllIdeasPage({ initialCity = '', onBack, onStart }) {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showSaved,     setShowSaved]     = useState(false);
   const [showAccount,   setShowAccount]   = useState(false);
+  const [chatOpen,      setChatOpen]      = useState(false);
   const cityInputRef = useRef(null);
 
   const handleCardClick = (card) => {
@@ -51,6 +53,12 @@ export default function AllIdeasPage({ initialCity = '', onBack, onStart }) {
             <span className="lp-logo-text"><span className="lp-logo-party">Party</span>Scout</span>
           </div>
           <div className="lp-nav-right">
+            <button
+              className={`lp-nav-chat-btn${chatOpen ? ' lp-nav-chat-btn--active' : ''}`}
+              onClick={() => setChatOpen(o => !o)}
+            >
+              Ask AI
+            </button>
             <button
               className={`lp-nav-saved${savedEvents.length > 0 ? ' lp-nav-saved--active' : ''}`}
               onClick={() => setShowSaved(true)}
@@ -115,6 +123,16 @@ export default function AllIdeasPage({ initialCity = '', onBack, onStart }) {
           </div>
         ))}
       </div>
+
+      {chatOpen && (
+        <div className="lp-chat-col lp-chat-col--open">
+          <ChatPanel
+            existingContext={{ city: cityValue || null, occasion: 'birthday' }}
+            contextLabel="All Ideas"
+            onClose={() => setChatOpen(false)}
+          />
+        </div>
+      )}
 
       {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
       <SavedEventsPanel open={showSaved} onClose={() => setShowSaved(false)} />

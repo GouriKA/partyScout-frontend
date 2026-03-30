@@ -109,7 +109,7 @@ export default function LandingPage({ onStart, onSeeAll }) {
   }, []);
 
   // ── Open / close chat overlay ──────────────────────────────────────────────
-  const openChat = () => setChatOpen(true);
+  const openChat = () => { setChatOpen(true); };
   const closeChat = () => setChatOpen(false);
 
   // Open chat with text pre-filled in the input bar
@@ -126,6 +126,9 @@ export default function LandingPage({ onStart, onSeeAll }) {
 
   const handleVenuesFound = (venues) => {
     setChatVenues(venues);
+    // TODO: when ChatPanel exposes the city resolved by AI, call handleCityChange(city)
+    // to sync the filter row. Requires backend to return city in VENUES payload
+    // and ChatPanel to accept an onCityResolved prop.
   };
 
   // ── Manual search / nav ───────────────────────────────────────────────────
@@ -216,11 +219,15 @@ export default function LandingPage({ onStart, onSeeAll }) {
       ) : (
         <>
           <div className="lp-city-row">
-            <span className="lp-city-row-label">📍 Search near</span>
+            <svg className="lp-city-row-icon" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/>
+              <circle cx="8" cy="6" r="1.5"/>
+            </svg>
+            <span className="lp-city-row-label">Near</span>
             <CityAutocomplete
               value={cityValue}
               onChange={handleCityChange}
-              placeholder="Your city…"
+              placeholder="any city"
               className="lp-city-input"
             />
             {cityValue && (
@@ -350,7 +357,7 @@ export default function LandingPage({ onStart, onSeeAll }) {
               the <span className="lp-pink">best</span> <span className="lp-orange">moment.</span>
             </h1>
             <p className="lp-hero-sub">
-              Tell us what you're planning and we'll find the perfect venue — or use the filters below.
+              Describe your party and we'll find the perfect spot.
             </p>
 
             <div className="lp-occasion-pills">
@@ -363,6 +370,23 @@ export default function LandingPage({ onStart, onSeeAll }) {
                   {label}
                 </button>
               ))}
+            </div>
+
+            {/* Who's celebrating — persona chips, above chat bar */}
+            <div className="lp-hero-persona">
+              <span className="lp-hero-persona-label">Who's celebrating?</span>
+              <div className="lp-persona-row">
+                {PERSONAS.map(({ label, range }) => (
+                  <button
+                    key={label}
+                    className={`lp-persona-chip${activePersona === label ? ' lp-persona-chip--active' : ''}`}
+                    onClick={() => handlePersona(label)}
+                  >
+                    <span className="lp-persona-chip-label">{label}</span>
+                    <span className="lp-persona-chip-range">{range}</span>
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Primary chat bar */}
@@ -388,29 +412,6 @@ export default function LandingPage({ onStart, onSeeAll }) {
               ))}
             </div>
 
-          </div>
-        </section>
-
-        <section className="lp-for-who">
-          <div className="lp-for-who-inner">
-            <div className="lp-for-who-header">
-              <span className="lp-section-title">Celebrating someone specific?</span>
-            </div>
-            <p className="lp-for-who-sub">
-              We personalise results by age so the ideas always fit.
-            </p>
-            <div className="lp-persona-row">
-              {PERSONAS.map(({ label, range }) => (
-                <button
-                  key={label}
-                  className={`lp-persona-chip${activePersona === label ? ' lp-persona-chip--active' : ''}`}
-                  onClick={() => handlePersona(label)}
-                >
-                  <span className="lp-persona-chip-label">{label}</span>
-                  <span className="lp-persona-chip-range">{range}</span>
-                </button>
-              ))}
-            </div>
           </div>
         </section>
 
