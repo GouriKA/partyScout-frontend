@@ -90,9 +90,9 @@ export default function Step4_VenueResults() {
   const filteredVenues = sortedVenues.filter((venue) => {
     switch (filterBy) {
       case 'indoor':
-        return venue.setting === 'indoor';
+        return venue.setting === 'indoor' || venue.setting === 'both';
       case 'outdoor':
-        return venue.setting === 'outdoor';
+        return venue.setting === 'outdoor' || venue.setting === 'both';
       case 'highRated':
         return venue.rating >= 4;
       default:
