@@ -18,7 +18,7 @@ describe('PartyPlannerContext', () => {
     it('should have correct initial state', () => {
       const { result } = renderHook(() => usePartyPlanner(), { wrapper });
 
-      expect(result.current.currentStep).toBe(1);
+      expect(result.current.currentStep).toBe(4);
       expect(result.current.childInfo.name).toBe('');
       expect(result.current.childInfo.age).toBeNull();
       expect(result.current.preferences.guestCount).toBe(15);
@@ -32,28 +32,31 @@ describe('PartyPlannerContext', () => {
       const { result } = renderHook(() => usePartyPlanner(), { wrapper });
 
       act(() => {
+        result.current.goToStep(2);
         result.current.nextStep();
       });
 
-      expect(result.current.currentStep).toBe(2);
+      expect(result.current.currentStep).toBe(3);
     });
 
     it('should go to previous step', () => {
       const { result } = renderHook(() => usePartyPlanner(), { wrapper });
 
       act(() => {
+        result.current.goToStep(2);
         result.current.nextStep();
         result.current.nextStep();
         result.current.prevStep();
       });
 
-      expect(result.current.currentStep).toBe(2);
+      expect(result.current.currentStep).toBe(3);
     });
 
     it('should not go below step 1', () => {
       const { result } = renderHook(() => usePartyPlanner(), { wrapper });
 
       act(() => {
+        result.current.goToStep(1);
         result.current.prevStep();
       });
 
@@ -314,7 +317,7 @@ describe('PartyPlannerContext', () => {
         result.current.reset();
       });
 
-      expect(result.current.currentStep).toBe(1);
+      expect(result.current.currentStep).toBe(4);
       expect(result.current.childInfo.name).toBe('');
       expect(result.current.childInfo.age).toBeNull();
     });

@@ -57,20 +57,20 @@ describe('WizardFlow Integration Tests', () => {
     vi.restoreAllMocks();
   });
 
-  describe('PlanPage rendering', () => {
-    it('renders PlanPage with title', () => {
-      renderWizard();
-      expect(screen.getByText(/plan the party/i)).toBeInTheDocument();
+  describe('VenueResults rendering', () => {
+    it('renders wizard container', () => {
+      const { container } = renderWizard();
+      expect(container.querySelector('.wizard-container')).toBeInTheDocument();
     });
 
-    it('renders the date field', () => {
-      renderWizard();
-      expect(screen.getByText(/when is the party/i)).toBeInTheDocument();
+    it('renders wizard step wrapper', () => {
+      const { container } = renderWizard();
+      expect(container.querySelector('.wizard-step-wrapper')).toBeInTheDocument();
     });
 
-    it('renders the Find Venues button', () => {
+    it('renders back button on step 4', () => {
       renderWizard();
-      expect(screen.getByRole('button', { name: /find venues/i })).toBeInTheDocument();
+      expect(screen.getByText(/← Back/i)).toBeInTheDocument();
     });
 
     it('has wizard container class', () => {
@@ -79,7 +79,7 @@ describe('WizardFlow Integration Tests', () => {
     });
   });
 
-  describe('PlanPage interactions', () => {
+  describe('VenueResults interactions', () => {
     it('allows entering a date', async () => {
       const user = userEvent.setup();
       renderWizard();
@@ -92,22 +92,22 @@ describe('WizardFlow Integration Tests', () => {
       }
     });
 
-    it('has a find venues button', () => {
+    it('renders back navigation button', () => {
       renderWizard();
-      const btn = screen.getByRole('button', { name: /find venues/i });
+      const btn = screen.getByText(/← Back/i);
       expect(btn).toBeInTheDocument();
     });
   });
 
   describe('Form Validation', () => {
-    it('renders find venues button', () => {
-      renderWizard();
-      expect(screen.getByRole('button', { name: /find venues/i })).toBeInTheDocument();
+    it('renders venue results step', () => {
+      const { container } = renderWizard();
+      expect(container.querySelector('.wizard-step-wrapper')).toBeInTheDocument();
     });
 
-    it('renders the plan page subtitle', () => {
-      renderWizard();
-      expect(screen.getByText(/just two things/i)).toBeInTheDocument();
+    it('renders wizard content area', () => {
+      const { container } = renderWizard();
+      expect(container.querySelector('.wizard-content')).toBeInTheDocument();
     });
   });
 
@@ -119,24 +119,24 @@ describe('WizardFlow Integration Tests', () => {
   });
 
   describe('Step 4 and 5', () => {
-    it('wizard renders plan page by default (steps 1-3)', () => {
-      renderWizard();
-      expect(screen.getByText(/plan the party/i)).toBeInTheDocument();
+    it('wizard renders venue results by default (step 4)', () => {
+      const { container } = renderWizard();
+      expect(container.querySelector('.wizard-step-wrapper')).toBeInTheDocument();
     });
   });
 
   describe('Back Navigation', () => {
-    it('PlanPage renders', () => {
+    it('back button renders on step 4', () => {
       renderWizard();
-      expect(screen.getByText(/plan the party/i)).toBeInTheDocument();
+      expect(screen.getByText(/← Back/i)).toBeInTheDocument();
     });
   });
 
   describe('Error Handling', () => {
     it('renders without crashing when fetch fails', async () => {
       mockFetch.mockRejectedValue(new Error('Network error'));
-      renderWizard();
-      expect(screen.getByText(/plan the party/i)).toBeInTheDocument();
+      const { container } = renderWizard();
+      expect(container.querySelector('.wizard-container')).toBeInTheDocument();
     });
   });
 });

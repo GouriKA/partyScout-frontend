@@ -40,15 +40,19 @@ vi.mock('../../account/AccountPanel', () => ({
 // Context mocks
 const mockUpdateChildInfo = vi.fn();
 const mockUpdateLocation = vi.fn();
+const mockUpdatePreferences = vi.fn();
 const mockSearchVenuesByQuery = vi.fn();
 const mockGoToStep = vi.fn();
+const mockSelectVenue = vi.fn();
 
 vi.mock('../../../context/PartyPlannerContext', () => ({
   usePartyPlanner: () => ({
     updateChildInfo: mockUpdateChildInfo,
     updateLocation: mockUpdateLocation,
+    updatePreferences: mockUpdatePreferences,
     searchVenuesByQuery: mockSearchVenuesByQuery,
     goToStep: mockGoToStep,
+    selectVenue: mockSelectVenue,
   }),
 }));
 
@@ -127,9 +131,9 @@ describe('LandingPage', () => {
   // onStart is triggered by footer CTAs, persona chips, and idea card clicks.
 
   describe('hero and footer CTAs', () => {
-    it('renders the "Find venues" chat bar button', () => {
+    it('renders the unified search "Find" button', () => {
       renderLandingPage();
-      expect(screen.getByRole('button', { name: /find venues/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /find →/i })).toBeInTheDocument();
     });
 
     it('calls onStart when footer "Find birthday ideas" CTA is clicked', () => {
@@ -217,10 +221,12 @@ describe('LandingPage', () => {
   // ── Idea cards ─────────────────────────────────────────────────────────
 
   describe('idea cards', () => {
+    // There are two CityAutocomplete instances (hero search bar + cards section);
+    // change the first one — both share the same cityValue state.
     function renderWithCity(onStart = vi.fn(), city = 'London') {
       const result = renderLandingPage(onStart);
-      const input = screen.getByTestId('city-input');
-      fireEvent.change(input, { target: { value: city } });
+      const inputs = screen.getAllByTestId('city-input');
+      fireEvent.change(inputs[0], { target: { value: city } });
       return result;
     }
 
@@ -291,19 +297,18 @@ describe('LandingPage', () => {
 
     it('typing in city input updates the value', () => {
       renderLandingPage();
-      const input = screen.getByTestId('city-input');
-      fireEvent.change(input, { target: { value: 'London' } });
-      expect(input).toHaveValue('London');
+      // Two CityAutocomplete instances exist; change the first (hero search bar)
+      const inputs = screen.getAllByTestId('city-input');
+      fireEvent.change(inputs[0], { target: { value: 'London' } });
+      expect(inputs[0]).toHaveValue('London');
     });
 
     it('when city is set and a footer CTA is clicked, updateLocation is called', () => {
-      // The hero "Find venues →" button opens the chat; onStart (→ wizard) is reached
-      // via the footer CTA. handleSearch calls updateLocation when cityValue is set.
+      // A card click with city set triggers updateLocation + searchVenuesByQuery
       const onStart = vi.fn();
       renderLandingPage(onStart);
-      const input = screen.getByTestId('city-input');
-      fireEvent.change(input, { target: { value: 'Manchester' } });
-      // A card click with city set triggers updateLocation + searchVenuesByQuery
+      const inputs = screen.getAllByTestId('city-input');
+      fireEvent.change(inputs[0], { target: { value: 'Manchester' } });
       fireEvent.click(screen.getByText('Boba Tea').closest('.lp-card'));
       expect(mockUpdateLocation).toHaveBeenCalledWith({ city: 'Manchester' });
     });
@@ -319,8 +324,8 @@ describe('LandingPage', () => {
     it('when city is set and a card is clicked, updateLocation and searchVenuesByQuery are called', () => {
       const onStart = vi.fn();
       renderLandingPage(onStart);
-      const input = screen.getByTestId('city-input');
-      fireEvent.change(input, { target: { value: 'Bristol' } });
+      const inputs = screen.getAllByTestId('city-input');
+      fireEvent.change(inputs[0], { target: { value: 'Bristol' } });
       fireEvent.click(screen.getByText('Boba Tea').closest('.lp-card'));
       expect(mockUpdateLocation).toHaveBeenCalledWith({ city: 'Bristol' });
       expect(mockSearchVenuesByQuery).toHaveBeenCalledWith('boba tea', 'Bristol');

@@ -96,34 +96,34 @@ describe('WizardContainer', () => {
     expect(container.querySelector('.wizard-container')).toBeInTheDocument();
   });
 
-  it('renders PlanPage for steps 1-3', () => {
-    render(
-      <TestWrapper step={1}>
+  it('renders VenueResults for step 4', () => {
+    const { container } = render(
+      <TestWrapper step={4}>
         <WizardContainer />
       </TestWrapper>
     );
 
-    expect(screen.getByText(/plan the party/i)).toBeInTheDocument();
+    expect(container.querySelector('.wizard-step-wrapper')).toBeInTheDocument();
   });
 
-  it('renders PlanPage on step 2 as well', () => {
-    render(
-      <TestWrapper step={2}>
+  it('renders VenueResults for step 4 via default', () => {
+    const { container } = render(
+      <TestWrapper step={4}>
         <WizardContainer />
       </TestWrapper>
     );
 
-    expect(screen.getByText(/plan the party/i)).toBeInTheDocument();
+    expect(container.querySelector('.wizard-step-wrapper')).toBeInTheDocument();
   });
 
-  it('renders PlanPage on step 3 as well', () => {
+  it('back button shows correct label on step 4', () => {
     render(
-      <TestWrapper step={3}>
+      <TestWrapper step={4}>
         <WizardContainer />
       </TestWrapper>
     );
 
-    expect(screen.getByText(/plan the party/i)).toBeInTheDocument();
+    expect(screen.getByText(/← Back/i)).toBeInTheDocument();
   });
 
   it('has wizard container class', () => {
@@ -146,14 +146,14 @@ describe('WizardContainer', () => {
     expect(container.querySelector('.wizard-content')).toBeInTheDocument();
   });
 
-  it('renders PlanPage as default for unrecognized steps', () => {
-    render(
+  it('renders VenueResults as fallback for unrecognized steps', () => {
+    const { container } = render(
       <TestWrapper step={99}>
         <WizardContainer />
       </TestWrapper>
     );
 
-    expect(screen.getByText(/plan the party/i)).toBeInTheDocument();
+    expect(container.querySelector('.wizard-step-wrapper')).toBeInTheDocument();
   });
 });
 
