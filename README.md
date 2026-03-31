@@ -1,13 +1,14 @@
 # PartyScout Frontend
 
-React-based wizard interface for the PartyScout birthday party planning application.
+React 19 single-page application for planning parties and events. Includes an AI-powered chat assistant (Scout), a guided planning wizard, venue search with indoor/outdoor filtering, saved events, weather forecasts, and user authentication via Firebase.
 
 ## Tech Stack
 
-- **Framework**: React 19.2.0
-- **Build Tool**: Vite 7.x
-- **Styling**: CSS with custom properties
-- **State**: React Context API
+- **Framework**: React 19 + Vite 7
+- **State**: React Context + useReducer
+- **Auth**: Firebase Authentication
+- **Tests**: Vitest + React Testing Library (unit/integration), Playwright (E2E)
+- **Linting**: ESLint 9
 - **Server**: nginx (production)
 
 ## Quick Start
@@ -19,116 +20,117 @@ React-based wizard interface for the PartyScout birthday party planning applicat
 
 ### Local Development
 
-1. **Install dependencies**:
-   ```bash
-   npm install
-   ```
-
-2. **Start development server**:
-   ```bash
-   npm run dev
-   ```
-
-3. **Open browser**:
-   ```
-   http://localhost:5173
-   ```
+```bash
+npm install
+npm run dev        # http://localhost:5173
+```
 
 ## Project Structure
 
 ```
 src/
-├── App.jsx                      # Main component
-├── App.css                      # Design system
+├── App.jsx                          # Root — providers + routing
+├── App.css                          # Global design system + CSS variables
 ├── context/
-│   └── PartyPlannerContext.jsx  # State management
+│   ├── PartyPlannerContext.jsx       # Wizard state, all API calls, venue search
+│   ├── AuthContext.jsx               # Firebase auth state
+│   └── SavedEventsContext.jsx        # Saved events state
 ├── components/
-│   ├── wizard/                  # Wizard steps
-│   │   ├── WizardContainer.jsx
-│   │   ├── StepIndicator.jsx
-│   │   ├── Step1_ChildInfo.jsx
-│   │   ├── Step2_Preferences.jsx
-│   │   ├── Step3_Location.jsx
-│   │   ├── Step4_VenueResults.jsx
-│   │   └── Step5_PartyDetails.jsx
-│   ├── venue/                   # Venue components
-│   │   ├── VenueCard.jsx
-│   │   └── VenueCompare.jsx
-│   └── common/                  # Reusable UI
-│       ├── Button.jsx
-│       ├── Input.jsx
-│       └── Slider.jsx
-└── main.jsx                     # Entry point
+│   ├── landing/
+│   │   ├── LandingPage.jsx           # Landing page with unified search bar + AI chat
+│   │   └── LandingPage.css
+│   ├── wizard/
+│   │   ├── WizardContainer.jsx       # Step router
+│   │   ├── StepIndicator.jsx         # Progress bar
+│   │   ├── Step1_ChildInfo.jsx       # Name, age, party date
+│   │   ├── Step2_Preferences.jsx     # Party type, guest count, budget
+│   │   ├── Step3_Location.jsx        # City, indoor/outdoor, distance
+│   │   ├── Step4_VenueResults.jsx    # Venue list with filter + sort chips
+│   │   └── Step5_PartyDetails.jsx    # Selected venue details
+│   ├── venue/
+│   │   ├── VenueCard.jsx             # Venue card with weather, save, compare
+│   │   ├── VenueCompare.jsx          # Side-by-side comparison (max 3)
+│   │   └── VenueFilters.jsx          # Rating/price/setting filter selects
+│   ├── savedevents/
+│   │   ├── SavedEventsPage.jsx       # Saved events list
+│   │   └── SaveModal.jsx             # Save event modal
+│   └── common/
+│       ├── Button.jsx                # Shared button (loading state, variants)
+│       ├── Input.jsx                 # Labeled input with hint
+│       ├── FeedbackModal.jsx         # Feedback form (pre-filled from auth)
+│       ├── PartyTypeSelector.jsx     # Multi-select dropdown (max 3)
+│       └── Slider.jsx                # Range slider
+e2e/
+├── fixtures/mock-data.js             # Shared API mocks + helpers
+├── party-wizard.spec.js
+├── venue-compare.spec.js
+├── venue-search.spec.js
+└── partyScout.spec.js
 ```
 
-## Wizard Flow
+## Key User Flows
 
-```
-Step 1: Child Info
-   ↓
-Step 2: Party Preferences
-   ↓
-Step 3: Location
-   ↓
-Step 4: Venue Results
-   ↓
-Step 5: Party Details
-```
+### Landing Page
+Unified search bar (city + guests | description | Find →) launches directly into venue results. AI chat assistant (Scout) can also be used to find venues conversationally.
+
+### Wizard Flow
+Step-by-step guided planning: child info → party preferences → location → venue results → party details.
+
+### Chat (Scout)
+SSE streaming chat that extracts intent (city, age, occasion, indoor/outdoor) and returns venue cards inline. Supports all event types and age groups.
+
+### Saved Events
+Authenticated users can save venues with event date, guest count, and party types. Accessible from the nav.
 
 ## Environment Variables
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `VITE_API_URL` | Backend API URL | `http://localhost:8080` |
+| `VITE_API_URL` | Backend base URL | `http://localhost:8080` |
+| `VITE_FIREBASE_*` | Firebase config keys | — |
 
-Set at build time:
-```bash
-VITE_API_URL=https://api.example.com npm run build
-```
-
-## Available Scripts
+## Commands
 
 ```bash
-npm run dev      # Start dev server
-npm run build    # Production build
-npm run preview  # Preview production build
-npm run lint     # Run ESLint
-```
-
-## Deployment
-
-### Cloud Run
-
-Uses `cloudbuild.yaml` for CI/CD:
-
-```bash
-gcloud builds submit --config=cloudbuild.yaml \
-  --substitutions=_VITE_API_URL="https://your-backend.run.app"
-```
-
-### Docker
-
-```bash
-docker build \
-  --build-arg VITE_API_URL=https://your-backend.run.app \
-  -t partyscout-frontend .
-
-docker run -p 8080:8080 partyscout-frontend
+npm run dev            # Dev server (port 5173)
+npm run build          # Production build
+npm run lint           # ESLint
+npm run test           # Vitest (watch mode)
+npm run test:run       # Vitest (single run)
+npm run test:coverage  # Vitest with coverage
+npm run test:e2e       # Playwright (headless)
+npm run test:e2e:headed    # Playwright with browser
+npm run test:e2e:ui        # Playwright interactive UI
 ```
 
 ## Design System
 
-CSS custom properties in `App.css`:
+CSS variables in `App.css`:
 
 ```css
-:root {
-  --primary: #6366f1;      /* Indigo */
-  --secondary: #ec4899;    /* Pink */
-  --success: #10b981;      /* Green */
-  --warning: #f59e0b;      /* Amber */
-}
+--primary:    #F0287A   /* Pink — buttons, accents */
+--navy:       #1e2d6b   /* Navy — headings, borders */
+--bg:         #f8f6ff   /* Soft lavender background */
+--text:       #1a1a2e   /* Dark text */
+--radius:     12px
 ```
+
+## Deployment
+
+Two environments: **canary** (staging) and **prod**. Both use Cloud Run via Cloud Build.
+
+```bash
+# Deploy frontend to canary
+COMMIT_SHA=$(git rev-parse HEAD)
+gcloud builds submit --config cloudbuild.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA
+
+# Prod is always promoted from the exact canary image — never rebuilt
+IMAGE=$(gcloud run services describe partyscout-frontend-canary --region us-east1 --format="value(spec.template.spec.containers[0].image)")
+gcloud run deploy partyscout-frontend --image $IMAGE --region us-central1 --quiet
+```
+
+The load balancer at `partyscout.app` routes `/api/*` to the backend and `/*` to the frontend. Infrastructure is managed via Terraform in `./terraform/`.
 
 ## License
 
-Private - All rights reserved
+Private — All rights reserved
