@@ -1,9 +1,16 @@
 import { useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import Button from './Button';
 import './FeedbackModal.css';
 
 export default function FeedbackModal({ onClose }) {
-  const [form, setForm] = useState({ name: '', email: '', type: 'General Feedback', message: '' });
+  const { user } = useAuth();
+  const [form, setForm] = useState({
+    name:    user?.displayName || '',
+    email:   user?.email       || '',
+    type:    'General Feedback',
+    message: '',
+  });
   const [status, setStatus] = useState('idle'); // idle | submitting | success | error
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -34,7 +41,7 @@ export default function FeedbackModal({ onClose }) {
             <div className="feedback-success-icon">🎉</div>
             <h3>Thanks for your feedback!</h3>
             <p>We read every submission and use it to improve PartyScout.</p>
-            <Button onClick={onClose} size="large">Close</Button>
+            <Button onClick={onClose} size="medium">Close</Button>
           </div>
         ) : (
           <>
@@ -42,15 +49,19 @@ export default function FeedbackModal({ onClose }) {
             <p className="feedback-subtitle">Help us make PartyScout better for every family.</p>
 
             <form onSubmit={handleSubmit} className="feedback-form">
-              <div className="feedback-field">
-                <label htmlFor="fb-name">Your name <span className="feedback-optional">(optional)</span></label>
-                <input id="fb-name" name="name" type="text" value={form.name} onChange={handleChange} placeholder="e.g. Sarah" />
-              </div>
+              {!user && (
+                <>
+                  <div className="feedback-field">
+                    <label htmlFor="fb-name">Your name <span className="feedback-optional">(optional)</span></label>
+                    <input id="fb-name" name="name" type="text" value={form.name} onChange={handleChange} placeholder="e.g. Sarah" />
+                  </div>
 
-              <div className="feedback-field">
-                <label htmlFor="fb-email">Your email <span className="feedback-optional">(optional, for follow-up)</span></label>
-                <input id="fb-email" name="email" type="email" value={form.email} onChange={handleChange} placeholder="you@example.com" />
-              </div>
+                  <div className="feedback-field">
+                    <label htmlFor="fb-email">Your email <span className="feedback-optional">(optional, for follow-up)</span></label>
+                    <input id="fb-email" name="email" type="email" value={form.email} onChange={handleChange} placeholder="you@example.com" />
+                  </div>
+                </>
+              )}
 
               <div className="feedback-field">
                 <label htmlFor="fb-type">Feedback type</label>
@@ -83,7 +94,7 @@ export default function FeedbackModal({ onClose }) {
 
               <div className="feedback-actions">
                 <button type="button" className="feedback-cancel" onClick={onClose}>Cancel</button>
-                <Button type="submit" disabled={!form.message.trim()} loading={status === 'submitting'} size="large">
+                <Button type="submit" disabled={!form.message.trim()} loading={status === 'submitting'} size="medium">
                   Send Feedback
                 </Button>
               </div>
