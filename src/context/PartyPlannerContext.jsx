@@ -3,7 +3,7 @@ import { createContext, useContext, useReducer, useCallback } from 'react';
 const PartyPlannerContext = createContext(null);
 
 const initialState = {
-  currentStep: 1,
+  currentStep: 4,
   childInfo: {
     name: '',
     age: null,

@@ -62,8 +62,8 @@
   height: 100vh !important;
   display: flex;
   flex-direction: column;
-  z-index: 300;
-  background: #f7f8fc;
+  z-index: 500;           /* above sticky nav (300) */
+  background: #f2f3f8;
   border-left: none;
 }
 
@@ -72,11 +72,39 @@
   margin-right: 0;
 }
 
-/* ChatPanel locks to the bottom in expanded mode */
+/* In expanded mode: ChatPanel stays mounted (preserves history + stream)
+   but only the input area is visible — centered refinement strip */
 .lp-chat-col--expanded .chat-panel {
   flex-shrink: 0;
-  height: 300px;
+  height: auto;
+  background: #f2f3f8;
   border-top: 1px solid #e0e4f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 24px 18px;
+}
+
+.lp-chat-col--expanded .cp-header   { display: none; }
+.lp-chat-col--expanded .cp-messages { display: none; }
+.lp-chat-col--expanded .cp-ctx      { display: none; }
+.lp-chat-col--expanded .cp-chips    { display: none; }
+.lp-chat-col--expanded .cp-input-hint { display: none; }
+
+.lp-chat-col--expanded .cp-input-area {
+  max-width: 640px;
+  width: 100%;
+  padding: 0;
+  background: transparent;
+}
+
+.lp-chat-col--expanded .cp-input-footer {
+  padding: 4px 8px 6px;
+}
+
+/* Hide mini venue card bubbles in expanded mode — full grid above already shows them */
+.lp-chat-col--expanded .msg-bot--venues {
+  display: none;
 }
 
 /* Venue results fill the space above the chat */
@@ -86,16 +114,17 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
-  background: #f7f8fc;
+  background: #f2f3f8;
 }
 
+/* Sticky header inside the Scout expanded view */
 .lp-scout-header {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 24px;
+  padding: 12px 24px;
   background: #fff;
-  border-bottom: 1px solid #eef0f8;
+  border-bottom: 1px solid #e4e7f0;
   position: sticky;
   top: 0;
   z-index: 1;
@@ -135,11 +164,19 @@
 }
 .lp-scout-close:hover { color: #1e2d6b; }
 
+/* Centered content container — prevents edge-to-edge stretch */
+.lp-scout-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 24px;
+}
+
 .lp-scout-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
-  padding: 20px 24px;
+  gap: 20px;
+  padding: 24px 0;
 }
 
 /* Make nav sticky */
@@ -479,6 +516,138 @@
   white-space: nowrap;
 }
 
+/* ── Unified search bar ───────────────────────────────────── */
+.lp-unified-bar {
+  display: flex;
+  align-items: stretch;
+  border: 2px solid #1e2d6b;
+  max-width: 580px;
+  margin: 0 auto 12px;
+  background: #fff;
+  transition: box-shadow 0.2s;
+}
+
+@keyframes lp-unified-shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-5px); }
+  40%       { transform: translateX(5px); }
+  60%       { transform: translateX(-3px); }
+  80%       { transform: translateX(3px); }
+}
+
+.lp-unified-bar--highlight {
+  animation: lp-unified-shake 0.4s ease;
+  box-shadow: 0 0 0 3px rgba(240, 40, 122, 0.3);
+}
+
+/* Left zone: city + inner divider + guests */
+.lp-unified-left {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.lp-unified-left .city-ac-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.lp-unified-city-input {
+  width: 130px;
+  padding: 11px 10px 11px 12px;
+  font-size: 14px;
+  border: none;
+  outline: none;
+  font-family: 'Poppins', sans-serif;
+  color: #0a0a0a;
+  background: transparent;
+}
+
+.lp-unified-city-input::placeholder { color: #bbb; }
+
+.lp-unified-inner-divider {
+  width: 1px;
+  background: #e4e7f0;
+  align-self: stretch;
+  margin: 7px 0;
+  flex-shrink: 0;
+}
+
+.lp-unified-guests {
+  width: 64px;
+  padding: 11px 8px;
+  font-size: 14px;
+  border: none;
+  outline: none;
+  font-family: 'Poppins', sans-serif;
+  color: #0a0a0a;
+  background: transparent;
+  text-align: center;
+  -moz-appearance: textfield;
+}
+
+.lp-unified-guests::-webkit-inner-spin-button,
+.lp-unified-guests::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.lp-unified-guests::placeholder { color: #bbb; }
+
+/* Centre divider — heavier, signals a zone boundary */
+.lp-unified-divider {
+  width: 1px;
+  background: #c8cfe8;
+  align-self: stretch;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+/* Right zone: free-text description */
+.lp-unified-desc {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 10px;
+  font-size: 14px;
+  border: none;
+  outline: none;
+  font-family: 'Poppins', sans-serif;
+  color: #0a0a0a;
+  background: transparent;
+}
+
+.lp-unified-desc::placeholder { color: #bbb; }
+
+/* Single CTA */
+.lp-unified-btn {
+  background: linear-gradient(135deg, #F0287A, #F5923E);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 0 20px;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+
+.lp-unified-btn:hover { opacity: 0.88; }
+
+/* Suppress individual pink focus rings inside the bar;
+   show a subtle navy glow on the bar itself instead */
+.lp-unified-bar input:focus-visible,
+.lp-unified-bar button:focus-visible {
+  outline: none;
+}
+
+.lp-unified-bar:focus-within {
+  box-shadow: 0 0 0 2px rgba(30, 45, 107, 0.2);
+}
+
 /* ── Secondary search bar (manual, idle) ─────────────────── */
 .lp-search-wrap {
   display: flex;
@@ -816,13 +985,13 @@
 }
 
 .lp-persona-chip-label {
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 600;
   color: #0a0a0a;
 }
 
 .lp-persona-chip-range {
-  font-size: 14px;
+  font-size: 12px;
   color: #999;
 }
 
@@ -877,8 +1046,8 @@
 .lp-city-row-label {
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-transform: none;
   color: #F0287A;
   padding: 0 6px 0 2px;
   white-space: nowrap;

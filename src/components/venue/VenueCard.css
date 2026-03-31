@@ -2,9 +2,11 @@
   position: relative;
   background: white;
   border: 1.5px solid var(--neutral-200, #e5e7eb);
-  border-radius: 0;
+  border-radius: 0 !important;
   overflow: hidden;
   transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .venue-card:hover {
@@ -135,6 +137,9 @@
 .venue-content {
   padding: 1rem;
   cursor: pointer;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .venue-name {
@@ -319,6 +324,7 @@
   display: flex;
   flex-direction: column;
   margin-bottom: 0;
+  margin-top: auto;
 }
 
 .venue-pricing-estimates {

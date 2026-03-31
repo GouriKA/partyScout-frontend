@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { usePartyPlanner } from '../../context/PartyPlannerContext';
 import { useSavedEvents } from '../../context/SavedEventsContext';
 import VenueCard from '../venue/VenueCard';
@@ -50,6 +50,10 @@ export default function Step4_VenueResults() {
   const [filterBy, setFilterBy] = useState('all');
   const [showCompare, setShowCompare] = useState(false);
   const [saveTarget, setSaveTarget] = useState(null); // { venue, eventDate, partyTypes, guestCount }
+
+  // Prevent "no venues found" flash on mount before the first search starts
+  const hasBeenLoading = useRef(false);
+  if (loading) hasBeenLoading.current = true;
 
   useEffect(() => {
     const hasOutdoor = venues.some(v => v.setting === 'outdoor');
@@ -154,7 +158,7 @@ export default function Step4_VenueResults() {
     );
   }
 
-  if (!loading && !error && venues.length === 0) {
+  if (!loading && !error && venues.length === 0 && hasBeenLoading.current) {
     return (
       <div className="wizard-step">
         <div className="step-top-nav">

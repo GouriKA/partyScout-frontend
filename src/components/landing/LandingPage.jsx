@@ -10,6 +10,7 @@ import AccountPanel from '../account/AccountPanel';
 import VenueCard from '../venue/VenueCard';
 import SaveModal from '../savedevents/SaveModal';
 import ChatPanel from '../chat/ChatPanel';
+import ScoutCompare from '../chat/ScoutCompare';
 import { firebaseConfigured } from '../../firebase';
 import { IDEA_CARDS } from '../../data/ideaCards';
 import '../chat/ChatPanel.css';
@@ -43,7 +44,7 @@ const QUICK_CHIPS = [
 ];
 
 export default function LandingPage({ onStart, onSeeAll }) {
-  const { updateChildInfo, updateLocation, searchVenuesByQuery, goToStep, selectVenue } = usePartyPlanner();
+  const { updateChildInfo, updateLocation, updatePreferences, searchVenuesByQuery, goToStep, selectVenue } = usePartyPlanner();
   const { user, loading: authLoading } = useAuth();
   const { savedEvents, isSaved, unsaveEvent } = useSavedEvents();
 
@@ -57,8 +58,10 @@ export default function LandingPage({ onStart, onSeeAll }) {
   const [cityHighlight,  setCityHighlight]  = useState(false);
   const [pendingCard,    setPendingCard]    = useState(null);
 
+  const [guestCount,     setGuestCount]     = useState('');
   const [chatInput,      setChatInput]      = useState('');
   const [chatVenues,     setChatVenues]     = useState(null);
+  const [compareVenues,  setCompareVenues]  = useState(null);
   const [saveTarget,     setSaveTarget]     = useState(null);
   const [scoutExpanded,  setScoutExpanded]  = useState(false);
 
@@ -135,6 +138,10 @@ export default function LandingPage({ onStart, onSeeAll }) {
 
   const handleVenuesFound = (venues) => {
     setChatVenues(venues);
+    // Don't auto-expand — user clicks "See all venues →" in the mini cards to expand
+  };
+
+  const expandScout = () => {
     setScoutExpanded(true);
     setChatOpen(true);
   };
@@ -150,10 +157,24 @@ export default function LandingPage({ onStart, onSeeAll }) {
     setChatOpen(false);
   };
 
-  // ── Manual search / nav ───────────────────────────────────────────────────
-  const handleSearch = () => {
+  // ── Unified search ────────────────────────────────────────────────────────
+  const handleUnifiedSearch = () => {
+    // Require at least city or description
+    if (!cityValue && !chatInput.trim()) {
+      setCityHighlight(true);
+      setTimeout(() => setCityHighlight(false), 1500);
+      return;
+    }
+    if (guestCount) updatePreferences({ guestCount: parseInt(guestCount) });
+    updateChildInfo({ age: PERSONA_AGES[activePersona] });
     if (cityValue) updateLocation({ city: cityValue });
+    goToStep(4);
     onStart();
+    const query = chatInput.trim()
+      ? chatInput.trim()
+      : `${activeOccasion} party venues for ${activePersona.toLowerCase()}`;
+    searchVenuesByQuery(query, cityValue);
+    setChatInput('');
   };
 
   const handleSeeAll = () => {
@@ -406,24 +427,60 @@ export default function LandingPage({ onStart, onSeeAll }) {
               </div>
             </div>
 
-            {/* Primary chat bar */}
-            <div className="lp-chat-bar">
+            {/* Unified search bar */}
+            <div className={`lp-unified-bar${cityHighlight ? ' lp-unified-bar--highlight' : ''}`}>
+              {/* Left: structured — city + guests */}
+              <div className="lp-unified-left">
+                <CityAutocomplete
+                  value={cityValue}
+                  onChange={handleCityChange}
+                  placeholder="City"
+                  className="lp-unified-city-input"
+                />
+                <div className="lp-unified-inner-divider" />
+                <input
+                  className="lp-unified-guests"
+                  type="number"
+                  min="1"
+                  max="500"
+                  value={guestCount}
+                  onChange={e => setGuestCount(e.target.value)}
+                  placeholder="Guests"
+                />
+              </div>
+
+              {/* Centre divider */}
+              <div className="lp-unified-divider" />
+
+              {/* Right: free-text description */}
               <input
-                className="lp-chat-bar-input"
+                className="lp-unified-desc"
                 value={chatInput}
                 onChange={e => setChatInput(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter' && chatInput.trim()) { openChatAndSend(chatInput); setChatInput(''); } }}
-                placeholder="e.g. Birthday for my 7 year old in Austin, 15 kids..."
+                onKeyDown={e => { if (e.key === 'Enter') handleUnifiedSearch(); }}
+                placeholder="Or describe it…"
               />
-              <button className="lp-chat-bar-btn" onClick={() => { if (chatInput.trim()) { openChatAndSend(chatInput); setChatInput(''); } else openChat(); }}>
-                Find venues →
+
+              {/* Single CTA */}
+              <button className="lp-unified-btn" onClick={handleUnifiedSearch}>
+                Find →
               </button>
             </div>
 
             {/* Quick-start chips */}
             <div className="lp-quickstart-chips">
               {QUICK_CHIPS.map(chip => (
-                <button key={chip} className="lp-qs-chip" onClick={() => openChatAndSend(chip)}>
+                <button
+                  key={chip}
+                  className="lp-qs-chip"
+                  onClick={() => {
+                    updateChildInfo({ age: PERSONA_AGES[activePersona] });
+                    if (cityValue) updateLocation({ city: cityValue });
+                    goToStep(4);
+                    onStart();
+                    searchVenuesByQuery(chip, cityValue);
+                  }}
+                >
                   {chip}
                 </button>
               ))}
@@ -452,16 +509,21 @@ export default function LandingPage({ onStart, onSeeAll }) {
               </span>
               <button className="lp-scout-close" onClick={closeScout} aria-label="Close Scout">✕</button>
             </div>
-            <div className="lp-scout-grid">
-              {chatVenues?.map(renderScoutVenueCard)}
+            <div className="lp-scout-inner">
+              <div className="lp-scout-grid">
+                {chatVenues?.map(renderScoutVenueCard)}
+              </div>
             </div>
           </div>
         )}
         <ChatPanel
           existingContext={chatContext}
-          suggestions={QUICK_CHIPS}
+          suggestions={scoutExpanded ? [] : QUICK_CHIPS}
           onVenuesFound={handleVenuesFound}
           onVenueSelect={(venue) => { selectVenue(venue); goToStep(5); closeScout(); onStart(); }}
+          onSeeAll={chatVenues?.length > 0 ? expandScout : undefined}
+          onCollapse={scoutExpanded ? collapseScout : undefined}
+          onCompare={(venues) => setCompareVenues(venues)}
           onClose={scoutExpanded ? null : closeChat}
           initialText={chatInitial}
           triggerSend={chatTrigger}
@@ -469,6 +531,13 @@ export default function LandingPage({ onStart, onSeeAll }) {
       </div>
       </div>{/* lp-body */}
 
+      {compareVenues && (
+        <ScoutCompare
+          venues={compareVenues}
+          onSelect={(v) => { setCompareVenues(null); selectVenue(v); goToStep(5); closeScout(); onStart(); }}
+          onClose={() => setCompareVenues(null)}
+        />
+      )}
       {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
       <SavedEventsPanel open={showSaved} onClose={() => setShowSaved(false)} />
       <AccountPanel     open={showAccount} onClose={() => setShowAccount(false)} />

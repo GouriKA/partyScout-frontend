@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { usePartyPlanner } from '../../context/PartyPlannerContext';
 import AppNav from '../common/AppNav';
 import ChatPanel from '../chat/ChatPanel';
-import PlanPage from '../plan/PlanPage';
 import Step4_VenueResults from './Step4_VenueResults';
 import Step5_PartyDetails from './Step5_PartyDetails';
 import './WizardContainer.css';
@@ -25,14 +24,13 @@ export default function WizardContainer({ onHome }) {
   };
 
   const handleBack = () => {
-    if (currentStep <= 3) handleGoHome();
-    else prevStep();
+    if (currentStep === 5) prevStep();
+    else handleGoHome();
   };
 
   const renderContent = () => {
     if (currentStep === 5) return <div className="wizard-step-wrapper"><Step5_PartyDetails /></div>;
-    if (currentStep === 4) return <div className="wizard-step-wrapper"><Step4_VenueResults /></div>;
-    return <PlanPage onHome={handleGoHome} />;
+    return <div className="wizard-step-wrapper"><Step4_VenueResults /></div>;
   };
 
   const persona = getPersonaLabel(childInfo?.age);
@@ -43,11 +41,9 @@ export default function WizardContainer({ onHome }) {
   if (city) contextParts.push(city);
   const contextLabel = contextParts.join(' · ');
 
-  const suggestions = currentStep <= 3
-    ? ['Indoor or outdoor?', 'Best themes', 'Skip — show all']
-    : currentStep === 4
-    ? ['Outdoor only', 'Has party rooms', 'Compare top 2']
-    : ['What should I know?', 'Any alternatives?'];
+  const suggestions = currentStep === 5
+    ? ['What should I know?', 'Any alternatives?']
+    : ['Outdoor only', 'Has party rooms', 'Compare top 2'];
 
   const handleVenuesFound = (venues) => {
     setVenues({ venues, llmFilterApplied: true });
@@ -78,11 +74,9 @@ export default function WizardContainer({ onHome }) {
       <div className={`wizard-body${chatOpen ? ' wizard-body--chat-open' : ''}`}>
         <main className="wizard-content">
           <div className="wizard-back-row">
-            <button className="wizard-back-btn" onClick={handleBack}>← Back</button>
-            <span className="wizard-step-count">Step {Math.min(currentStep, 5)} of 5</span>
-          </div>
-          <div className="wizard-progress-track">
-            <div className="wizard-progress-fill" style={{ width: `${(Math.min(currentStep, 5) / 5) * 100}%` }} />
+            <button className="wizard-back-btn" onClick={handleBack}>
+              {currentStep === 5 ? '← Results' : '← Back'}
+            </button>
           </div>
           {renderContent()}
         </main>

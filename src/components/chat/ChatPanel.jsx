@@ -113,6 +113,9 @@ export default function ChatPanel({
   suggestions = [],
   onVenuesFound,
   onVenueSelect,
+  onSeeAll,
+  onCompare,
+  onCollapse,
   onClose,
   initialText,
   triggerSend,
@@ -123,6 +126,11 @@ export default function ChatPanel({
   const [isStreaming, setIsStreaming] = useState(false);
 
   const historyRef        = useRef(initial.history);
+  const knownVenuesRef    = useRef([]);
+  const onCompareRef      = useRef(onCompare);
+  const onCollapseRef     = useRef(onCollapse);
+  useEffect(() => { onCompareRef.current  = onCompare;  }, [onCompare]);
+  useEffect(() => { onCollapseRef.current = onCollapse; }, [onCollapse]);
   const messagesEndRef    = useRef(null);
   const readerRef         = useRef(null);
   const lastTriggerKeyRef = useRef(null);
@@ -147,6 +155,39 @@ export default function ChatPanel({
   const sendMessage = useCallback(async (text) => {
     const msg = (text ?? input).trim();
     if (!msg || isStreaming) return;
+
+    // Intercept compare intent — open compare overlay immediately
+    if (onCompareRef.current && /compare/i.test(msg)) {
+      // Fall back to venues in message history if knownVenuesRef isn't populated yet
+      const known = knownVenuesRef.current.length >= 2
+        ? knownVenuesRef.current
+        : messages
+            .filter(m => m.venueList)
+            .flatMap(m => m.venueList.map((v, i) => ({
+              num: i + 1,
+              name: v.name,
+              rating: v.rating || null,
+              address: v.address || null,
+              setting: v.setting || null,
+              reason: v.reason || null,
+              photos: v.photos || [],
+            })));
+      if (known.length >= 2) {
+        const nums = [...msg.matchAll(/\b([1-9])\b/g)].map(m => parseInt(m[1]));
+        const matched = nums.length >= 2
+          ? nums.map(n => known.find(v => v.num === n)).filter(Boolean)
+          : known;
+        if (matched.length >= 2) {
+          setInput('');
+          setMessages(prev => [...prev, { role: 'user', content: msg, _key: nextKeyRef.current++ }]);
+          onCompareRef.current(matched);
+          return;
+        }
+      }
+    }
+
+    // If in expanded full-screen mode, collapse to side panel so messages are visible
+    onCollapseRef.current?.();
 
     setInput('');
     setIsStreaming(true);
@@ -179,6 +220,7 @@ export default function ChatPanel({
             persona:  existingContext.persona  ?? null,
             occasion: existingContext.occasion ?? null,
           },
+          knownVenues: knownVenuesRef.current,
         }),
       });
 
@@ -219,11 +261,27 @@ export default function ChatPanel({
             try {
               const venues = JSON.parse(data.slice(8));
               onVenuesFound?.(venues);
-              const venueKey = nextKeyRef.current++;
-              setMessages(prev => [
-                ...prev,
-                { role: 'assistant', content: '', venueList: venues, _key: venueKey },
-              ]);
+              // Store numbered venue context so follow-up questions have accurate info
+              knownVenuesRef.current = venues.map((v, i) => ({
+                num: i + 1,
+                name: v.name,
+                rating: v.rating || null,
+                address: v.address || null,
+                setting: v.setting || null,
+                reason: v.reason || null,
+                photos: v.photos || [],
+              }));
+              // Merge into the last assistant bubble so text + cards appear as one unit
+              setMessages(prev => {
+                const updated = [...prev];
+                const last = updated[updated.length - 1];
+                if (last?.role === 'assistant') {
+                  updated[updated.length - 1] = { ...last, venueList: venues };
+                } else {
+                  updated.push({ role: 'assistant', content: '', venueList: venues, _key: nextKeyRef.current++ });
+                }
+                return updated;
+              });
             } catch { /* ignore malformed */ }
           } else {
             // If the previous chunk ended with a word char and this one starts
@@ -287,6 +345,7 @@ export default function ChatPanel({
     setMessages([]);
     setIsStreaming(false);
     historyRef.current = [];
+    knownVenuesRef.current = [];
     nextKeyRef.current = 0;
     clearChat();
   };
@@ -315,21 +374,63 @@ export default function ChatPanel({
 
     if (msg.venueList) {
       return (
-        <div key={key} className="msg-bot">
-          <ul className="msg-venue-list">
+        <div key={key} className="msg-bot msg-bot--venues">
+          {msg.content && (
+            <div className="msg-bot-prose">
+              {renderMarkdown(msg.content, knownVenues, onVenueSelect)}
+            </div>
+          )}
+          <div className={`msg-venue-cards${msg.content ? ' msg-venue-cards--divided' : ''}`}>
             {msg.venueList.map((v, vi) => (
-              // Prefer a unique venue identifier; fall back to name, then index
-              <li key={v.googlePlaceId || v.id || v.name || vi}>
-                {onVenueSelect ? (
-                  <button className="msg-venue-name msg-venue-name--link" onClick={() => onVenueSelect(v)}>
+              <div
+                key={v.googlePlaceId || v.id || v.name || vi}
+                className="msg-venue-card"
+              >
+                <div className="msg-venue-card-num">{vi + 1}</div>
+                <div
+                  className="msg-venue-card-photo"
+                  onClick={() => onVenueSelect?.(v)}
+                  style={onVenueSelect ? { cursor: 'pointer' } : undefined}
+                >
+                  {v.photos?.[0] ? (
+                    <img src={v.photos[0]} alt={v.name} loading="lazy" />
+                  ) : (
+                    <div className="msg-venue-card-photo-empty">🎉</div>
+                  )}
+                </div>
+                <div className="msg-venue-card-body">
+                  <div
+                    className={`msg-venue-card-name${onVenueSelect ? ' msg-venue-card-name--link' : ''}`}
+                    onClick={() => onVenueSelect?.(v)}
+                  >
                     {v.name}
-                  </button>
-                ) : (
-                  <span className="msg-venue-name">{v.name}</span>
-                )}
-              </li>
+                  </div>
+                  {v.rating > 0 && (
+                    <div className="msg-venue-card-rating">
+                      <span className="msg-venue-card-star">★</span>
+                      {v.rating.toFixed(1)}
+                    </div>
+                  )}
+                  {v.reason && (
+                    <div className="msg-venue-card-reason">{v.reason}</div>
+                  )}
+                </div>
+                <button
+                  className="msg-venue-card-ask"
+                  onClick={() => sendMessage(`Tell me more about ${v.name}`)}
+                  disabled={isStreaming}
+                  title={`Ask Scout about ${v.name}`}
+                >
+                  Ask →
+                </button>
+              </div>
             ))}
-          </ul>
+          </div>
+          {onSeeAll && (
+            <button className="msg-see-all" onClick={onSeeAll}>
+              See all venues →
+            </button>
+          )}
         </div>
       );
     }
@@ -356,7 +457,7 @@ export default function ChatPanel({
           <button className="cp-back" onClick={onClose} aria-label="Close chat">✕</button>
         )}
         <div className="cp-dot" />
-        <span className="cp-title">Party planner</span>
+        <span className="cp-title">Hi, I'm Scout</span>
         <span className="cp-sub">AI powered</span>
         {messages.length > 0 && (
           <button className="cp-new-chat" onClick={handleNewChat} title="Start a new conversation">
@@ -375,7 +476,7 @@ export default function ChatPanel({
         <div ref={messagesEndRef} />
       </div>
 
-      {suggestions.length > 0 && (
+      {suggestions.length > 0 && messages.length === 0 && (
         <div className={`cp-chips${isStreaming ? ' cp-chips--dim' : ''}`}>
           {suggestions.map(s => (
             <button key={s} className="cp-chip" onClick={() => sendMessage(s)} disabled={isStreaming}>
@@ -385,18 +486,34 @@ export default function ChatPanel({
         </div>
       )}
 
-      <div className="cp-input-row">
-        <input
-          className="cp-input"
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder={isStreaming ? 'Waiting for response...' : 'Ask anything...'}
-          disabled={isStreaming}
-        />
-        <button className="cp-send" onClick={() => sendMessage()} disabled={isStreaming || !input.trim()}>
-          →
-        </button>
+      <div className="cp-input-area">
+        <div className="cp-input-wrap">
+          <textarea
+            className="cp-textarea"
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={isStreaming ? 'Thinking...' : 'Ask Scout anything...'}
+            disabled={isStreaming}
+            rows={2}
+          />
+          <div className="cp-input-footer">
+            <span className="cp-input-hint">
+              {!isStreaming && 'Shift + Enter for new line'}
+            </span>
+            <button
+              className="cp-send"
+              onClick={() => sendMessage()}
+              disabled={isStreaming || !input.trim()}
+              aria-label="Send message"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"/>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
