@@ -8,7 +8,7 @@ We take security seriously. If you discover a security vulnerability, please rep
 
 **DO NOT** open a public GitHub issue for security vulnerabilities.
 
-Instead, please email: [security contact email]
+Instead, please email: scout@partyscout.live
 
 Or use GitHub's private vulnerability reporting:
 1. Go to the repository's Security tab
@@ -39,96 +39,53 @@ Or use GitHub's private vulnerability reporting:
 
 | Data Type | Storage | Retention |
 |-----------|---------|-----------|
-| Search queries | Not stored | None |
-| Personal info | Not collected | None |
-| API keys | Secret Manager | Rotated quarterly |
-| Logs | Cloud Logging | 30 days |
+| Venue search queries | Not stored in browser | None |
+| Firebase auth token | Browser memory (not localStorage) | Session only |
+| Saved events | Sent to backend (Cloud SQL) | Until user deletes |
+| Feedback form | Sent to backend; not stored on frontend | None |
 
 **We do not**:
-- Store user personal information
-- Track users across sessions
-- Share data with third parties
+- Store API keys in frontend code or environment (they are backend-only)
 - Use cookies for tracking
+- Log personal information in the browser
 
-### API Security
+### Frontend Security
 
 | Measure | Implementation |
 |---------|----------------|
-| HTTPS | Enforced by Cloud Run |
-| API Keys | Stored in Secret Manager |
-| CORS | Restricted to known origins |
-| Input Validation | Server-side validation |
+| HTTPS | Enforced by load balancer |
+| Auth tokens | Firebase ID tokens; not stored in localStorage |
+| XSS | React escapes all rendered content by default |
+| CORS | Backend enforces origin allowlist |
+| Content Security Policy | Set via nginx headers |
 
-### Infrastructure Security
+### Secrets
 
-| Layer | Protection |
-|-------|------------|
-| Compute | Cloud Run (managed, isolated) |
-| Secrets | Google Secret Manager (encrypted) |
-| Network | HTTPS only, no direct DB access |
-| Auth | Currently public (no auth required) |
+Frontend build-time variables (`VITE_FIREBASE_*`) are Firebase project config — these are public by design (Firebase security is enforced by Firebase Security Rules, not by hiding the config).
 
----
-
-## Secure Development
-
-### Code Review Requirements
-
-- All changes require pull request
-- At least one approval before merge
-- Security-sensitive changes flagged
-
-### Dependency Management
-
-- Dependencies reviewed before adding
-- Automated vulnerability scanning (Dependabot)
-- Regular updates scheduled
-
-### Secrets Management
-
-**Never commit secrets to git**:
-- API keys
-- Passwords
-- Service account keys
-- Any credentials
-
-**Use instead**:
-- Environment variables
-- Secret Manager
-- `.gitignore` for local configs
+**Never put** Google Places API keys, Anthropic API keys, SMTP passwords, or database credentials in frontend code or `.env` files committed to git.
 
 ---
 
 ## Known Limitations
 
-### Current Security Gaps
-
-| Gap | Risk | Mitigation Plan |
-|-----|------|-----------------|
-| No authentication | Public access | Future: Add user accounts |
-| No rate limiting | DoS possible | Future: Implement limits |
-| No audit logging | Limited forensics | Future: Add audit trail |
-
-### Accepted Risks
-
-- Public API: Intentional for MVP
-- No user accounts: Reduces data liability
+| Gap | Risk | Mitigation |
+|-----|------|------------|
+| Firebase config in build output | Low (Firebase config is public) | Firebase Security Rules enforce access control |
+| No rate limiting on chat SSE | DoS possible | Backend Anthropic API key limits exposure |
 
 ---
 
 ## Compliance
 
-### GDPR Considerations
+### GDPR
+- No personal data stored in the browser beyond the session
+- Saved events stored server-side can be deleted by the user at any time
 
-- No EU user data stored
-- No cookies requiring consent
-- No tracking or profiling
-
-### COPPA Considerations
-
-- No data collected from children
-- Parents are the users (not children)
-- No account creation required
+### COPPA
+- Parents are the users, not children
+- No data collected directly from children
+- No account required for core venue search
 
 ---
 
@@ -136,7 +93,7 @@ Or use GitHub's private vulnerability reporting:
 
 | Role | Contact |
 |------|---------|
-| Security Lead | [email] |
+| Security Lead | scout@partyscout.live |
 | Project Owner | gouri.alampalli@gmail.com |
 
 ---
@@ -145,12 +102,5 @@ Or use GitHub's private vulnerability reporting:
 
 | Date | Change |
 |------|--------|
+| 2026-03-31 | Updated contact email; added auth token and saved events data handling |
 | 2026-01-29 | Initial security policy |
-
----
-
-## Acknowledgments
-
-We appreciate security researchers who help keep PartyScout safe. Contributors will be acknowledged here (with permission).
-
-*No vulnerabilities reported yet.*

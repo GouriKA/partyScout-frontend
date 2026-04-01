@@ -6,11 +6,12 @@ PartyScout is a parent-centric birthday party planning application that helps fa
 
 ## Problem Statement
 
-Planning a child's birthday party is stressful for parents:
-- Too many venue options with no clear way to filter
+Planning a party or event is stressful:
+- Too many venue options with no clear way to filter by age, setting, or occasion
 - Difficulty matching venues to age-appropriate activities
 - Unclear pricing and what's included
-- No easy way to compare options
+- No easy way to compare options side-by-side
+- Hard to find outdoor venues that actually are outdoor
 
 ## Solution
 
@@ -25,7 +26,7 @@ Landing page → Wizard (5-step guided flow) → venue results
 ## Target Users
 
 - **Primary**: Parents planning birthday parties for children ages 1-18
-- **Secondary**: Grandparents, family members organizing parties
+- **Secondary**: Anyone planning any party or event — graduations, baby showers, corporate events, quinceañeras, anniversaries, and more
 
 ---
 
@@ -59,7 +60,7 @@ The app opens on a landing page with:
 - Party date: separate date and time inputs (stored as ISO datetime string)
 
 ### 2. Location & Logistics — Wizard Step 2
-- ZIP code entry
+- City entry (e.g. "Boston, MA")
 - Indoor/Outdoor/Any preference
 - Maximum distance willing to travel (miles)
 
@@ -98,11 +99,10 @@ The app opens on a landing page with:
 - Full-width weather card for outdoor venues: high/low temp, rain %, condition, and "Typical for this time of year" label for CLIMATE_AVERAGE forecast type
 
 ### Saved Events
-- Heart icon on every venue card saves a venue (no account required)
+- Save icon on venue cards saves a venue (requires Firebase sign-in)
 - SaveModal captures event date, party types, and guest count at save time
-- Saved panel (★ button in nav) lists all saved venues with details
-- Firebase-authenticated users get saved events synced to backend and persisted across devices
-- Unsave from the panel or by clicking the heart again
+- Saved Events page (nav link) lists all saved venues with details; accessible across devices
+- Delete saved events from the page
 
 ### All Ideas Page
 - Accessible via "See all →" on the landing page
