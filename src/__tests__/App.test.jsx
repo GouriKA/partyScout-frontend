@@ -37,10 +37,10 @@ describe('App — early access banner', () => {
     expect(container.querySelector('.early-access-banner')).toBeInTheDocument();
   });
 
-  it('banner contains the development message', () => {
+  it('banner contains the beta message', () => {
     render(<App />);
 
-    expect(screen.getByText(/we're still in development/i)).toBeInTheDocument();
+    expect(screen.getByText(/now in beta/i)).toBeInTheDocument();
   });
 
   it('banner has a share thoughts button', () => {
