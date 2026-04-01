@@ -51,9 +51,13 @@ export default function Step4_VenueResults() {
   const [showCompare, setShowCompare] = useState(false);
   const [saveTarget, setSaveTarget] = useState(null); // { venue, eventDate, partyTypes, guestCount }
 
-  // Prevent "no venues found" flash on mount before the first search starts
-  const hasBeenLoading = useRef(false);
-  if (loading) hasBeenLoading.current = true;
+  // Track when a search has explicitly completed (loading transitioned true → false)
+  const [searchDone, setSearchDone] = useState(false);
+  const prevLoading = useRef(loading);
+  useEffect(() => {
+    if (prevLoading.current === true && loading === false) setSearchDone(true);
+    prevLoading.current = loading;
+  }, [loading]);
 
   useEffect(() => {
     const hasOutdoor = venues.some(v => v.setting === 'outdoor');
@@ -126,7 +130,7 @@ export default function Step4_VenueResults() {
     }
   }
 
-  if (loading) {
+  if (loading && venues.length === 0) {
     return (
       <div className="wizard-step">
         <div className="loading-state">
@@ -158,7 +162,7 @@ export default function Step4_VenueResults() {
     );
   }
 
-  if (!loading && !error && venues.length === 0 && hasBeenLoading.current) {
+  if (!loading && !error && venues.length === 0 && searchDone) {
     return (
       <div className="wizard-step">
         <div className="step-top-nav">
@@ -184,7 +188,13 @@ export default function Step4_VenueResults() {
   }
 
   return (
-    <div className="wizard-step step-venue-results">
+    <div className="wizard-step step-venue-results" style={{ position: 'relative' }}>
+      {loading && (
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(248,246,255,0.75)', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.75rem' }}>
+          <div className="loading-spinner" />
+          <p style={{ color: 'var(--navy)', fontWeight: 600 }}>Finding perfect venues...</p>
+        </div>
+      )}
       <div className="step-top-nav">
         <button type="button" className="btn-back" onClick={prevStep}>
           Back

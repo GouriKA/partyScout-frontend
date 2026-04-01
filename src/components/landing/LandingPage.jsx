@@ -168,13 +168,13 @@ export default function LandingPage({ onStart, onSeeAll }) {
     if (guestCount) updatePreferences({ guestCount: parseInt(guestCount) });
     updateChildInfo({ age: PERSONA_AGES[activePersona] });
     if (cityValue) updateLocation({ city: cityValue });
-    goToStep(4);
-    onStart();
     const query = chatInput.trim()
       ? chatInput.trim()
       : `${activeOccasion} party venues for ${activePersona.toLowerCase()}`;
     searchVenuesByQuery(query, cityValue);
     setChatInput('');
+    goToStep(4);
+    onStart();
   };
 
   const handleSeeAll = () => {
@@ -187,9 +187,9 @@ export default function LandingPage({ onStart, onSeeAll }) {
       return;
     }
     updateLocation({ city: cityValue });
+    searchVenuesByQuery(card.query, cityValue);
     goToStep(4);
     onStart();
-    searchVenuesByQuery(card.query, cityValue);
   };
 
   const handleCityChange = (city) => {
@@ -197,9 +197,9 @@ export default function LandingPage({ onStart, onSeeAll }) {
     if (pendingCard && city) {
       setPendingCard(null);
       updateLocation({ city });
+      searchVenuesByQuery(pendingCard.query, city);
       goToStep(4);
       onStart();
-      searchVenuesByQuery(pendingCard.query, city);
     }
   };
 
@@ -208,9 +208,9 @@ export default function LandingPage({ onStart, onSeeAll }) {
     updateChildInfo({ age: PERSONA_AGES[label] });
     if (cityValue) {
       updateLocation({ city: cityValue });
+      searchVenuesByQuery(PERSONA_QUERIES[label], cityValue);
       goToStep(4);
       onStart();
-      searchVenuesByQuery(PERSONA_QUERIES[label], cityValue);
     } else {
       onStart();
     }
@@ -476,9 +476,9 @@ export default function LandingPage({ onStart, onSeeAll }) {
                   onClick={() => {
                     updateChildInfo({ age: PERSONA_AGES[activePersona] });
                     if (cityValue) updateLocation({ city: cityValue });
+                    searchVenuesByQuery(chip, cityValue);
                     goToStep(4);
                     onStart();
-                    searchVenuesByQuery(chip, cityValue);
                   }}
                 >
                   {chip}
