@@ -537,7 +537,7 @@
 
 .lp-unified-bar--highlight {
   animation: lp-unified-shake 0.4s ease;
-  box-shadow: 0 0 0 3px rgba(240, 40, 122, 0.3);
+  box-shadow: 0 0 0 3px rgba(30, 45, 107, 0.35);
 }
 
 /* Left zone: city + inner divider + guests */
@@ -1032,6 +1032,11 @@
 .lp-city-row:focus-within {
   border-color: #1e2d6b;
   background: #fff;
+}
+
+.lp-city-row--highlight {
+  animation: lp-unified-shake 0.4s ease;
+  box-shadow: 0 0 0 3px rgba(30, 45, 107, 0.35);
 }
 
 .lp-city-row-icon {

@@ -55,7 +55,8 @@ export default function LandingPage({ onStart, onSeeAll }) {
   const [showAuthModal,  setShowAuthModal]  = useState(false);
   const [showSaved,      setShowSaved]      = useState(false);
   const [showAccount,    setShowAccount]    = useState(false);
-  const [cityHighlight,  setCityHighlight]  = useState(false);
+  const [cityHighlight,    setCityHighlight]    = useState(false);
+  const [cityRowHighlight, setCityRowHighlight] = useState(false);
   const [pendingCard,    setPendingCard]    = useState(null);
 
   const [guestCount,     setGuestCount]     = useState('');
@@ -183,7 +184,8 @@ export default function LandingPage({ onStart, onSeeAll }) {
 
   const handleCardClick = (card) => {
     if (!cityValue) {
-      openChatAndSend(`Find ${card.title} venues for a birthday party`);
+      setCityRowHighlight(true);
+      setTimeout(() => setCityRowHighlight(false), 1500);
       return;
     }
     updateLocation({ city: cityValue });
@@ -206,14 +208,15 @@ export default function LandingPage({ onStart, onSeeAll }) {
   const handlePersona = (label) => {
     setActivePersona(label);
     updateChildInfo({ age: PERSONA_AGES[label] });
-    if (cityValue) {
-      updateLocation({ city: cityValue });
-      searchVenuesByQuery(PERSONA_QUERIES[label], cityValue);
-      goToStep(4);
-      onStart();
-    } else {
-      onStart();
+    if (!cityValue) {
+      setCityHighlight(true);
+      setTimeout(() => setCityHighlight(false), 1500);
+      return;
     }
+    updateLocation({ city: cityValue });
+    searchVenuesByQuery(PERSONA_QUERIES[label], cityValue);
+    goToStep(4);
+    onStart();
   };
 
   const sectionTitle = activeOccasion === 'birthday'
@@ -257,7 +260,7 @@ export default function LandingPage({ onStart, onSeeAll }) {
   const renderCards = () => (
     <section className="lp-cards-section">
       <>
-          <div className="lp-city-row">
+          <div className={`lp-city-row${cityRowHighlight ? ' lp-city-row--highlight' : ''}`}>
             <svg className="lp-city-row-icon" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">
               <path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5S12.5 9.5 12.5 6c0-2.5-2-4.5-4.5-4.5z"/>
               <circle cx="8" cy="6" r="1.5"/>
