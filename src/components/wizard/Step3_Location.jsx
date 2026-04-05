@@ -15,7 +15,8 @@ export default function Step3_Location() {
     location,
     updateLocation,
     nextStep,
-    prevStep
+    prevStep,
+    searchVenues,
   } = usePartyPlanner();
 
   const handleSettingChange = (setting) => {
@@ -87,11 +88,11 @@ export default function Step3_Location() {
       <div className="step-actions">
         <div /> {/* Spacer */}
         <Button
-          onClick={nextStep}
+          onClick={() => { searchVenues(); nextStep(); }}
           disabled={!canProceed}
           size="large"
         >
-          Continue to Party Type
+          Find Venues
         </Button>
       </div>
     </div>

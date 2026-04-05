@@ -58,7 +58,8 @@ const actionTypes = {
   SET_PARTY_DETAILS: 'SET_PARTY_DETAILS',
   SET_WEATHER: 'SET_WEATHER',
   SET_WEATHER_LOADING: 'SET_WEATHER_LOADING',
-  RESET: 'RESET'
+  RESET: 'RESET',
+  START_SEARCH: 'START_SEARCH',
 };
 
 function partyPlannerReducer(state, action) {
@@ -154,6 +155,9 @@ function partyPlannerReducer(state, action) {
     case actionTypes.SET_WEATHER_LOADING:
       return { ...state, weatherLoading: action.payload };
 
+    case actionTypes.START_SEARCH:
+      return { ...state, loading: true, error: null, venues: [], persona: null, llmFilterApplied: null };
+
     case actionTypes.RESET:
       return initialState;
 
@@ -232,8 +236,7 @@ export function PartyPlannerProvider({ children }) {
 
   // Quick search by free-text query (used from landing page cards)
   const searchVenuesByQuery = useCallback(async (textQuery, city) => {
-    setLoading(true);
-    setError(null);
+    dispatch({ type: actionTypes.START_SEARCH });
 
     const requestBody = {
       age: state.childInfo.age ?? 7,
@@ -262,12 +265,11 @@ export function PartyPlannerProvider({ children }) {
     } catch (err) {
       setError('Unable to load results. Please try again.');
     }
-  }, [state.childInfo.age, state.preferences.guestCount, state.location, setLoading, setError, setVenues]);
+  }, [state.childInfo.age, state.preferences.guestCount, state.location, setError, setVenues]);
 
   // API call to search venues
   const searchVenues = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+    dispatch({ type: actionTypes.START_SEARCH });
 
     const requestBody = {
       age: state.childInfo.age ?? 7,
@@ -320,7 +322,7 @@ export function PartyPlannerProvider({ children }) {
         setError(err.message);
       }
     }
-  }, [state.childInfo, state.preferences, state.location, setLoading, setError, setVenues, setPartyTypeSuggestions]);
+  }, [state.childInfo, state.preferences, state.location, setError, setVenues, setPartyTypeSuggestions]);
 
   // Fetch party type suggestions for an age
   const fetchPartyTypeSuggestions = useCallback(async (age) => {
