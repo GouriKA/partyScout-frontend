@@ -1,5 +1,5 @@
 steps:
-  # Build the Docker image with build args
+  # Build the Docker image with all required build args
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
@@ -19,30 +19,41 @@ steps:
       - 'VITE_FIREBASE_APP_ID=${_VITE_FIREBASE_APP_ID}'
       - '-t'
       - 'gcr.io/$PROJECT_ID/partyscout-frontend:$COMMIT_SHA'
-      - '-t'
-      - 'gcr.io/$PROJECT_ID/partyscout-frontend:latest'
       - '.'
 
-  # Push both tags so prod can promote :latest without rebuilding
+  # Push image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', '--all-tags', 'gcr.io/$PROJECT_ID/partyscout-frontend']
+    args: ['push', 'gcr.io/$PROJECT_ID/partyscout-frontend:$COMMIT_SHA']
 
-  # Deploy to canary (us-east1)
+  # Deploy to Cloud Run (no-traffic — promotes manually after verification)
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
       - 'run'
       - 'deploy'
-      - 'partyscout-frontend-canary'
+      - 'partyscout-frontend'
       - '--image'
       - 'gcr.io/$PROJECT_ID/partyscout-frontend:$COMMIT_SHA'
       - '--region'
-      - 'us-east1'
+      - 'us-central1'
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
       - '--memory'
       - '256Mi'
+      - '--no-traffic'
+
+  # Route all traffic to the new revision
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'services'
+      - 'update-traffic'
+      - 'partyscout-frontend'
+      - '--to-latest'
+      - '--region'
+      - 'us-central1'
 
 options:
   logging: CLOUD_LOGGING_ONLY
@@ -58,4 +69,3 @@ substitutions:
 
 images:
   - 'gcr.io/$PROJECT_ID/partyscout-frontend:$COMMIT_SHA'
-  - 'gcr.io/$PROJECT_ID/partyscout-frontend:latest'
