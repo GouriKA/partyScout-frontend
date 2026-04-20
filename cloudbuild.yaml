@@ -25,7 +25,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/partyscout-frontend:$COMMIT_SHA']
 
-  # Deploy to Cloud Run (no-traffic — promotes manually after verification)
+  # Deploy to canary (0% traffic) — promote to prod manually after verification
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
@@ -42,18 +42,8 @@ steps:
       - '--memory'
       - '256Mi'
       - '--no-traffic'
-
-  # Route all traffic to the new revision
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: gcloud
-    args:
-      - 'run'
-      - 'services'
-      - 'update-traffic'
-      - 'partyscout-frontend'
-      - '--to-latest'
-      - '--region'
-      - 'us-central1'
+      - '--tag'
+      - 'canary'
 
 options:
   logging: CLOUD_LOGGING_ONLY
