@@ -365,14 +365,15 @@ export default function LandingPage({ onStart, onSeeAll }) {
             className={`lp-nav-chat-btn${chatOpen ? ' lp-nav-chat-btn--active' : ''}`}
             onClick={() => chatOpen ? closeChat() : openChat()}
           >
-            Ask Scout
+            <span className="lp-nav-chat-icon">💬</span>
+            <span className="lp-nav-chat-label">Ask Scout</span>
           </button>
           <button
             className={`lp-nav-saved${savedEvents.length > 0 ? ' lp-nav-saved--active' : ''}`}
             onClick={() => setShowSaved(true)}
           >
             <span className="lp-nav-saved-heart">★</span>
-            Saved{savedEvents.length > 0 ? ` (${savedEvents.length})` : ''}
+            <span className="lp-nav-saved-label">Saved{savedEvents.length > 0 ? ` (${savedEvents.length})` : ''}</span>
           </button>
           {firebaseConfigured && !authLoading && (
             user ? (

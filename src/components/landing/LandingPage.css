@@ -1325,8 +1325,16 @@
     justify-content: flex-start;
   }
 
-  /* Unified search bar: city input takes available space on mobile */
-  .lp-unified-city-input { width: auto; flex: 1; }
+  /* Nav: hide text labels, show icons only to fit on small screens */
+  .lp-nav-chat-label { display: none; }
+  .lp-nav-saved-label { display: none; }
+  .lp-btn-signup { display: none; }
+  .lp-nav-chat-btn { margin-right: 4px; padding: 8px 10px; }
+
+  /* Unified search bar: allow left zone to shrink, tighten button */
+  .lp-unified-left { flex-shrink: 1; min-width: 0; }
+  .lp-unified-city-input { width: auto; flex: 1; min-width: 0; }
+  .lp-unified-btn { padding: 0 14px; }
 
   /* Carousel buttons: meet 44px minimum touch target */
   .lp-carousel-btn { width: 44px; height: 44px; }
