@@ -415,3 +415,11 @@
 }
 
 .btn-call:hover { background: var(--neutral-200, #e5e7eb); }
+
+@media (max-width: 640px) {
+  /* Ensure heart/save button meets 44px touch target on mobile */
+  .venue-heart-btn { width: 2.75rem; height: 2.75rem; }
+
+  /* Slightly larger photo area on mobile for visual impact */
+  .venue-photo { height: 180px; }
+}

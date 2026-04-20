@@ -512,4 +512,8 @@
 
 @media (max-width: 640px) {
   .chat-overlay { right: 0; width: 100%; }
+
+  /* Increase touch targets for venue ask/see-all buttons in chat */
+  .msg-venue-card-ask { min-height: 44px; padding: 10px 12px; font-size: 12px; }
+  .msg-see-all        { min-height: 44px; padding: 12px 0; }
 }

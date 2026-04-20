@@ -130,4 +130,10 @@
   .wizard-back-row {
     padding: 10px 16px;
   }
+
+  /* Chat column: full-screen overlay on mobile instead of 400px sidebar */
+  .wizard-chat-col { width: 100%; left: 0; }
+
+  /* No content shift when chat opens — it overlays instead */
+  .wizard-body--chat-open .wizard-content { margin-right: 0; }
 }

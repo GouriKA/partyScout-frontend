@@ -148,3 +148,10 @@
   .compare-actions { flex-direction: column; }
   .compare-select-btn { max-width: none; }
 }
+
+@media (max-width: 480px) {
+  /* Close button: meet 44px minimum touch target */
+  .compare-close { width: 2.75rem; height: 2.75rem; }
+  .compare-label-col { width: 80px; }
+  .compare-venue-col { min-width: 120px; }
+}
